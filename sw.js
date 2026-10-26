@@ -12,7 +12,7 @@ const CACHE = 'revisions-' + VERSION;   // un cache par version
 // Fichiers mis de côté dès l'installation, pour le mode hors-ligne
 const FICHIERS = [
   './', 'index.html', 'style.css', 'app.js', 'version.js', 'lecons.json',
-  'manifest.json', 'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png'
+  'manifest.json', 'audio/index.json', 'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png'
 ];
 
 // Installation : on remplit le cache puis on s'active sans attendre
@@ -34,6 +34,19 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   // On ne gère que nos propres fichiers (pas Google Fonts, etc.)
   if (e.request.method !== 'GET' || new URL(e.request.url).origin !== location.origin) return;
+
+  // Les MP3 ne changent jamais (leur nom = empreinte du texte) : « cache d'abord ».
+  // On télécharge le fichier en entier (sans « Range »), car le cache refuse les morceaux (réponses 206).
+  if (e.request.url.endsWith('.mp3')) {
+    const url = e.request.url;
+    e.respondWith(
+      caches.match(url).then((enCache) => enCache || fetch(url).then((reponse) => {
+        if (reponse.ok) { const copie = reponse.clone(); caches.open(CACHE).then((c) => c.put(url, copie)); }
+        return reponse;
+      }))
+    );
+    return;
+  }
 
   e.respondWith(
     fetch(e.request)

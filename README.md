@@ -67,6 +67,19 @@ Options pour toutes les activités : `"explication"` (affichée après la répon
 
 Option de la réponse à taper : `"strict": true` → les accents comptent (pour la dictée, la conjugaison…). Sans elle, « cotes » = « côtés ».
 
+## 🔊 La voix de Papa (depuis la v1.2.0)
+
+Le bouton 🔊 lit la leçon ou la question avec la voix de Sébastien (clonée sur ElevenLabs).
+
+- Chaque phrase lue est un MP3 dans le dossier `audio/`, nommé d'après une **empreinte** du texte
+  (ex. `audio/8469ba9e.mp3`). `audio/index.json` liste toutes les empreintes disponibles.
+- Si un texte n'a pas de MP3 (nouvelle leçon, phrase modifiée…), l'appli utilise
+  automatiquement **la voix du téléphone** : rien ne casse.
+- ⚠️ Modifier ne serait-ce qu'une virgule dans une phrase change son empreinte :
+  elle repasse en voix du téléphone tant qu'on n'a pas régénéré son MP3.
+- Pour les nouvelles leçons : envoyer les photos à Claude, il crée la leçon **et** ses MP3.
+- Les MP3 sont gardés dans le téléphone après la 1re écoute (marche hors-ligne ensuite).
+
 ## Étoiles
 
 ⭐⭐⭐ ≥ 90 % · ⭐⭐ ≥ 70 % · ⭐ ≥ 40 %. Le meilleur score est gardé dans le téléphone (chaque téléphone a ses propres scores).

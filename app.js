@@ -176,14 +176,54 @@ function son(type) {
   } catch { /* pas de son possible : tant pis */ }
 }
 
-/** Lecture à voix haute avec la synthèse vocale du téléphone (en français). */
-function parler(texte) {
+/* --- VOIX ---------------------------------------------------
+   Deux voix possibles :
+   1. la voix de Papa (MP3 générés avec ElevenLabs, dans le dossier audio/) ;
+   2. sinon, la synthèse vocale du téléphone.
+   Chaque MP3 est nommé d'après une « empreinte » du texte (ex. audio/3fa2c9e1.mp3).
+   Ainsi, si un texte change dans lecons.json, son empreinte change aussi :
+   l'ancien MP3 n'est plus utilisé et on retombe sur la voix du téléphone. */
+
+let audiosDispo = new Set(); // empreintes des MP3 présents (lu dans audio/index.json au démarrage)
+let lecteur = null;          // le MP3 en cours de lecture
+
+/** Empreinte FNV-1a 32 bits du texte (encodé en UTF-8), en 8 caractères hexadécimaux.
+    Le script Python qui génère les MP3 calcule exactement la même chose. */
+function empreinte(texte) {
+  let h = 0x811c9dc5;
+  for (const octet of new TextEncoder().encode(texte)) {
+    h ^= octet;
+    h = Math.imul(h, 0x01000193) >>> 0; // multiplication 32 bits (>>> 0 = reste un entier positif)
+  }
+  return h.toString(16).padStart(8, '0');
+}
+
+// Arrête toute voix en cours (MP3 ou téléphone)
+function couperVoix() {
+  window.speechSynthesis?.cancel();
+  if (lecteur) { lecteur.pause(); lecteur = null; }
+}
+
+// Voix de secours : la synthèse vocale du téléphone
+function voixDuTelephone(texte) {
   if (!('speechSynthesis' in window)) return;
-  speechSynthesis.cancel();
-  const phrase = new SpeechSynthesisUtterance(texte.replace(/\*\*|^#\s|^-\s/gm, ''));
+  const phrase = new SpeechSynthesisUtterance(texte);
   phrase.lang = 'fr-FR';
   phrase.rate = 0.95;
   speechSynthesis.speak(phrase);
+}
+
+/** Lit un texte à voix haute : la voix de Papa si le MP3 existe, sinon celle du téléphone. */
+function parler(texte) {
+  const propre = texte.replace(/\*\*|^#\s|^-\s/gm, ''); // retire la mise en forme (**gras**, # titres, - puces)
+  couperVoix();
+  const h = empreinte(propre);
+  if (audiosDispo.has(h)) {
+    lecteur = new Audio('audio/' + h + '.mp3');
+    lecteur.play().catch(() => voixDuTelephone(propre)); // MP3 illisible (hors-ligne…) : plan B
+  } else {
+    voixDuTelephone(propre);
+  }
 }
 
 // Petite vibration (si le téléphone le permet)
@@ -258,7 +298,7 @@ function entete(titre) {
   $('#titre').textContent = titre;
   $('#btn-retour').hidden = pile.length <= 1;
   $('#badge-enfant').textContent = etat.enfant ? etat.enfant.avatar || '🙂' : '';
-  window.speechSynthesis?.cancel(); // on coupe la voix en changeant d'écran
+  couperVoix(); // on coupe la voix en changeant d'écran
 }
 
 /* ---------- 5. LES ÉCRANS ------------------------------------ */
@@ -698,6 +738,12 @@ async function demarrer() {
       el('p', { class: 'aide' }, 'Vérifie lecons.json (une virgule ou un guillemet oublié ?)')));
     return;
   }
+
+  // Liste des MP3 de la voix de Papa (facultatif : sans ce fichier, voix du téléphone)
+  try {
+    const rep = await fetch('audio/index.json', { cache: 'no-store' });
+    if (rep.ok) audiosDispo = new Set(await rep.json());
+  } catch { /* pas de liste : tant pis */ }
 
   // Premier écran = racine de la pile
   pile.push([afficherAccueil, []]);

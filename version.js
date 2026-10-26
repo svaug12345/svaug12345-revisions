@@ -10,4 +10,4 @@
 //  ("var" et pas "const" : la variable doit être globale pour
 //   être visible aussi dans le service worker.)
 // =============================================================
-var VERSION = '1.1.0'; // 1.1.0 : option "strict" (accents exigés) + "1 000" = "1000"
+var VERSION = '1.2.0'; // 1.2.0 : voix de Papa (MP3 ElevenLabs) ; 1.1.0 : option "strict"
