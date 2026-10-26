@@ -2,9 +2,9 @@
   "maj": "26/10/2026",
 
   "enfants": [
-    { "id": "tom",   "nom": "Tom",   "avatar": "🦖", "couleur": "#22c55e" },
-    { "id": "gaby",  "nom": "Gaby",  "avatar": "🦄", "couleur": "#ec4899" },
-    { "id": "nanon", "nom": "Nanon", "avatar": "🦊", "couleur": "#f59e0b" }
+    {"id": "tom", "nom": "Tom", "avatar": "🦖", "couleur": "#22c55e"},
+    {"id": "gaby", "nom": "Gaby", "avatar": "🦄", "couleur": "#ec4899"},
+    {"id": "nanon", "nom": "Nanon", "avatar": "🦊", "couleur": "#f59e0b"}
   ],
 
   "lecons": [
@@ -29,41 +29,14 @@
         "**Astuce :** 5, 6, 7, 8 → 56 = 7 × 8 !"
       ],
       "activites": [
-        { "type": "saisie", "question": "Combien font 7 × 8 ?", "reponse": "56", "explication": "Retiens : 5, 6, 7, 8 → 56 = 7 × 8." },
-        { "type": "qcm", "question": "Combien font 7 × 6 ?", "choix": ["42", "48", "36", "49"] },
-        { "type": "vraifaux", "affirmation": "7 × 9 = 63", "reponse": true },
-        { "type": "vraifaux", "affirmation": "7 × 4 = 24", "reponse": false, "explication": "7 × 4 = 28. C'est 6 × 4 qui fait 24." },
-        { "type": "paires", "consigne": "Relie chaque calcul à son résultat", "paires": [["7 × 3", "21"], ["7 × 5", "35"], ["7 × 7", "49"], ["7 × 10", "70"]] },
-        { "type": "ordre", "consigne": "Range ces résultats du plus petit au plus grand", "elements": ["7", "14", "21", "28", "35"] },
-        { "type": "trous", "texte": "7 × 2 = [14] et 7 × 3 = [21]", "intrus": ["17", "24"] },
-        { "type": "carte", "recto": "7 × 7", "verso": "49" }
-      ]
-    },
-
-    {
-      "id": "francais-classes-de-mots",
-      "pour": ["gaby"],
-      "matiere": "Français",
-      "titre": "Les classes de mots",
-      "emoji": "🔤",
-      "fiche": [
-        "# Les classes de mots",
-        "Chaque mot appartient à une **classe** (on dit aussi sa « nature ») :",
-        "- **Le nom** : une personne, un animal, une chose ou une idée (chat, Paris, joie)",
-        "- **Le déterminant** : se place devant le nom (le, une, des, mon, ce…)",
-        "- **L'adjectif** : précise le nom (petit, rouge, gentil…)",
-        "- **Le verbe** : une action ou un état, il se conjugue (courir, être…)",
-        "- **L'adverbe** : invariable, il précise un verbe ou un adjectif (vite, rapidement, très…)",
-        "- **Le pronom** : remplace un nom (il, elle, nous…)"
-      ],
-      "activites": [
-        { "type": "qcm", "question": "Dans « Le petit chat dort », quelle est la classe de « petit » ?", "choix": ["Adjectif", "Nom", "Verbe", "Adverbe"] },
-        { "type": "qcm", "question": "Dans « Elle mange une pomme », quelle est la classe de « Elle » ?", "choix": ["Pronom", "Déterminant", "Nom", "Adjectif"] },
-        { "type": "vraifaux", "affirmation": "« rapidement » est un adjectif.", "reponse": false, "explication": "C'est un adverbe : il est invariable et précise le verbe." },
-        { "type": "paires", "consigne": "Associe chaque mot à sa classe", "paires": [["maison", "Nom"], ["courir", "Verbe"], ["rouge", "Adjectif"], ["des", "Déterminant"], ["très", "Adverbe"]] },
-        { "type": "trous", "texte": "Le [pronom] remplace un nom. Le [verbe] se conjugue.", "intrus": ["déterminant", "adjectif"] },
-        { "type": "saisie", "question": "Quelle est la classe du mot « joie » ?", "reponse": ["nom", "un nom", "nom commun"] },
-        { "type": "carte", "recto": "Comment reconnaître un verbe ?", "verso": "Il se conjugue : je mange, je mangeais, je mangerai." }
+        {"type": "saisie", "question": "Combien font 7 × 8 ?", "reponse": "56", "explication": "Retiens : 5, 6, 7, 8 → 56 = 7 × 8."},
+        {"type": "qcm", "question": "Combien font 7 × 6 ?", "choix": ["42", "48", "36", "49"]},
+        {"type": "vraifaux", "affirmation": "7 × 9 = 63", "reponse": true},
+        {"type": "vraifaux", "affirmation": "7 × 4 = 24", "reponse": false, "explication": "7 × 4 = 28. C'est 6 × 4 qui fait 24."},
+        {"type": "paires", "consigne": "Relie chaque calcul à son résultat", "paires": [["7 × 3", "21"], ["7 × 5", "35"], ["7 × 7", "49"], ["7 × 10", "70"]]},
+        {"type": "ordre", "consigne": "Range ces résultats du plus petit au plus grand", "elements": ["7", "14", "21", "28", "35"]},
+        {"type": "trous", "texte": "7 × 2 = [14] et 7 × 3 = [21]", "intrus": ["17", "24"]},
+        {"type": "carte", "recto": "7 × 7", "verso": "49"}
       ]
     },
 
@@ -86,13 +59,387 @@
         "- **2 septembre 1945** : capitulation du Japon, fin de la guerre"
       ],
       "activites": [
-        { "type": "qcm", "question": "Qui lance un appel à continuer le combat depuis Londres le 18 juin 1940 ?", "choix": ["Le général de Gaulle", "Philippe Pétain", "Jean Moulin", "Winston Churchill"] },
-        { "type": "ordre", "consigne": "Remets ces événements dans l'ordre chronologique", "elements": ["Invasion de la Pologne", "Appel du 18 juin", "Pearl Harbor", "Débarquement en Normandie", "Capitulation de l'Allemagne"] },
-        { "type": "paires", "consigne": "Associe chaque date à son événement", "paires": [["1er sept. 1939", "Invasion de la Pologne"], ["7 déc. 1941", "Pearl Harbor"], ["6 juin 1944", "Débarquement"], ["8 mai 1945", "Capitulation allemande"]] },
-        { "type": "saisie", "question": "En quelle année la Seconde Guerre mondiale se termine-t-elle ?", "reponse": "1945" },
-        { "type": "vraifaux", "affirmation": "Les États-Unis entrent en guerre après l'attaque de Pearl Harbor.", "reponse": true },
-        { "type": "trous", "texte": "Le 6 août 1945, une bombe atomique frappe [Hiroshima], puis le 9 août [Nagasaki].", "intrus": ["Tokyo", "Kyoto"] },
-        { "type": "carte", "recto": "Qu'est-ce que le régime de Vichy ?", "verso": "Le régime dirigé par Pétain (1940-1944), qui collabore avec l'Allemagne nazie." }
+        {"type": "qcm", "question": "Qui lance un appel à continuer le combat depuis Londres le 18 juin 1940 ?", "choix": ["Le général de Gaulle", "Philippe Pétain", "Jean Moulin", "Winston Churchill"]},
+        {"type": "ordre", "consigne": "Remets ces événements dans l'ordre chronologique", "elements": ["Invasion de la Pologne", "Appel du 18 juin", "Pearl Harbor", "Débarquement en Normandie", "Capitulation de l'Allemagne"]},
+        {"type": "paires", "consigne": "Associe chaque date à son événement", "paires": [["1er sept. 1939", "Invasion de la Pologne"], ["7 déc. 1941", "Pearl Harbor"], ["6 juin 1944", "Débarquement"], ["8 mai 1945", "Capitulation allemande"]]},
+        {"type": "saisie", "question": "En quelle année la Seconde Guerre mondiale se termine-t-elle ?", "reponse": "1945"},
+        {"type": "vraifaux", "affirmation": "Les États-Unis entrent en guerre après l'attaque de Pearl Harbor.", "reponse": true},
+        {"type": "trous", "texte": "Le 6 août 1945, une bombe atomique frappe [Hiroshima], puis le 9 août [Nagasaki].", "intrus": ["Tokyo", "Kyoto"]},
+        {"type": "carte", "recto": "Qu'est-ce que le régime de Vichy ?", "verso": "Le régime dirigé par Pétain (1940-1944), qui collabore avec l'Allemagne nazie."}
+      ]
+    },
+
+    {
+      "id": "gaby-fr-passe-simple",
+      "pour": ["gaby"],
+      "matiere": "Français",
+      "titre": "Le passé simple",
+      "emoji": "✍️",
+      "fiche": [
+        "# Les 3 groupes de verbes",
+        "- **1er groupe** : verbes en -er (sauf aller) → chanter, jouer",
+        "- **2e groupe** : verbes en -ir avec un participe présent en -issant → finir (finissant), grandir",
+        "- **3e groupe** : tous les autres, dont aller, être et avoir → savoir, partir, mettre",
+        "# Les terminaisons",
+        "- **1er groupe** (en -a) : je montr**ai**, tu montr**as**, il montr**a**, nous montr**âmes**, vous montr**âtes**, ils montr**èrent**",
+        "- **2e groupe** (en -i) : je grand**is**, tu grand**is**, il grand**it**, nous grand**îmes**, vous grand**îtes**, ils grand**irent**",
+        "- **3e groupe** : en -i (je sortis), en -u (je voulus) ou en -in (je vins, je tins)",
+        "# Cas particuliers",
+        "- Verbes en **-cer** : ç partout sauf ils → je traçai, il traça, mais ils tracèrent",
+        "- Verbes en **-ger** : e après le g partout sauf ils → je plongeai, il plongea, mais ils plongèrent",
+        "- **être** : je fus, tu fus, il fut, nous fûmes, vous fûtes, ils furent",
+        "- **avoir** : j'eus, tu eus, il eut, nous eûmes, vous eûtes, ils eurent",
+        "# Verbes du 3e groupe à connaître",
+        "- dire → je dis, nous dîmes · écrire → j'écrivis · faire → je fis, nous fîmes",
+        "- mettre → je mis · naître → je naquis · prendre → je pris · voir → je vis",
+        "- boire → je bus · courir → je courus · lire → je lus · mourir → je mourus",
+        "- pouvoir → je pus · vivre → je vécus · vouloir → je voulus"
+      ],
+      "activites": [
+        {"type": "saisie", "strict": true, "question": "Ce soir-là, nous (manger) … plus que de coutume.", "reponse": "mangeâmes", "explication": "Verbe en -ger : on garde le e après le g. Et l'accent circonflexe : nous mangeâmes."},
+        {"type": "saisie", "strict": true, "question": "Elles (laisser) … leur panier sur le quai.", "reponse": "laissèrent"},
+        {"type": "saisie", "strict": true, "question": "Je (finir) … juste à temps.", "reponse": "finis"},
+        {"type": "saisie", "strict": true, "question": "Les vagues (grossir) … démesurément.", "reponse": "grossirent"},
+        {"type": "qcm", "question": "Je (boire) une gorgée de potion.", "choix": ["je bus", "je buvai", "je boivis", "je bois"]},
+        {"type": "qcm", "question": "Elle (courir) à perdre haleine.", "choix": ["elle courut", "elle courit", "elle coura", "elle courra"]},
+        {"type": "qcm", "question": "Vous (venir) à la première heure.", "choix": ["vous vîntes", "vous venîtes", "vous vintes", "vous venâtes"]},
+        {"type": "qcm", "question": "Les témoins (dire) ce qu'ils avaient vu.", "choix": ["dirent", "disèrent", "dirèrent", "disaient"], "explication": "« disaient » est à l'imparfait, pas au passé simple."},
+        {"type": "paires", "consigne": "Associe chaque verbe à son passé simple", "paires": [["être", "je fus"], ["avoir", "j'eus"], ["faire", "je fis"], ["prendre", "je pris"], ["voir", "je vis"]]},
+        {"type": "paires", "consigne": "Associe chaque verbe à son passé simple", "paires": [["naître", "je naquis"], ["vivre", "je vécus"], ["mettre", "je mis"], ["lire", "je lus"], ["pouvoir", "je pus"]]},
+        {"type": "trous", "texte": "Il [traça] un cercle, mais ils [tracèrent] un carré.", "intrus": ["traca", "traçèrent"], "explication": "ç partout… sauf à « ils » : devant le è, le c se prononce déjà [s]."},
+        {"type": "ordre", "consigne": "Remets la conjugaison de « montrer » dans l'ordre (de je à ils)", "elements": ["je montrai", "tu montras", "il montra", "nous montrâmes", "vous montrâtes", "ils montrèrent"]},
+        {"type": "vraifaux", "affirmation": "Le verbe « aller » est du 1er groupe.", "reponse": false, "explication": "Il se termine par -er, mais c'est l'exception : aller est du 3e groupe !"},
+        {"type": "qcm", "question": "À quel groupe appartient « grandir » ?", "choix": ["2e groupe", "1er groupe", "3e groupe"], "explication": "On dit « grandissant » → 2e groupe."},
+        {"type": "qcm", "question": "À quel groupe appartient « partir » ?", "choix": ["3e groupe", "2e groupe", "1er groupe"], "explication": "On dit « partant » et pas « partissant » → 3e groupe."},
+        {"type": "carte", "recto": "Les terminaisons du 1er groupe au passé simple ?", "verso": "-ai, -as, -a, -âmes, -âtes, -èrent"}
+      ]
+    },
+
+    {
+      "id": "gaby-fr-imparfait-passe-simple",
+      "pour": ["gaby"],
+      "matiere": "Français",
+      "titre": "Imparfait ou passé simple ?",
+      "emoji": "⏳",
+      "fiche": [
+        "Donner la **valeur** d'un temps, c'est expliquer pourquoi on l'emploie.",
+        "# Le passé simple : le premier plan",
+        "- Les actions **importantes** qui font **avancer l'histoire**",
+        "- Des actions **délimitées dans le temps** (souvent après « un jour », « soudain », « ce jour-là »)",
+        "- Ex : Alors que tout était calme, un bruit **se fit** entendre et **alerta** les habitants.",
+        "# L'imparfait : l'arrière-plan",
+        "- une **action secondaire** : Certains échangeaient des nouvelles.",
+        "- une **description** : La fête était vraiment somptueuse.",
+        "- une **action habituelle ou répétée** : Chaque jour, il courait pendant une demi-heure.",
+        "- une **action en cours de réalisation** : Les clients dînaient encore quand l'incident se produisit.",
+        "# Astuce : -ais ou -ai ?",
+        "- Avec « je », l'imparfait (-ais) et le passé simple (-ai) se prononcent pareil.",
+        "- **Remplace « je » par « il »** : il chantait → je chantais ; il chanta → je chantai."
+      ],
+      "activites": [
+        {"type": "qcm", "question": "« Tous les jours, mon père (prendre) le train de 7h49. »", "choix": ["prenait", "prit"], "explication": "« Tous les jours » = action répétée → imparfait."},
+        {"type": "qcm", "question": "« Ce jour-là, un voyageur imprudent (vouloir) prendre le train trop tard. »", "choix": ["voulut", "voulait"], "explication": "« Ce jour-là » = une action unique, délimitée → passé simple."},
+        {"type": "qcm", "question": "« Toutes les fois qu'elles allaient dans cette librairie, elles (acheter) un ou deux livres. »", "choix": ["achetaient", "achetèrent"], "explication": "« Toutes les fois que » = action répétée → imparfait."},
+        {"type": "qcm", "question": "« Au petit matin, le bateau leva l'ancre, puis (disparaître) à l'horizon. »", "choix": ["disparut", "disparaissait"]},
+        {"type": "qcm", "question": "« Alice revenait chez elle quand elle aperçut une camarade. » Valeur de « revenait » ?", "choix": ["Une action en cours de réalisation", "Une description", "Une action répétée"]},
+        {"type": "qcm", "question": "« Il acheta une guitare ; il en jouait tous les soirs. » Valeur de « jouait » ?", "choix": ["Une action répétée", "Une description", "Une action en cours de réalisation"]},
+        {"type": "qcm", "question": "« Sa chambre était assez grande. » Valeur de « était » ?", "choix": ["Une description", "Une action répétée", "Une action importante"]},
+        {"type": "trous", "texte": "Je l'[écoutais] depuis une heure quand soudain je [distinguai] une ombre.", "intrus": ["écoutai", "distinguais"], "explication": "Astuce du « il » : il écoutait (imparfait) ; soudain il distingua (passé simple)."},
+        {"type": "trous", "texte": "Lorsque j'[arrivai] chez lui, je [sonnai] puis [frappai] à la porte.", "intrus": ["arrivais", "sonnais"]},
+        {"type": "trous", "texte": "Petit, je [mangeais] souvent des bonbons, mais je ne [pleurais] jamais chez le dentiste.", "intrus": ["mangeai", "pleurai"]},
+        {"type": "vraifaux", "affirmation": "On utilise le passé simple pour décrire un lieu ou un personnage.", "reponse": false, "explication": "La description, c'est l'imparfait. Le passé simple, ce sont les actions importantes."},
+        {"type": "carte", "recto": "« je chantai » ou « je chantais » : comment choisir ?", "verso": "Je remplace par « il » : il chanta → -ai (passé simple) ; il chantait → -ais (imparfait)."}
+      ]
+    },
+
+    {
+      "id": "gaby-fr-dictee-petit-poucet",
+      "pour": ["gaby"],
+      "matiere": "Français",
+      "titre": "Dictée : le Petit Poucet",
+      "emoji": "📝",
+      "fiche": [
+        "# Le texte (d'après Charles Perrault, 1697)",
+        "Plus ils marchaient, plus ils s'égaraient et s'enfonçaient dans la forêt. La nuit vint, et il s'éleva un grand vent qui leur faisait épouvantablement peur. Ils croyaient entendre de tous côtés des hurlements de loups qui venaient à eux pour les manger. Ils n'osaient presque pas se parler ni tourner la tête. Il survint une grosse pluie qui les trempa jusqu'aux os ; ils glissaient à chaque pas et tombaient dans la boue.",
+        "# Les mots pièges",
+        "- s'enfon**ç**aient (ç devant le a)",
+        "- la for**ê**t · de tous c**ô**tés · la t**ê**te",
+        "- **épouvantablement** (é-pou-van-ta-ble-ment)",
+        "- des hurlements de loup**s**",
+        "- ils ven**aient**, ils n'os**aient**, ils gliss**aient** (imparfait)",
+        "- la nuit v**int**, il surv**int**, la pluie les tremp**a** (passé simple)",
+        "- jusqu'**aux** os (aux = à + les)",
+        "- la bou**e**",
+        "# L'accord de « leur »",
+        "- Devant un **verbe**, « leur » remplace « à eux » : il est **invariable** → le vent **leur** faisait peur.",
+        "- Devant un **nom au pluriel**, il s'accorde → ils prennent **leurs** voitures.",
+        "- Devant un nom au singulier → ils prennent **leur** voiture.",
+        "- Précédé de « les » → les **leurs**.",
+        "**Astuce :** si je peux remplacer par « lui », pas de s : il **leur** parle → il **lui** parle."
+      ],
+      "activites": [
+        {"type": "trous", "texte": "Plus ils marchaient, plus ils s'égaraient et s'[enfonçaient] dans la [forêt].", "intrus": ["enfoncaient", "foret"]},
+        {"type": "trous", "texte": "Il s'éleva un grand vent qui [leur] faisait [épouvantablement] peur.", "intrus": ["leurs", "épouventablement"]},
+        {"type": "trous", "texte": "Ils croyaient entendre de tous [côtés] des hurlements de [loups] qui [venaient] à eux.", "intrus": ["cotés", "loup", "venait"]},
+        {"type": "trous", "texte": "Il survint une grosse pluie qui les [trempa] [jusqu'aux] os.", "intrus": ["trampa", "jusqu'au"]},
+        {"type": "qcm", "question": "Quelle est la bonne orthographe ?", "choix": ["épouvantablement", "épouventablement", "épouvantablemant", "épouvantabllement"]},
+        {"type": "qcm", "question": "« La nuit … » (venir, au passé simple)", "choix": ["vint", "vînt", "vin", "venut"]},
+        {"type": "qcm", "question": "« Ils prennent … voitures. »", "choix": ["leurs", "leur"], "explication": "« voitures » est au pluriel → leurs."},
+        {"type": "qcm", "question": "« Il … parle. »", "choix": ["leur", "leurs"], "explication": "Devant un verbe, « leur » = « lui » au pluriel : jamais de s."},
+        {"type": "qcm", "question": "« Ils ont perdu … chemin. »", "choix": ["leur", "leurs"], "explication": "« chemin » est au singulier → leur."},
+        {"type": "vraifaux", "affirmation": "Dans « Le vent leur faisait peur », « leur » prend un s car il y a plusieurs enfants.", "reponse": false, "explication": "Devant un verbe, « leur » est un pronom : il ne prend jamais de s."},
+        {"type": "saisie", "strict": true, "question": "Écris le mot qui manque : « de tous … » (= de toutes les directions)", "reponse": "côtés"},
+        {"type": "saisie", "strict": true, "question": "Écris le mot qui manque : « ils glissaient et tombaient dans la … »", "reponse": "boue"},
+        {"type": "carte", "recto": "« jusqu'au os » ou « jusqu'aux os » ?", "verso": "jusqu'aux os : ici « os » est au pluriel, et aux = à + les."}
+      ]
+    },
+
+    {
+      "id": "gaby-maths-calcul-mental-3",
+      "pour": ["gaby"],
+      "matiere": "Maths",
+      "titre": "Calcul mental : 0,5 · 4 · 5",
+      "emoji": "🧮",
+      "fiche": [
+        "# Multiplier par 0,5 ; 0,1 ; 0,01 ; 0,001",
+        "- × 0,5 = **diviser par 2** → 800 × 0,5 = 400",
+        "- × 0,1 = **diviser par 10** → 56 × 0,1 = 5,6",
+        "- × 0,01 = **diviser par 100** → 56 × 0,01 = 0,56",
+        "- × 0,001 = **diviser par 1 000** → 56 × 0,001 = 0,056",
+        "# Multiplier et diviser par 4 ou 5",
+        "- × 4 = **× 2 puis × 2** → 41 × 4 : 41 × 2 = 82, 82 × 2 = 164",
+        "- × 5 = **× 10 puis : 2** → 14 × 5 : 14 × 10 = 140, 140 : 2 = 70",
+        "- : 4 = **: 2 puis : 2** → 52 : 4 : 52 : 2 = 26, 26 : 2 = 13",
+        "- : 5 = **: 10 puis × 2** → 160 : 5 : 160 : 10 = 16, 16 × 2 = 32",
+        "# Diviser avec les tables",
+        "- 63 : 9 = ? → je cherche **9 × ? = 63** → 7"
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Multiplier par 0,5, c'est…", "choix": ["diviser par 2", "multiplier par 2", "diviser par 5", "ajouter 0,5"]},
+        {"type": "qcm", "question": "Pour diviser par 5, je peux…", "choix": ["diviser par 10 puis multiplier par 2", "diviser par 2 puis encore par 2", "multiplier par 10 puis diviser par 2"]},
+        {"type": "qcm", "question": "56 × 0,1 = ?", "choix": ["5,6", "560", "0,56", "56,1"]},
+        {"type": "saisie", "question": "800 × 0,5 = ?", "reponse": "400"},
+        {"type": "saisie", "question": "15 × 0,5 = ?", "reponse": "7,5"},
+        {"type": "saisie", "question": "0,1 × 9,056 = ?", "reponse": "0,9056"},
+        {"type": "saisie", "question": "10,8 × 0,01 = ?", "reponse": "0,108"},
+        {"type": "saisie", "question": "22 × 4 = ?", "reponse": "88"},
+        {"type": "saisie", "question": "4 × 104 = ?", "reponse": "416"},
+        {"type": "saisie", "question": "40 × 5 = ?", "reponse": "200"},
+        {"type": "saisie", "question": "30,4 × 5 = ?", "reponse": "152", "explication": "30,4 × 10 = 304, puis 304 : 2 = 152."},
+        {"type": "saisie", "question": "100 : 4 = ?", "reponse": "25"},
+        {"type": "saisie", "question": "80 : 5 = ?", "reponse": "16"},
+        {"type": "saisie", "question": "230 : 5 = ?", "reponse": "46", "explication": "230 : 10 = 23, puis 23 × 2 = 46."},
+        {"type": "saisie", "question": "42 : 4 = ?", "reponse": "10,5", "explication": "42 : 2 = 21, puis 21 : 2 = 10,5."},
+        {"type": "paires", "consigne": "Relie les calculs à leur résultat", "paires": [["63 : 9", "7"], ["16 : 4", "4"], ["40 : 5", "8"], ["42 : 6", "7"], ["56 : 7", "8"], ["36 : 9", "4"]]},
+        {"type": "saisie", "question": "72 : 9 = ?", "reponse": "8"},
+        {"type": "saisie", "question": "54 : 6 = ?", "reponse": "9"}
+      ]
+    },
+
+    {
+      "id": "gaby-anglais-be-have",
+      "pour": ["gaby"],
+      "matiere": "Anglais",
+      "titre": "BE et HAVE (The Addams Family)",
+      "emoji": "🦇",
+      "fiche": [
+        "# BE = être (ce que l'on est)",
+        "- I **am** · you **are** · he / she / it **is**",
+        "- we **are** · you **are** · they **are**",
+        "- Négatif : I'm **not** · he **isn't** · they **aren't**",
+        "- ⚠️ L'âge se dit avec BE : **She is 12.** (et pas « she has 12 »)",
+        "# HAVE = avoir (ce que l'on a)",
+        "- I **have** · you **have** · he / she / it **has**",
+        "- we **have** · you **have** · they **have**",
+        "- Négatif : I **don't have** · he / she / it **doesn't have** (jamais « doesn't has » !)",
+        "- ⚠️ Pas de « a » devant hair ou skin : He has black hair. They have pale skin.",
+        "# Les pronoms sujets",
+        "- Morticia → **she** · Gomez → **he** · Thing (la main) → **it**",
+        "- My friend and I → **we** · Gomez and Morticia → **they**"
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Pugsley … a striped T-shirt.", "choix": ["has", "is", "have", "are"]},
+        {"type": "qcm", "question": "Wednesday … cruel.", "choix": ["is", "has", "are", "have"]},
+        {"type": "qcm", "question": "Morticia and Gomez … two children.", "choix": ["have", "has", "are", "is"]},
+        {"type": "qcm", "question": "Fester … no hair.", "choix": ["has", "is", "have", "are"]},
+        {"type": "qcm", "question": "Comment dit-on « Elle a 12 ans » ?", "choix": ["She is 12.", "She has 12.", "She have 12.", "She are 12."], "explication": "En anglais, l'âge se dit avec BE."},
+        {"type": "qcm", "question": "Gomez … a cat. (forme négative)", "choix": ["doesn't have", "don't have", "doesn't has", "don't has"], "explication": "Avec he / she / it : doesn't + have (le s est déjà dans « doesn't »)."},
+        {"type": "paires", "consigne": "Associe chaque personnage au bon pronom", "paires": [["Morticia", "she"], ["Gomez", "he"], ["Thing (la main)", "it"], ["My friend and I", "we"], ["Gomez and Morticia", "they"]]},
+        {"type": "trous", "texte": "I [am] smart, she [is] tall and they [are] weird.", "intrus": ["have", "has"]},
+        {"type": "trous", "texte": "Wednesday and Pugsley [aren't] nice. They [have] pale skin.", "intrus": ["isn't", "has"]},
+        {"type": "vraifaux", "affirmation": "On peut dire « He don't have a cat. »", "reponse": false, "explication": "Avec he : He doesn't have a cat."},
+        {"type": "vraifaux", "affirmation": "« Gomez has a black hair » est correct.", "reponse": false, "explication": "Pas de « a » devant hair : Gomez has black hair."},
+        {"type": "saisie", "question": "Complète : They … children. (BE)", "reponse": "are"},
+        {"type": "carte", "recto": "BE ou HAVE ? « Il a une moustache. »", "verso": "HAVE : He has a moustache."}
+      ]
+    },
+
+    {
+      "id": "gaby-allemand-familie",
+      "pour": ["gaby"],
+      "matiere": "Allemand",
+      "titre": "die Familie",
+      "emoji": "👨‍👩‍👧‍👦",
+      "fiche": [
+        "# die Familie = la famille",
+        "- **der Großvater (Opa)** : le grand-père",
+        "- **die Großmutter (Oma)** : la grand-mère",
+        "- **die Großeltern** : les grands-parents",
+        "- **der Vater (Papa)** : le père",
+        "- **die Mutter (Mama)** : la mère",
+        "- **die Eltern** : les parents",
+        "- **der Onkel** : l'oncle",
+        "- **die Tante** : la tante",
+        "- **der Cousin** : le cousin",
+        "- **die Cousine** : la cousine",
+        "- **der Bruder** : le frère",
+        "- **die Schwester** : la sœur",
+        "- **ich** : moi",
+        "**Astuce :** der = masculin, die = féminin… et aussi pluriel (die Eltern, die Großeltern)."
+      ],
+      "activites": [
+        {"type": "paires", "consigne": "Associe le mot allemand au mot français", "paires": [["der Vater", "le père"], ["die Mutter", "la mère"], ["der Bruder", "le frère"], ["die Schwester", "la sœur"], ["der Onkel", "l'oncle"]]},
+        {"type": "paires", "consigne": "Associe le mot allemand au mot français", "paires": [["der Großvater", "le grand-père"], ["die Großmutter", "la grand-mère"], ["die Tante", "la tante"], ["die Cousine", "la cousine"], ["die Eltern", "les parents"]]},
+        {"type": "qcm", "question": "Comment dit-on « la sœur » en allemand ?", "choix": ["die Schwester", "der Bruder", "die Tante", "die Cousine"]},
+        {"type": "qcm", "question": "Que veut dire « die Eltern » ?", "choix": ["les parents", "les grands-parents", "les enfants", "les cousins"]},
+        {"type": "qcm", "question": "Que veut dire « die Großeltern » ?", "choix": ["les grands-parents", "les parents", "les oncles", "la grande sœur"]},
+        {"type": "trous", "consigne": "Choisis le bon article : der ou die", "texte": "[der] Vater, [die] Mutter, [der] Bruder, [die] Schwester", "intrus": ["das"]},
+        {"type": "saisie", "question": "Comment dit-on « le frère » en allemand ?", "reponse": ["der Bruder", "Bruder"]},
+        {"type": "saisie", "question": "Comment dit-on « la grand-mère » en allemand ?", "reponse": ["die Großmutter", "Großmutter", "die Grossmutter", "Grossmutter", "die Oma", "Oma"]},
+        {"type": "vraifaux", "affirmation": "« der Onkel » veut dire « la tante ».", "reponse": false, "explication": "der Onkel = l'oncle ; die Tante = la tante."},
+        {"type": "carte", "recto": "Comment dit-on « papi » et « mamie » en allemand ?", "verso": "Opa et Oma (der Großvater et die Großmutter)"}
+      ]
+    },
+
+    {
+      "id": "gaby-geo-population-mondiale",
+      "pour": ["gaby"],
+      "matiere": "Géographie",
+      "titre": "La répartition de la population mondiale",
+      "emoji": "🌍",
+      "fiche": [
+        "# Combien sommes-nous ?",
+        "- En 2026 : plus de **8 milliards** d'habitants sur Terre",
+        "- En 2050 : environ **10 milliards**",
+        "# Une population très inégalement répartie",
+        "- **Foyer de population** : région du monde qui concentre un grand nombre d'habitants.",
+        "- **3 grands foyers** regroupent plus de la moitié de la population mondiale : **l'Asie du Sud**, **l'Asie de l'Est** et **l'Europe**. Les densités y sont très élevées.",
+        "- Ces 3 foyers sont les mêmes depuis **2 000 ans** ; on y pratique l'agriculture depuis au moins **7 000 ans**.",
+        "- Autres foyers : le **Nord-Est américain**, le **golfe de Guinée**, le **Sud-Est du Brésil**, l'île de **Java**.",
+        "- **Densité de population** : nombre moyen d'habitants par km².",
+        "# Les déserts humains",
+        "- **Désert humain** : territoire faiblement peuplé où la densité ne dépasse pas **5 habitants par km²**.",
+        "- Exemples : le **Grand Nord canadien**, le **Groenland**, la **Sibérie**, le **Sahara**, l'**Arabie**, le **désert australien**, l'**Antarctique**.",
+        "# Les migrations",
+        "- **Migration** : déplacement d'une personne (ou d'une population) qui quitte son lieu de résidence pour aller en habiter un autre.",
+        "- Le peuplement de l'Amérique : les **Européens** et la **traite des Noirs** (XVIIe-XIXe siècle), puis les **Latino-Américains** et les **Asiatiques** (XXe siècle)."
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Combien d'habitants y a-t-il sur Terre en 2026 ?", "choix": ["Plus de 8 milliards", "Environ 5 milliards", "Plus de 12 milliards", "Environ 800 millions"]},
+        {"type": "qcm", "question": "Combien d'habitants environ en 2050 ?", "choix": ["10 milliards", "8 milliards", "20 milliards", "6 milliards"]},
+        {"type": "qcm", "question": "Lequel n'est PAS un des 3 grands foyers de population ?", "choix": ["L'Amérique du Nord", "L'Asie du Sud", "L'Asie de l'Est", "L'Europe"]},
+        {"type": "saisie", "question": "Comment appelle-t-on une région du monde qui concentre un grand nombre d'habitants ?", "reponse": ["foyer de population", "un foyer de population", "foyer", "un foyer"]},
+        {"type": "saisie", "question": "Comment appelle-t-on le déplacement d'une population qui part habiter ailleurs ?", "reponse": ["migration", "une migration"]},
+        {"type": "trous", "texte": "La [densité] de population est le nombre moyen d'habitants par [km²].", "intrus": ["migration", "m²"]},
+        {"type": "trous", "texte": "Dans un désert humain, la densité ne dépasse pas [5] habitants par km².", "intrus": ["50", "500"]},
+        {"type": "paires", "consigne": "Foyer de population ou désert humain ?", "paires": [["Asie du Sud", "Foyer"], ["Sahara", "Désert humain"], ["Europe", "Foyer"], ["Sibérie", "Désert humain"], ["Golfe de Guinée", "Foyer"], ["Groenland", "Désert humain"]]},
+        {"type": "vraifaux", "affirmation": "L'Antarctique est un désert humain.", "reponse": true},
+        {"type": "vraifaux", "affirmation": "L'île de Java est un désert humain.", "reponse": false, "explication": "Java (en Indonésie) est un foyer de population très peuplé."},
+        {"type": "vraifaux", "affirmation": "Les 3 grands foyers de population sont les mêmes depuis 2 000 ans.", "reponse": true},
+        {"type": "qcm", "question": "Au XXe siècle, qui migre surtout vers les États-Unis et le Canada ?", "choix": ["Les Latino-Américains et les Asiatiques", "Uniquement les Européens", "Les Australiens", "Personne"]},
+        {"type": "carte", "recto": "Qu'est-ce que la densité de population ?", "verso": "Le nombre moyen d'habitants par km²."}
+      ]
+    },
+
+    {
+      "id": "gaby-physique-masse-volume",
+      "pour": ["gaby"],
+      "matiere": "Physique-Chimie",
+      "titre": "Masse et volume",
+      "emoji": "🧪",
+      "fiche": [
+        "# La masse",
+        "- La **masse** correspond à la quantité de matière d'un objet.",
+        "- Unité : le **kilogramme (kg)**. On utilise aussi la tonne (t), le gramme (g), le milligramme (mg).",
+        "- 1 t = 1 000 kg · 1 kg = 1 000 g · 1 g = 1 000 mg",
+        "- Instrument de mesure : la **balance**.",
+        "- Masse d'un liquide : je pèse le récipient vide, puis plein, et je fais la **différence** (ou j'utilise la tare).",
+        "# Le volume",
+        "- Le **volume** est la place occupée par un objet.",
+        "- Unités : le **litre (L)** et le **mètre cube (m³)**. Aussi : dL, cL, mL, dm³, cm³.",
+        "- 1 L = 10 dL = 100 cL = 1 000 mL",
+        "- **1 L = 1 dm³** · **1 mL = 1 cm³** · **1 m³ = 1 000 L**",
+        "- Instrument : l'**éprouvette graduée**. On lit le volume **en bas du ménisque**, l'œil à la hauteur du liquide, en vérifiant l'unité (mL ou cL ?).",
+        "- Volume d'un solide : je le plonge dans l'eau ; volume du solide = **volume final − volume initial**.",
+        "- Volume d'un gaz : je le recueille dans une éprouvette remplie d'eau et retournée ; le volume d'eau chassée = volume du gaz.",
+        "# Relation entre masse et volume",
+        "- Pour une même matière, masse et volume sont **proportionnels** : 1 L d'eau = 1 kg, 2 L d'eau = 2 kg.",
+        "- Deux matières différentes de même masse n'ont **pas le même volume**.",
+        "- Deux matières différentes de même volume n'ont **pas la même masse**.",
+        "- À volume égal, la matière la plus lourde est la plus **dense**.",
+        "- Une matière **moins dense que l'eau flotte** (bois de chêne, polystyrène)."
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Quelle est l'unité de la masse ?", "choix": ["le kilogramme (kg)", "le litre (L)", "le mètre cube (m³)", "le degré (°)"]},
+        {"type": "qcm", "question": "Avec quel instrument mesure-t-on un volume de liquide ?", "choix": ["une éprouvette graduée", "une balance", "un thermomètre", "une règle"]},
+        {"type": "qcm", "question": "Où lit-on le volume dans une éprouvette graduée ?", "choix": ["en bas du ménisque", "en haut du ménisque", "au bord du verre", "au fond de l'éprouvette"]},
+        {"type": "trous", "texte": "La masse se mesure avec une [balance] et le volume avec une [éprouvette graduée].", "intrus": ["thermomètre", "règle"]},
+        {"type": "saisie", "question": "1 L = combien de mL ?", "reponse": "1000"},
+        {"type": "saisie", "question": "1 m³ = combien de litres ?", "reponse": "1000"},
+        {"type": "saisie", "question": "2,5 kg = combien de grammes ?", "reponse": "2500"},
+        {"type": "qcm", "question": "1 mL est égal à…", "choix": ["1 cm³", "1 dm³", "1 m³", "1 L"]},
+        {"type": "saisie", "question": "Une piscine mesure 25 m × 50 m × 3 m. Quel est son volume en m³ ?", "reponse": "3750", "explication": "V = 25 × 50 × 3 = 3 750 m³, soit 3 750 000 L… donc 3 750 000 kg d'eau !"},
+        {"type": "saisie", "question": "1 mL de mercure a une masse de 13,5 g. Quelle est la masse de 12 mL (en g) ?", "reponse": ["162", "162 g", "162g"], "explication": "12 × 13,5 = 162 g."},
+        {"type": "ordre", "consigne": "Range ces matières de la MOINS dense à la PLUS dense", "elements": ["Polystyrène", "Bois de chêne", "Eau pure", "Vinaigre", "Sable", "Or"], "explication": "Pour 1 mL : polystyrène 0,04 g · chêne 0,7 g · eau 1 g · vinaigre 1,05 g · sable 1,6 g · or 19,32 g."},
+        {"type": "vraifaux", "affirmation": "Le bois de chêne (700 g pour 1 000 mL) flotte sur l'eau.", "reponse": true, "explication": "1 000 mL d'eau pèsent 1 000 g : le chêne est moins dense que l'eau, il flotte."},
+        {"type": "vraifaux", "affirmation": "1 L de sable et 1 L d'eau ont la même masse.", "reponse": false, "explication": "Même volume mais pas la même matière → pas la même masse (1 L de sable ≈ 1,6 kg)."},
+        {"type": "vraifaux", "affirmation": "Pour une même matière, si le volume double, la masse double aussi.", "reponse": true, "explication": "Masse et volume sont proportionnels."},
+        {"type": "carte", "recto": "Comment mesurer le volume d'un caillou ?", "verso": "Je le plonge dans une éprouvette d'eau : volume du caillou = volume final − volume initial."},
+        {"type": "carte", "recto": "Comment mesurer la masse d'un liquide ?", "verso": "Je pèse le récipient vide puis plein : masse du liquide = masse pleine − masse vide (ou je fais la tare)."}
+      ]
+    },
+
+    {
+      "id": "gaby-svt-environnement",
+      "pour": ["gaby"],
+      "matiere": "SVT",
+      "titre": "Notre environnement et les êtres vivants",
+      "emoji": "🌿",
+      "fiche": [
+        "# L'environnement",
+        "- **Définition** : l'environnement est l'ensemble des éléments qui nous entourent.",
+        "- Il se compose d'**êtres vivants** (animaux, végétaux) et de ce qui provient d'un être vivant (feuille, plume),",
+        "- d'**éléments minéraux** (roche, air, eau),",
+        "- et de **traces de l'activité humaine** (bâtiments, bancs).",
+        "# La répartition des êtres vivants",
+        "- Les êtres vivants sont **différents d'un endroit à l'autre**.",
+        "- Ils **ne sont pas répartis au hasard**.",
+        "- Leur répartition dépend des **facteurs physiques du milieu** : **température**, **éclairement** et **humidité**.",
+        "- Au collège : la **haie** (20 °C, 75 %, 5 000 lux) abrite cloportes, araignées, mousse et lierre ; le **parking** (28 °C, 50 %, 30 000 lux) abrite papillons, fourmis, pins et lilas.",
+        "# Les appareils de mesure",
+        "- Température → **thermomètre**, en **degrés Celsius (°C)** : chaud / froid",
+        "- Éclairement → **luxmètre**, en **lux** : éclairé / sombre",
+        "- Humidité → **hygromètre**, en **%** : humide / sec",
+        "# Les relations entre les éléments",
+        "- **Alimentation** : le papillon butine l'arbre aux papillons ; le ragondin mange une moule ; le saule absorbe l'eau.",
+        "- **Support** : la toile d'araignée s'accroche sur la ronce ; le lierre grimpe le long du mur.",
+        "- **Reproduction** : le canard colvert mâle a la tête vert brillant pour attirer la femelle."
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Qu'est-ce que l'environnement ?", "choix": ["L'ensemble des éléments qui nous entourent", "Uniquement les animaux et les plantes", "Uniquement la nature sauvage", "Les bâtiments et les routes"]},
+        {"type": "paires", "consigne": "Range chaque élément dans la bonne catégorie", "paires": [["Platane", "Être vivant"], ["Coccinelle", "Être vivant"], ["Plume", "Trace d'être vivant"], ["Banc", "Activité humaine"], ["Cailloux", "Élément minéral"], ["Eau de l'Yvette", "Élément minéral"]]},
+        {"type": "paires", "consigne": "Associe chaque facteur à son appareil de mesure", "paires": [["Température", "Thermomètre"], ["Éclairement", "Luxmètre"], ["Humidité", "Hygromètre"]]},
+        {"type": "paires", "consigne": "Associe chaque facteur à son unité", "paires": [["Température", "°C"], ["Éclairement", "lux"], ["Humidité", "%"]]},
+        {"type": "trous", "texte": "Le [thermomètre] mesure la température, le [luxmètre] l'éclairement et l'[hygromètre] l'humidité.", "intrus": ["baromètre"]},
+        {"type": "qcm", "question": "Haie : 20 °C, 75 %. Parking : 28 °C, 50 %. Quel milieu est le plus chaud et le plus sec ?", "choix": ["Le parking", "La haie"]},
+        {"type": "qcm", "question": "Où trouve-t-on des cloportes et de la mousse ?", "choix": ["Dans la haie, sombre et humide", "Sur le parking, chaud et éclairé"]},
+        {"type": "vraifaux", "affirmation": "Les êtres vivants sont répartis au hasard.", "reponse": false, "explication": "Leur répartition dépend de la température, de l'éclairement et de l'humidité."},
+        {"type": "qcm", "question": "« Le lierre grimpe le long du mur » : quel type de relation ?", "choix": ["Support", "Alimentation", "Reproduction"]},
+        {"type": "qcm", "question": "« Le ragondin mange une moule d'eau douce » : quel type de relation ?", "choix": ["Alimentation", "Support", "Reproduction"]},
+        {"type": "qcm", "question": "« Le canard colvert mâle a la tête vert brillant pour attirer la femelle » : quel type de relation ?", "choix": ["Reproduction", "Alimentation", "Support"]},
+        {"type": "qcm", "question": "« La toile d'araignée s'accroche sur la ronce » : quel type de relation ?", "choix": ["Support", "Alimentation", "Reproduction"]},
+        {"type": "qcm", "question": "« Le saule absorbe de l'eau par ses racines » : quel type de relation ?", "choix": ["Alimentation", "Support", "Reproduction"]},
+        {"type": "carte", "recto": "De quoi se compose l'environnement ?", "verso": "D'êtres vivants, d'éléments minéraux (roche, air, eau) et de traces de l'activité humaine."}
       ]
     }
   ]

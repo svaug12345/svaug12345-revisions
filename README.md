@@ -65,6 +65,8 @@ Hébergée sur GitHub Pages, comme Lecteur QR.
 
 Options pour toutes les activités : `"explication"` (affichée après la réponse, 💡) et `"consigne"`.
 
+Option de la réponse à taper : `"strict": true` → les accents comptent (pour la dictée, la conjugaison…). Sans elle, « cotes » = « côtés ».
+
 ## Étoiles
 
 ⭐⭐⭐ ≥ 90 % · ⭐⭐ ≥ 70 % · ⭐ ≥ 40 %. Le meilleur score est gardé dans le téléphone (chaque téléphone a ses propres scores).

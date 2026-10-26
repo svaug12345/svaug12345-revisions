@@ -60,14 +60,18 @@ function melanger(tableau) {
 const auHasard = (t) => t[Math.floor(Math.random() * t.length)];
 
 /**
- * Rend une réponse tapée « comparable » : minuscules, sans accents,
- * sans ponctuation, espaces simplifiés. Ainsi "Évaporation !" = "evaporation".
+ * Rend une réponse tapée « comparable » : minuscules, sans ponctuation,
+ * espaces simplifiés. Ainsi "Évaporation !" = "evaporation".
+ * - strict = false (par défaut) : les accents sont ignorés
+ * - strict = true : les accents comptent (dictée, conjugaison…)
+ * Les espaces dans les nombres sont retirés : "1 000" = "1000".
  */
-function normaliser(texte) {
-  return String(texte)
-    .toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // enlève les accents
-    .replace(/[.,;:!?'’"«»()\-\s]+/g, ' ')            // ponctuation -> espace
+function normaliser(texte, strict = false) {
+  let t = String(texte).toLowerCase().normalize('NFC'); // NFC : une lettre accentuée = un seul caractère
+  if (!strict) t = t.normalize('NFD').replace(/[̀-ͯ]/g, ''); // enlève les accents
+  return t
+    .replace(/(\d)\s+(?=\d)/g, '$1')        // "1 000" -> "1000" (fait AVANT la ponctuation pour ne pas coller "7,5")
+    .replace(/[.,;:!?'’"«»()\-\s]+/g, ' ')  // ponctuation -> espace
     .trim();
 }
 
@@ -475,20 +479,22 @@ const ACTIVITES = {
   },
 
   /* RÉPONSE À TAPER — "reponse": "56" ou ["nom", "un nom"] (plusieurs acceptées).
-     Majuscules, accents et ponctuation ne comptent pas. */
+     Majuscules et ponctuation ne comptent pas. Les accents non plus,
+     sauf si l'activité contient "strict": true (orthographe exigée). */
   saisie(act, zone, fin) {
     zone.append(enonce(act.question));
     const acceptees = [].concat(act.reponse).map(String);
     const queDesChiffres = acceptees.every((r) => /^[\d\s.,-]+$/.test(r));
     const champ = el('input', {
-      class: 'champ', type: 'text', autocomplete: 'off', autocapitalize: 'off',
-      placeholder: 'Ta réponse…', inputmode: queDesChiffres ? 'decimal' : 'text', // clavier numérique si besoin
+      class: 'champ', type: 'text', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false',
+      placeholder: act.strict ? 'Attention aux accents !' : 'Ta réponse…',
+      inputmode: queDesChiffres ? 'decimal' : 'text', // clavier numérique si besoin
     });
     const valider = () => {
       if (!champ.value.trim()) { champ.focus(); return; }
       champ.disabled = true;
       bouton.disabled = true;
-      const ok = acceptees.some((r) => normaliser(r) === normaliser(champ.value));
+      const ok = acceptees.some((r) => normaliser(r, act.strict) === normaliser(champ.value, act.strict));
       champ.classList.add(ok ? 'bon' : 'faux');
       fin(ok, acceptees[0]);
     };

@@ -10,4 +10,4 @@
 //  ("var" et pas "const" : la variable doit être globale pour
 //   être visible aussi dans le service worker.)
 // =============================================================
-var VERSION = '1.0.0';
+var VERSION = '1.1.0'; // 1.1.0 : option "strict" (accents exigés) + "1 000" = "1000"
