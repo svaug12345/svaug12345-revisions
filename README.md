@@ -80,6 +80,24 @@ Le bouton 🔊 lit la leçon ou la question avec la voix de Sébastien (clonée 
 - Pour les nouvelles leçons : envoyer les photos à Claude, il crée la leçon **et** ses MP3.
 - Les MP3 sont gardés dans le téléphone après la 1re écoute (marche hors-ligne ensuite).
 
+## 🇬🇧🇩🇪 Leçons de langues : écouter et répéter (depuis la v1.3.0)
+
+1. Ajouter à la leçon `"langue": "en"` (anglais) ou `"de"` (allemand).
+2. Entourer les mots étrangers de **doubles accolades**, partout (fiche, questions, choix, paires, cartes, explications) :
+
+| On écrit | On voit | On entend |
+|---|---|---|
+| `{{der Vater}}` | der Vater 🔈 | « der Vater » |
+| `{{he / she / it is\|he is. she is. it is.}}` | he / she / it is 🔈 | « he is. she is. it is. » |
+
+- Dans la **fiche** et les **énoncés**, le mot devient un bouton : on le touche → une bulle s'ouvre avec
+  🔊 Écouter, 🐢 Lentement et 🎤 **À toi !** (le micro écoute l'enfant et lui dit si c'est bien prononcé).
+- Dans les **QCM** et les **paires**, la bonne réponse est prononcée quand elle est trouvée.
+- Une **explication** contenant `{{…}}` est lue juste après la réponse (pratique pour réentendre la phrase complète).
+- Les voix sont natives : **Alice** (anglais britannique) et **Lola** (allemand). Les MP3 sont nommés d'après
+  l'empreinte de `langue|texte prononcé` ; sans MP3, c'est la voix du téléphone dans la bonne langue.
+- Le micro (🎤) utilise la reconnaissance vocale de Chrome : il faut internet et autoriser le micro la 1re fois.
+
 ## Étoiles
 
 ⭐⭐⭐ ≥ 90 % · ⭐⭐ ≥ 70 % · ⭐ ≥ 40 %. Le meilleur score est gardé dans le téléphone (chaque téléphone a ses propres scores).

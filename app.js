@@ -91,7 +91,10 @@ function miseEnForme(texte) {
   let html = '';
   let dansListe = false;
   for (const brute of echapper(texte).split('\n')) {
-    const ligne = brute.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+    const ligne = brute
+      .replace(MOT_ETRANGER, (_, affiche, dit) => // {{mot}} ou {{mot affiché|texte prononcé}}
+        `<button class="mot" data-dit="${(dit || affiche).replace(/\*\*/g, '')}">${affiche}</button>`)
+      .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
     if (ligne.startsWith('- ')) {
       if (!dansListe) { html += '<ul>'; dansListe = true; }
       html += `<li>${ligne.slice(2)}</li>`;
@@ -205,17 +208,19 @@ function couperVoix() {
 }
 
 // Voix de secours : la synthèse vocale du téléphone
-function voixDuTelephone(texte) {
+function voixDuTelephone(texte, langue = 'fr-FR', vitesse = 0.95) {
   if (!('speechSynthesis' in window)) return;
   const phrase = new SpeechSynthesisUtterance(texte);
-  phrase.lang = 'fr-FR';
-  phrase.rate = 0.95;
+  phrase.lang = langue;
+  phrase.rate = vitesse;
   speechSynthesis.speak(phrase);
 }
 
 /** Lit un texte à voix haute : la voix de Papa si le MP3 existe, sinon celle du téléphone. */
 function parler(texte) {
-  const propre = texte.replace(/\*\*|^#\s|^-\s/gm, ''); // retire la mise en forme (**gras**, # titres, - puces)
+  // retire la mise en forme (**gras**, # titres, - puces, {{mots étrangers}}) :
+  // l'empreinte reste la même qu'avant l'ajout des {{ }}, donc les MP3 existants marchent toujours
+  const propre = sansMots(texte).replace(/\*\*|^#\s|^-\s/gm, '');
   couperVoix();
   const h = empreinte(propre);
   if (audiosDispo.has(h)) {
@@ -224,6 +229,124 @@ function parler(texte) {
   } else {
     voixDuTelephone(propre);
   }
+}
+
+/* ---------- MOTS ÉTRANGERS : écouter et répéter -------------
+   Dans lecons.json, une leçon de langue a "langue": "en" ou "de",
+   et ses mots étrangers sont entourés de doubles accolades :
+     {{der Vater}}                    -> on affiche et on prononce "der Vater"
+     {{he / she / it is|he is. she is. it is.}}
+                                      -> on affiche avant le |, on prononce après
+   Toucher un mot ouvre une bulle : 🔊 écouter, 🐢 lentement, 🎤 à toi !
+   ------------------------------------------------------------- */
+const MOT_ETRANGER = /\{\{([^|}]+)(?:\|([^}]+))?\}\}/g;
+const sansMots = (texte) => String(texte).replace(MOT_ETRANGER, '$1'); // texte sans les {{ }}
+const motsDe = (texte) => [...String(texte).matchAll(MOT_ETRANGER)].map((m) => (m[2] || m[1]).replace(/\*\*/g, ''));
+
+// Code de langue complet pour la voix du téléphone et la reconnaissance vocale
+const LANGUES = { en: 'en-GB', de: 'de-DE', es: 'es-ES', it: 'it-IT' };
+let langueLecon = null; // "en", "de"… de la leçon ouverte (null = leçon en français)
+
+// Micro : l'API de reconnaissance vocale de Chrome (préfixée "webkit" sur Android)
+const Reconnaissance = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+/** Prononce un mot étranger : MP3 de la voix native s'il existe, sinon voix du téléphone dans la bonne langue.
+    lent = true -> lecture ralentie (le MP3 garde la même hauteur de voix grâce à preservesPitch). */
+function prononcer(dit, lent = false) {
+  if (!langueLecon) return;
+  couperVoix();
+  const h = empreinte(langueLecon + '|' + dit); // même calcul dans le script Python qui fabrique les MP3
+  const secours = () => voixDuTelephone(dit, LANGUES[langueLecon] || langueLecon, lent ? 0.55 : 0.9);
+  if (audiosDispo.has(h)) {
+    lecteur = new Audio('audio/' + h + '.mp3');
+    lecteur.preservesPitch = true;
+    lecteur.playbackRate = lent ? 0.65 : 1;
+    lecteur.play().catch(secours);
+  } else {
+    secours();
+  }
+}
+
+// Compare ce que le micro a entendu avec le mot attendu (en pardonnant les petites différences)
+function ressemble(entendu, attendu) {
+  const net = (t) => normaliser(t).replace(/ß/g, 'ss').replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim();
+  const a = net(entendu), b = net(attendu);
+  if (!a || !b) return false;
+  if (a === b || a.includes(b)) return true;
+  // distance de Levenshtein = nombre de lettres à changer pour passer d'un mot à l'autre
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++)
+    for (let j = 1; j <= b.length; j++)
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return d[a.length][b.length] / Math.max(a.length, b.length) <= 0.25; // 75 % de lettres justes suffisent
+}
+
+/** Ouvre la bulle d'un mot : il est prononcé tout de suite, puis l'enfant peut réécouter ou essayer. */
+function ouvrirBulleMot(affiche, dit) {
+  $('#bulle-mot')?.remove();
+  const message = el('p', { class: 'bulle-message' }, Reconnaissance ? 'Écoute, puis répète !' : 'Écoute, puis répète à voix haute !');
+  let ecoute = null; // reconnaissance vocale en cours
+
+  const fermer = () => { ecoute?.abort(); couperVoix(); fond.remove(); };
+  const micro = Reconnaissance ? el('button', { class: 'btn-bulle micro', onclick: essayer }, '🎤 À toi !') : null;
+
+  function essayer() {
+    if (ecoute) { ecoute.stop(); return; } // 2e appui = j'ai fini de parler
+    couperVoix();
+    ecoute = new Reconnaissance();
+    ecoute.lang = LANGUES[langueLecon] || langueLecon;
+    ecoute.maxAlternatives = 5;   // le micro propose plusieurs "j'ai peut-être entendu…"
+    ecoute.interimResults = false;
+    micro.classList.add('en-cours');
+    micro.textContent = '👂 Je t’écoute…';
+    message.textContent = 'Parle maintenant !';
+    message.className = 'bulle-message';
+    ecoute.onresult = (e) => {
+      const entendus = [...e.results[0]].map((alt) => alt.transcript);
+      const reussi = entendus.some((t) => ressemble(t, dit));
+      message.className = 'bulle-message ' + (reussi ? 'ok' : 'ko');
+      message.textContent = reussi ? auHasard(['Bravo ! 🎉', 'Parfait ! 🌟', 'Super prononciation ! 👏'])
+        : `J’ai entendu « ${entendus[0]} »… Réécoute et réessaie 💪`;
+      son(reussi ? 'bon' : 'petit');
+      if (reussi) vibrer(60);
+    };
+    ecoute.onerror = (e) => {
+      message.className = 'bulle-message ko';
+      message.textContent = e.error === 'not-allowed' ? 'Autorise le micro pour t’entendre 🎤'
+        : e.error === 'no-speech' ? 'Je n’ai rien entendu… Parle plus fort !'
+        : e.error === 'network' ? 'Le micro a besoin d’internet 📶' : 'Oups, réessaie !';
+    };
+    ecoute.onend = () => { ecoute = null; micro.classList.remove('en-cours'); micro.textContent = '🎤 À toi !'; };
+    ecoute.start();
+  }
+
+  const fond = el('div', { id: 'bulle-mot', class: 'fond-bulle', onclick: (e) => { if (e.target === fond) fermer(); } },
+    el('div', { class: 'bulle' },
+      el('button', { class: 'fermer-bulle', 'aria-label': 'Fermer', onclick: fermer }, '✕'),
+      el('p', { class: 'bulle-mot', html: echapper(affiche).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>') }),
+      el('div', { class: 'boutons-bulle' },
+        el('button', { class: 'btn-bulle', onclick: () => prononcer(dit) }, '🔊 Écouter'),
+        el('button', { class: 'btn-bulle', onclick: () => prononcer(dit, true) }, '🐢 Lentement'),
+        micro),
+      message));
+  document.body.append(fond);
+  prononcer(dit);
+}
+
+/** Texte simple -> morceaux de texte + boutons cliquables pour les {{mots étrangers}}. */
+function riche(texte) {
+  const morceaux = [];
+  let fin = 0;
+  for (const m of String(texte).matchAll(MOT_ETRANGER)) {
+    morceaux.push(texte.slice(fin, m.index));
+    const affiche = m[1].replace(/\*\*/g, '');
+    const dit = (m[2] || m[1]).replace(/\*\*/g, '');
+    morceaux.push(el('button', { class: 'mot', onclick: (e) => { e.stopPropagation(); ouvrirBulleMot(affiche, dit); } }, affiche));
+    fin = m.index + m[0].length;
+  }
+  morceaux.push(String(texte).slice(fin));
+  return morceaux;
 }
 
 // Petite vibration (si le téléphone le permet)
@@ -299,6 +422,7 @@ function entete(titre) {
   $('#btn-retour').hidden = pile.length <= 1;
   $('#badge-enfant').textContent = etat.enfant ? etat.enfant.avatar || '🙂' : '';
   couperVoix(); // on coupe la voix en changeant d'écran
+  $('#bulle-mot')?.remove(); // et on ferme la bulle d'un mot étranger
 }
 
 /* ---------- 5. LES ÉCRANS ------------------------------------ */
@@ -366,6 +490,7 @@ function afficherLecons() {
 // --- Une leçon : la fiche à relire + le bouton pour lancer le quiz ---
 function afficherLecon(lecon) {
   entete(lecon.titre);
+  langueLecon = lecon.langue || null;
   const fiche = texteFiche(lecon);
   const nb = (lecon.activites || []).length;
   ecran.replaceChildren(
@@ -376,7 +501,13 @@ function afficherLecon(lecon) {
       el('div', { class: 'fiche-haut' },
         el('h3', {}, '📖 La leçon'),
         el('button', { class: 'btn-icone', 'aria-label': 'Écouter la leçon', onclick: () => parler(fiche) }, '🔊')),
-      el('div', { html: miseEnForme(fiche) })) : null,
+      el('div', {
+        html: miseEnForme(fiche),
+        onclick: (e) => { // un mot étranger touché ?
+          const mot = e.target.closest('.mot');
+          if (mot) ouvrirBulleMot(mot.innerHTML.replace(/<\/?b>/g, '**').replace(/&amp;/g, '&'), mot.dataset.dit);
+        },
+      })) : null,
     nb
       ? el('button', { class: 'btn-principal collant', onclick: () => aller(lancerQuiz, lecon) },
         `🚀 C'est parti ! (${pluriel(nb, 'question')})`)
@@ -386,6 +517,7 @@ function afficherLecon(lecon) {
 
 // --- Le quiz : on enchaîne les activités dans un ordre mélangé ---
 function lancerQuiz(lecon) {
+  langueLecon = lecon.langue || null;
   entete(lecon.titre);
   const questions = lecon.melanger === false ? [...lecon.activites] : melanger(lecon.activites);
   questionSuivante({ lecon, questions, i: 0, bons: 0, erreurs: [], entrainement: false });
@@ -429,12 +561,15 @@ function questionSuivante(q) {
     retour.replaceChildren(
       el('div', { class: 'bandeau ' + (reussi ? 'ok' : 'ko') },
         el('b', {}, auHasard(reussi ? BRAVO : OUPS)),
-        !reussi && bonneReponse ? el('p', {}, 'La bonne réponse : ', el('b', {}, bonneReponse)) : null,
-        activite.explication ? el('p', { class: 'explication' }, '💡 ' + activite.explication) : null),
+        !reussi && bonneReponse ? el('p', {}, 'La bonne réponse : ', el('b', {}, sansMots(bonneReponse))) : null,
+        activite.explication ? el('p', { class: 'explication' }, '💡 ', riche(activite.explication)) : null),
       el('button', { class: 'btn-principal', onclick: () => { q.i++; questionSuivante(q); scrollTo(0, 0); } },
         derniere ? 'Voir mon score 🏁' : 'Question suivante →'),
     );
     retour.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    // Leçon de langue : on fait entendre la phrase correcte juste après le petit son bon/faux
+    const aDire = motsDe(activite.explication || '')[0];
+    if (aDire) setTimeout(() => prononcer(aDire), 700);
   });
 }
 
@@ -477,7 +612,7 @@ function revoirErreurs(q) {
 // Énoncé + bouton 🔊 pour l'écouter (pratique pour les plus jeunes)
 function enonce(texte) {
   return el('div', { class: 'enonce' },
-    el('p', {}, texte),
+    el('p', {}, riche(texte)),
     el('button', { class: 'btn-icone', 'aria-label': 'Lire à voix haute', onclick: () => parler(texte) }, '🔊'));
 }
 
@@ -494,10 +629,12 @@ const ACTIVITES = {
           boutons.forEach((b) => (b.disabled = true));
           const ok = texte === bonne;
           e.currentTarget.classList.add(ok ? 'bon' : 'faux');
-          boutons.find((b) => b.textContent === bonne).classList.add('bon'); // montre la bonne
+          boutons.find((b) => b.textContent === sansMots(bonne)).classList.add('bon'); // montre la bonne
           fin(ok, bonne);
+          const motBon = motsDe(bonne)[0];
+          if (motBon && !motsDe(act.explication || '').length) setTimeout(() => prononcer(motBon), 700);
         },
-      }, texte));
+      }, sansMots(texte)));
     zone.append(el('div', { class: 'liste-choix' }, boutons));
   },
 
@@ -608,10 +745,12 @@ const ACTIVITES = {
     let erreurs = 0;
     let trouvees = 0;
     // une association est bonne si elle existe dans la liste (gère les doublons à droite)
-    const estPaire = (g, d) => act.paires.some((p) => String(p[0]) === g && String(p[1]) === d);
+    const estPaire = (g, d) => act.paires.some((p) => sansMots(p[0]) === g && sansMots(p[1]) === d);
+    // mot étranger d'une tuile (dans l'une ou l'autre colonne), pour le prononcer quand la paire est trouvée
+    const motDeTuile = (t) => act.paires.flat().map(String).filter((x) => sansMots(x) === t).flatMap(motsDe)[0];
 
     const colGauche = el('div', { class: 'colonne' },
-      melanger(act.paires.map((p) => String(p[0]))).map((texte) => {
+      melanger(act.paires.map((p) => sansMots(p[0]))).map((texte) => {
         const b = el('button', {
           class: 'tuile',
           onclick: () => {
@@ -624,12 +763,14 @@ const ACTIVITES = {
       }));
 
     const colDroite = el('div', { class: 'colonne' },
-      melanger(act.paires.map((p) => String(p[1]))).map((texte) => {
+      melanger(act.paires.map((p) => sansMots(p[1]))).map((texte) => {
         const b = el('button', {
           class: 'tuile droite',
           onclick: () => {
             if (!choisi) { secouer(colGauche); return; } // il faut d'abord choisir à gauche
             if (estPaire(choisi.textContent, texte)) {
+              const aDire = motDeTuile(choisi.textContent) || motDeTuile(texte);
+              if (aDire) prononcer(aDire);
               [choisi, b].forEach((x) => { x.classList.remove('choisie'); x.classList.add('bon'); x.disabled = true; });
               choisi = null;
               trouvees++;
@@ -698,10 +839,12 @@ const ACTIVITES = {
         if (carte.classList.contains('retournee')) return;
         carte.classList.add('retournee');
         boutons.hidden = false;
+        const aDire = motsDe(act.verso)[0];
+        if (aDire) setTimeout(() => prononcer(aDire), 400); // laisse le temps à la carte de tourner
       },
     },
-      el('div', { class: 'face recto' }, el('span', {}, act.recto), el('small', {}, 'Touche pour retourner')),
-      el('div', { class: 'face verso' }, el('span', {}, act.verso)));
+      el('div', { class: 'face recto' }, el('span', {}, riche(act.recto)), el('small', {}, 'Touche pour retourner')),
+      el('div', { class: 'face verso' }, el('span', {}, riche(act.verso))));
     zone.append(enonce(act.consigne || 'Réfléchis, puis retourne la carte'), carte, boutons);
   },
 };
