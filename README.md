@@ -16,10 +16,10 @@ Hébergée sur GitHub Pages, comme Lecteur QR.
 
 ## Mettre en ligne (une seule fois)
 
-1. Créer un dépôt GitHub `svaug12345/revisions` (public).
+1. Créer un dépôt GitHub `svaug12345/svaug12345-revisions` (public).
 2. Y déposer tous les fichiers (en gardant le dossier `icons/`).
 3. *Settings → Pages → Branch : main / (root) → Save*.
-4. Ouvrir `https://svaug12345.github.io/revisions/` dans Chrome sur le téléphone
+4. Ouvrir `https://svaug12345.github.io/svaug12345-revisions/` dans Chrome sur le téléphone
    → menu ⋮ → **Ajouter à l'écran d'accueil**.
 
 ## Ajouter une leçon (depuis le téléphone)
@@ -94,9 +94,40 @@ Le bouton 🔊 lit la leçon ou la question avec la voix de Sébastien (clonée 
   🔊 Écouter, 🐢 Lentement et 🎤 **À toi !** (le micro écoute l'enfant et lui dit si c'est bien prononcé).
 - Dans les **QCM** et les **paires**, la bonne réponse est prononcée quand elle est trouvée.
 - Une **explication** contenant `{{…}}` est lue juste après la réponse (pratique pour réentendre la phrase complète).
-- Les voix sont natives : **Alice** (anglais britannique) et **Lola** (allemand). Les MP3 sont nommés d'après
-  l'empreinte de `langue|texte prononcé` ; sans MP3, c'est la voix du téléphone dans la bonne langue.
+- Les mots étrangers sont lus avec **la voix de Papa** (clonée sur ElevenLabs, qui parle aussi anglais et allemand).
+  Les MP3 sont nommés d'après l'empreinte de `langue|texte prononcé` ; sans MP3, c'est la voix du téléphone dans la bonne langue.
 - Le micro (🎤) utilise la reconnaissance vocale de Chrome : il faut internet et autoriser le micro la 1re fois.
+
+## 🔁 Deuxième chance (depuis la v1.4.0)
+
+À la fin d'un quiz, s'il y a des erreurs, l'appli enchaîne **une fois** sur les questions ratées.
+Les étoiles comptent seulement le premier passage ; l'écran final dit combien d'erreurs ont été corrigées
+et propose de revoir celles qui restent.
+
+## 📦 Archiver une leçon
+
+- Sur la fiche d'une leçon : bouton **« 📦 Archiver cette leçon »**. Elle disparaît de la liste et va dans
+  **« 📦 Leçons archivées »** (en bas, replié), d'où on peut la **ressortir** 📤.
+- Ce choix est gardé **dans l'appareil** (le téléphone et le PC ont chacun le leur).
+- Pour archiver une leçon pour tout le monde, Papa peut ajouter `"archive": true` à la leçon dans `lecons.json`
+  (on peut quand même la ressortir depuis l'appli).
+
+## 🧒 Avatars
+
+Dans `lecons.json`, `"avatar"` accepte un emoji (`"🦄"`) **ou** une image du dossier `avatars/`
+(`"avatars/gaby.svg"` : guerrière ninja, `tom.svg` : sabre laser, `nanon.svg` : fusée).
+
+## 💻 Sur ordinateur
+
+Même adresse que sur le téléphone : https://svaug12345.github.io/svaug12345-revisions/
+La page s'élargit sur grand écran (leçons sur 2 colonnes) et se pilote au clavier :
+**1 à 4** pour répondre, **Entrée** pour continuer, **Échap** pour revenir.
+
+## 🔄 Mises à jour
+
+`lecons.json` contient `"versionApp"` : la version minimale du moteur nécessaire. Si un appareil a gardé
+un vieux `app.js`, il se met à jour et recharge tout seul. **Quand on ajoute une nouveauté au moteur
+utilisée par les leçons, on augmente ce numéro en même temps que `version.js`.**
 
 ## Étoiles
 

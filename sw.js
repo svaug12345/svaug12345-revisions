@@ -12,7 +12,8 @@ const CACHE = 'revisions-' + VERSION;   // un cache par version
 // Fichiers mis de côté dès l'installation, pour le mode hors-ligne
 const FICHIERS = [
   './', 'index.html', 'style.css', 'app.js', 'version.js', 'lecons.json',
-  'manifest.json', 'audio/index.json', 'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png'
+  'manifest.json', 'audio/index.json', 'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png',
+  'avatars/gaby.svg', 'avatars/tom.svg', 'avatars/nanon.svg'
 ];
 
 // Installation : on remplit le cache puis on s'active sans attendre
@@ -48,8 +49,11 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
+  // cache: 'no-cache' = on redemande toujours au serveur s'il y a du neuf (sinon le navigateur
+  // peut resservir un vieux app.js pendant 10 min alors que lecons.json est déjà neuf : c'est
+  // ce qui affichait les {{ }} bruts). Si rien n'a changé, le serveur répond « 304 » : très léger.
   e.respondWith(
-    fetch(e.request)
+    fetch(e.request, { cache: 'no-cache' })
       .then((reponse) => {
         // Réseau OK : on met à jour la copie de secours
         if (reponse.ok) {

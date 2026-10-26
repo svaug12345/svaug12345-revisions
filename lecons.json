@@ -1,10 +1,11 @@
 {
-  "maj": "26/10/2026",
+  "maj": "27/10/2026",
+  "versionApp": "1.4.0",
 
   "enfants": [
-    {"id": "tom", "nom": "Tom", "avatar": "🦖", "couleur": "#22c55e"},
-    {"id": "gaby", "nom": "Gaby", "avatar": "🦄", "couleur": "#ec4899"},
-    {"id": "nanon", "nom": "Nanon", "avatar": "🦊", "couleur": "#f59e0b"}
+    {"id": "tom", "nom": "Tom", "avatar": "avatars/tom.svg", "couleur": "#22c55e"},
+    {"id": "gaby", "nom": "Gaby", "avatar": "avatars/gaby.svg", "couleur": "#ec4899"},
+    {"id": "nanon", "nom": "Nanon", "avatar": "avatars/nanon.svg", "couleur": "#f59e0b"}
   ],
 
   "lecons": [

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Avatar de Nanon : fusée. Dessin original. -->
+  <!-- Étoiles -->
+  <path d="M18 20l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z" fill="#fde68a"/>
+  <circle cx="82" cy="72" r="2.2" fill="#fde68a"/>
+  <circle cx="26" cy="64" r="1.6" fill="#fde68a"/>
+  <g transform="rotate(40 50 50)">
+    <!-- Flamme -->
+    <path d="M42 74q8 26 8 26t8-26z" fill="#f97316"/>
+    <path d="M45.5 74q4.5 15 4.5 15t4.5-15z" fill="#fde047"/>
+    <!-- Ailerons -->
+    <path d="M38 52l-11 18 13-3z" fill="#ef4444"/>
+    <path d="M62 52l11 18-13-3z" fill="#ef4444"/>
+    <path d="M47 62h6v12h-6z" fill="#b91c1c"/>
+    <!-- Corps -->
+    <path d="M50 4c13 12 15 32 12 70H38C35 36 37 16 50 4z" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+    <path d="M50 4c6 6 9 13 10.5 21h-21C41 17 44 10 50 4z" fill="#f59e0b"/>
+    <!-- Hublot -->
+    <circle cx="50" cy="40" r="7.5" fill="#f59e0b"/>
+    <circle cx="50" cy="40" r="5" fill="#38bdf8"/>
+    <circle cx="48" cy="38" r="1.6" fill="#e0f2fe"/>
+    <rect x="38" y="68" width="24" height="6" rx="2" fill="#94a3b8"/>
+  </g>
+</svg>

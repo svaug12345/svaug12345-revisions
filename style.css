@@ -295,3 +295,66 @@ h2 { font-weight: 900; }
 @keyframes monte { from { transform: translateY(100%); } }
 @keyframes fondu { from { opacity: 0; } }
 @keyframes pulse { 50% { transform: scale(1.06); } }
+
+/* ---------- Avatars en image (avatars/*.svg) ---------- */
+.carte-enfant img.avatar { padding: 8px; object-fit: contain; }      /* même rond coloré que l'emoji */
+#badge-enfant { display: grid; place-items: center; }
+.mini-avatar.avatar-img { width: 38px; height: 38px; border-radius: 50%; background: rgba(255, 255, 255, .9); padding: 3px; }
+
+/* ---------- Archives ---------- */
+.archives { margin-top: 26px; }
+.archives summary {
+  cursor: pointer; list-style: none; padding: 12px 14px; border-radius: var(--rayon);
+  background: rgba(255, 255, 255, .6); color: var(--doux); font-weight: 800;
+}
+.archives summary::-webkit-details-marker { display: none; }
+.archives[open] summary { margin-bottom: 10px; }
+.ligne-archive { display: flex; gap: 8px; align-items: stretch; }
+.carte-lecon.archivee { opacity: .7; filter: grayscale(.5); }
+.btn-petit {
+  font: inherit; font-size: .85rem; border: 0; border-radius: 14px; padding: 0 12px; margin-bottom: 10px;
+  background: var(--clair); color: var(--fonce); white-space: nowrap; cursor: pointer;
+}
+.btn-archive { margin-top: 10px; font-size: .95rem; }
+
+/* Petit message temporaire en bas de l'écran */
+.toast {
+  position: fixed; left: 50%; bottom: calc(90px + env(safe-area-inset-bottom)); transform: translateX(-50%);
+  background: var(--texte); color: #fff; padding: 10px 18px; border-radius: 30px; z-index: 60;
+  animation: fondu .2s ease-out; box-shadow: 0 6px 16px rgba(0, 0, 0, .2);
+}
+
+/* ---------- Deuxième chance (rattrapage des erreurs) ---------- */
+.deuxieme-chance {
+  margin: 18px 0; padding: 18px; border-radius: var(--rayon);
+  background: #fef3c7; border: 2px dashed var(--accent);
+}
+.deuxieme-chance h2 { margin: 4px 0; color: #b45309; }
+.deuxieme-chance .gros-emoji { font-size: 2.6rem; }
+.bilan-rattrapage { padding: 10px 14px; border-radius: 14px; font-weight: 800; }
+.bilan-rattrapage.ok { background: #dcfce7; color: #15803d; }
+.bilan-rattrapage.ko { background: #fef3c7; color: #b45309; }
+
+/* ---------- Ordinateur et tablette : plus large, souris, survol ---------- */
+button { cursor: pointer; }
+@media (hover: hover) {
+  .carte-lecon:hover, .carte-enfant:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(15, 118, 110, .15); }
+  .choix:not(:disabled):hover, .tuile:not(:disabled):hover, .etiquette:hover { filter: brightness(.97); outline: 2px solid var(--principal); }
+  .mot:hover { background: #99f6e4; }
+}
+@media (min-width: 900px) {
+  main { max-width: 860px; padding: 24px; }
+  header h1 { font-size: 1.5rem; }
+  .grille-enfants { grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .carte-enfant { padding: 30px 10px; }
+  .carte-enfant .avatar { width: 120px; height: 120px; font-size: 4rem; }
+  /* Leçons sur 2 colonnes */
+  .groupe { display: grid; grid-template-columns: 1fr 1fr; column-gap: 14px; }
+  .groupe h2 { grid-column: 1 / -1; }
+  .fiche { font-size: 1.1rem; }
+  .liste-choix:not(.deux) { grid-template-columns: 1fr 1fr; }
+  .collant { position: static; }
+  .bulle { border-radius: 24px; margin-bottom: 30px; }
+  /* aide clavier affichée seulement sur grand écran */
+  .compteur::after { content: '  ·  ⌨️ 1-4 pour répondre, Entrée pour continuer'; color: var(--doux); font-weight: 600; font-size: .8rem; }
+}

@@ -118,6 +118,14 @@ function leconsDe(idEnfant) {
   );
 }
 
+/** Avatar d'un enfant : soit un emoji ("🦄"), soit une image ("avatars/gaby.svg"). */
+function dessinAvatar(enfant, classe = 'avatar') {
+  const a = enfant?.avatar || '🙂';
+  return /\.(svg|png|jpe?g|webp)$/i.test(a)
+    ? el('img', { class: classe + ' avatar-img', src: a, alt: enfant.nom })
+    : el('span', { class: classe }, a);
+}
+
 const pluriel = (n, mot) => `${n} ${mot}${n > 1 ? 's' : ''}`;
 
 /* ---------- 2. PROGRÈS (sauvegardés dans le téléphone) ------- */
@@ -142,6 +150,23 @@ function enregistrerScore(idEnfant, idLecon, etoiles, pourcentage) {
     dernier: Date.now(),
   };
   try { localStorage.setItem(CLE_PROGRES, JSON.stringify(p)); } catch { /* stockage plein ou bloqué */ }
+}
+
+/* --- Archives : leçons rangées (plus affichées dans la liste principale) ---
+   Par défaut, une leçon est archivée si lecons.json contient "archive": true.
+   L'enfant (ou Papa) peut archiver / désarchiver depuis l'appli : ce choix est
+   gardé dans le téléphone et passe AVANT la valeur du fichier.
+   Structure : { gaby: { "id-lecon": true (archivée) / false (sortie des archives) } } */
+const CLE_ARCHIVES = 'revisions-archives';
+function lireArchives() {
+  try { return JSON.parse(localStorage.getItem(CLE_ARCHIVES)) || {}; } catch { return {}; }
+}
+const estArchivee = (idEnfant, lecon) => lireArchives()[idEnfant]?.[lecon.id] ?? !!lecon.archive;
+function changerArchive(idEnfant, lecon, archiver) {
+  const a = lireArchives();
+  a[idEnfant] ??= {};
+  a[idEnfant][lecon.id] = archiver;
+  try { localStorage.setItem(CLE_ARCHIVES, JSON.stringify(a)); } catch { /* stockage bloqué */ }
 }
 
 const etoilesDe = (idEnfant, idLecon) => lireProgres()[idEnfant]?.[idLecon]?.etoiles || 0;
@@ -420,7 +445,7 @@ addEventListener('popstate', () => {
 function entete(titre) {
   $('#titre').textContent = titre;
   $('#btn-retour').hidden = pile.length <= 1;
-  $('#badge-enfant').textContent = etat.enfant ? etat.enfant.avatar || '🙂' : '';
+  $('#badge-enfant').replaceChildren(etat.enfant ? dessinAvatar(etat.enfant, 'mini-avatar') : '');
   couperVoix(); // on coupe la voix en changeant d'écran
   $('#bulle-mot')?.remove(); // et on ferme la bulle d'un mot étranger
 }
@@ -436,14 +461,14 @@ function afficherAccueil() {
     el('p', { class: 'intro' }, 'Choisis ton profil pour commencer 👇'),
     el('div', { class: 'grille-enfants' },
       d.enfants.map((enfant) => {
-        const lecons = leconsDe(enfant.id);
+        const lecons = leconsDe(enfant.id).filter((l) => !estArchivee(enfant.id, l));
         const total = lecons.reduce((s, l) => s + etoilesDe(enfant.id, l.id), 0);
         return el('button', {
           class: 'carte-enfant',
           style: `--c:${enfant.couleur || '#14b8a6'}`,
           onclick: () => { etat.enfant = enfant; aller(afficherLecons); },
         },
-          el('span', { class: 'avatar' }, enfant.avatar || '🙂'),
+          dessinAvatar(enfant),
           el('span', { class: 'nom' }, enfant.nom),
           el('span', { class: 'mini' }, `${pluriel(lecons.length, 'leçon')} · ⭐ ${total}`),
         );
@@ -457,12 +482,28 @@ function afficherAccueil() {
 function afficherLecons() {
   const enfant = etat.enfant;
   entete(`Leçons de ${enfant.nom}`);
-  const lecons = leconsDe(enfant.id);
+  const toutes = leconsDe(enfant.id);
+  const lecons = toutes.filter((l) => !estArchivee(enfant.id, l));
+  const archivees = toutes.filter((l) => estArchivee(enfant.id, l));
+
+  // Bloc "📦 Leçons archivées" (replié par défaut), avec un bouton pour sortir chaque leçon
+  const blocArchives = archivees.length ? el('details', { class: 'archives' },
+    el('summary', {}, `📦 Leçons archivées (${archivees.length})`),
+    archivees.map((l) => el('div', { class: 'ligne-archive' },
+      el('button', { class: 'carte-lecon archivee', onclick: () => aller(afficherLecon, l) },
+        el('span', { class: 'emoji' }, l.emoji || '📘'),
+        el('span', { class: 'infos' }, el('b', {}, l.titre), el('small', {}, l.matiere || '')),
+        el('span', { class: 'etoiles' }, dessinEtoiles(etoilesDe(enfant.id, l.id)))),
+      el('button', {
+        class: 'btn-petit', title: 'Remettre dans mes leçons',
+        onclick: () => { changerArchive(enfant.id, l, false); afficherLecons(); },
+      }, '📤 Ressortir')))) : null;
 
   if (!lecons.length) {
     ecran.replaceChildren(el('div', { class: 'vide' },
       el('div', { class: 'gros-emoji' }, '📭'),
-      el('p', {}, 'Pas encore de leçon ici. Demande à Papa d’en ajouter 😉')));
+      el('p', {}, archivees.length ? 'Toutes tes leçons sont archivées 📦' : 'Pas encore de leçon ici. Demande à Papa d’en ajouter 😉')),
+      blocArchives);
     return;
   }
 
@@ -484,7 +525,7 @@ function afficherLecons() {
           el('small', {}, pluriel((l.activites || []).length, 'question'))),
         el('span', { class: 'etoiles' }, dessinEtoiles(etoilesDe(enfant.id, l.id))),
       )),
-    )));
+    )), blocArchives);
 }
 
 // --- Une leçon : la fiche à relire + le bouton pour lancer le quiz ---
@@ -512,7 +553,24 @@ function afficherLecon(lecon) {
       ? el('button', { class: 'btn-principal collant', onclick: () => aller(lancerQuiz, lecon) },
         `🚀 C'est parti ! (${pluriel(nb, 'question')})`)
       : el('p', { class: 'vide' }, 'Pas encore de questions pour cette leçon.'),
+    etat.enfant ? el('button', {
+      class: 'btn-secondaire btn-archive',
+      onclick: () => {
+        const archiver = !estArchivee(etat.enfant.id, lecon);
+        changerArchive(etat.enfant.id, lecon, archiver);
+        afficherLecon(lecon); // redessine le bouton
+        toast(archiver ? '📦 Leçon archivée' : '📤 Leçon remise dans ta liste');
+      },
+    }, estArchivee(etat.enfant.id, lecon) ? '📤 Ressortir cette leçon des archives' : '📦 Archiver cette leçon (je la connais !)') : null,
   );
+}
+
+// Petit message qui s'affiche 2 secondes en bas de l'écran
+function toast(texte) {
+  $('#toast')?.remove();
+  const t = el('div', { id: 'toast', class: 'toast' }, texte);
+  document.body.append(t);
+  setTimeout(() => t.remove(), 2200);
 }
 
 // --- Le quiz : on enchaîne les activités dans un ordre mélangé ---
@@ -547,7 +605,7 @@ function questionSuivante(q) {
   ecran.replaceChildren(
     el('div', { class: 'progression' },
       el('div', { class: 'barre', style: `width:${(q.i / q.questions.length) * 100}%` })),
-    el('p', { class: 'compteur' }, `${q.entrainement ? '🔁 ' : ''}Question ${q.i + 1} / ${q.questions.length}`),
+    el('p', { class: 'compteur' }, `${q.entrainement ? '🔁 Deuxième chance · ' : ''}Question ${q.i + 1} / ${q.questions.length}`),
     zone,
     retour,
   );
@@ -564,7 +622,7 @@ function questionSuivante(q) {
         !reussi && bonneReponse ? el('p', {}, 'La bonne réponse : ', el('b', {}, sansMots(bonneReponse))) : null,
         activite.explication ? el('p', { class: 'explication' }, '💡 ', riche(activite.explication)) : null),
       el('button', { class: 'btn-principal', onclick: () => { q.i++; questionSuivante(q); scrollTo(0, 0); } },
-        derniere ? 'Voir mon score 🏁' : 'Question suivante →'),
+        derniere ? (q.entrainement ? 'Voir mon bilan 🏁' : 'Voir mon score 🏁') : 'Question suivante →'),
     );
     retour.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     // Leçon de langue : on fait entendre la phrase correcte juste après le petit son bon/faux
@@ -573,35 +631,70 @@ function questionSuivante(q) {
   });
 }
 
-// --- Écran de fin : étoiles, message, rejouer ---
+// --- Fin du quiz ---
+// 1er passage terminé : on enregistre les étoiles, puis s'il y a des erreurs,
+// on enchaîne UNE fois sur les questions ratées (« deuxième chance »).
+// Le rattrapage ne change pas les étoiles : il sert à fixer ce qui n'est pas acquis.
 function afficherResultat(q) {
-  const total = q.questions.length;
-  const pct = Math.round((q.bons / total) * 100);
-  const etoiles = pct >= 90 ? 3 : pct >= 70 ? 2 : pct >= 40 ? 1 : 0;
-  // Le mode "retravailler mes erreurs" ne compte pas dans les étoiles
-  if (!q.entrainement) enregistrerScore(etat.enfant.id, q.lecon.id, etoiles, pct);
+  if (!q.entrainement) {
+    const total = q.questions.length;
+    const pct = Math.round((q.bons / total) * 100);
+    const etoiles = pct >= 90 ? 3 : pct >= 70 ? 2 : pct >= 40 ? 1 : 0;
+    enregistrerScore(etat.enfant.id, q.lecon.id, etoiles, pct);
+    q.premier = { bons: q.bons, total, etoiles };
+    if (q.erreurs.length) return ecranDeuxiemeChance(q);
+    return ecranFinal(q.lecon, q.premier, null);
+  }
+  // Fin d'un rattrapage
+  ecranFinal(q.lecon, q.premier, { corrigees: q.bons, total: q.questions.length, restantes: q.erreurs });
+}
 
+// Écran intermédiaire : score du 1er passage + annonce du rattrapage
+function ecranDeuxiemeChance(q) {
+  const n = q.erreurs.length;
+  ecran.replaceChildren(el('div', { class: 'resultat' },
+    dessinGrossesEtoiles(q.premier.etoiles),
+    el('p', { class: 'score' }, `${q.premier.bons} / ${q.premier.total} du premier coup`),
+    el('div', { class: 'deuxieme-chance' },
+      el('div', { class: 'gros-emoji' }, '🔁'),
+      el('h2', {}, 'Deuxième chance !'),
+      el('p', {}, n > 1 ? `On revoit les ${n} questions ratées pour bien les retenir.` : 'On revoit la question ratée pour bien la retenir.')),
+    el('button', { class: 'btn-principal', onclick: () => revoirErreurs(q) }, 'On y va ! 💪'),
+    el('button', { class: 'btn-secondaire', onclick: () => ecranFinal(q.lecon, q.premier, null, q.erreurs) }, 'Passer et voir mon score'),
+  ));
+  son('petit');
+}
+
+// Écran final : étoiles (1er passage), bilan du rattrapage, rejouer
+function ecranFinal(lecon, premier, rattrapage, erreursNonRevues = []) {
+  const restantes = rattrapage ? rattrapage.restantes : erreursNonRevues;
   const messages = ['On recommence ? Tu vas y arriver 💪', 'Pas mal ! Encore un petit effort 🙂', 'Très bien ! 👏', 'Magnifique ! 🏆'];
-  const nbErreurs = q.erreurs.length;
+  const qRelance = { lecon, erreurs: restantes, premier };
 
   ecran.replaceChildren(el('div', { class: 'resultat' },
-    el('div', { class: 'grosses-etoiles' },
-      [0, 1, 2].map((i) => el('span', { class: i < etoiles ? 'pleine' : 'eteinte', style: `animation-delay:${i * 0.25}s` }, '★'))),
-    el('h2', {}, q.entrainement && nbErreurs === 0 ? 'Erreurs corrigées ! 🎯' : messages[etoiles]),
-    el('p', { class: 'score' }, `${q.bons} / ${total} bonne${q.bons > 1 ? 's' : ''} réponse${q.bons > 1 ? 's' : ''}`),
-    nbErreurs ? el('button', { class: 'btn-principal', onclick: () => revoirErreurs(q) },
-      `🔁 Retravailler ${nbErreurs > 1 ? `mes ${nbErreurs} erreurs` : 'mon erreur'}`) : null,
-    el('button', { class: nbErreurs ? 'btn-secondaire' : 'btn-principal', onclick: () => lancerQuiz(q.lecon) }, '🔄 Rejouer toute la leçon'),
+    dessinGrossesEtoiles(premier.etoiles),
+    el('h2', {}, messages[premier.etoiles]),
+    el('p', { class: 'score' }, `${premier.bons} / ${premier.total} du premier coup`),
+    rattrapage ? el('p', { class: 'bilan-rattrapage ' + (restantes.length ? 'ko' : 'ok') },
+      restantes.length
+        ? `🔁 Rattrapage : ${rattrapage.corrigees} / ${rattrapage.total} corrigée${rattrapage.corrigees > 1 ? 's' : ''}. Encore ${pluriel(restantes.length, 'question')} à revoir.`
+        : '🎯 Rattrapage réussi : toutes tes erreurs sont corrigées !') : null,
+    restantes.length ? el('button', { class: 'btn-principal', onclick: () => revoirErreurs(qRelance) },
+      `🔁 Revoir ${restantes.length > 1 ? `les ${restantes.length} questions` : 'la question'} encore une fois`) : null,
+    el('button', { class: restantes.length ? 'btn-secondaire' : 'btn-principal', onclick: () => lancerQuiz(lecon) }, '🔄 Rejouer toute la leçon'),
     el('button', { class: 'btn-secondaire', onclick: () => history.back() }, '📖 Revenir à la fiche'),
   ));
 
-  son(etoiles >= 2 ? 'fin' : 'petit');
-  if (etoiles >= 2 || (q.entrainement && nbErreurs === 0)) confettis();
+  son(premier.etoiles >= 2 ? 'fin' : 'petit');
+  if (premier.etoiles >= 2 || (rattrapage && !restantes.length)) confettis();
 }
 
-// Rejoue seulement les questions ratées
+const dessinGrossesEtoiles = (n) => el('div', { class: 'grosses-etoiles' },
+  [0, 1, 2].map((i) => el('span', { class: i < n ? 'pleine' : 'eteinte', style: `animation-delay:${i * 0.25}s` }, '★')));
+
+// Rejoue seulement les questions ratées (q.premier est transmis pour l'écran final)
 function revoirErreurs(q) {
-  questionSuivante({ lecon: q.lecon, questions: melanger(q.erreurs), i: 0, bons: 0, erreurs: [], entrainement: true });
+  questionSuivante({ lecon: q.lecon, questions: melanger(q.erreurs), i: 0, bons: 0, erreurs: [], entrainement: true, premier: q.premier });
   scrollTo(0, 0);
 }
 
@@ -851,6 +944,13 @@ const ACTIVITES = {
 
 /* ---------- 7. DÉMARRAGE ------------------------------------- */
 
+// Compare deux numéros "1.3.0" / "1.4.0" : true si a est plus ancien que b
+function plusAncienne(a, b) {
+  const x = String(a).split('.').map(Number), y = String(b).split('.').map(Number);
+  for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0);
+  return false;
+}
+
 async function demarrer() {
   $('#version').textContent = 'v' + VERSION;
 
@@ -873,6 +973,18 @@ async function demarrer() {
     const rep = await fetch('lecons.json', { cache: 'no-store' });
     if (!rep.ok) throw new Error('Fichier introuvable (erreur ' + rep.status + ')');
     etat.donnees = await rep.json(); // plante ici si une virgule manque dans le JSON
+    // Les leçons demandent une version plus récente du moteur ? (ex. ancien app.js resté en cache)
+    // -> on force la mise à jour et on recharge UNE fois (le drapeau évite une boucle infinie).
+    const requise = etat.donnees.versionApp;
+    if (requise && plusAncienne(VERSION, requise) && !sessionStorage.getItem('revisions-maj')) {
+      sessionStorage.setItem('revisions-maj', '1');
+      const reg = await navigator.serviceWorker?.getRegistration();
+      await reg?.update().catch(() => {});
+      if (window.caches) for (const k of await caches.keys()) await caches.delete(k); // vide les vieilles copies
+      location.reload();
+      return;
+    }
+    sessionStorage.removeItem('revisions-maj');
   } catch (err) {
     ecran.replaceChildren(el('div', { class: 'vide' },
       el('div', { class: 'gros-emoji' }, '😵'),
@@ -894,7 +1006,30 @@ async function demarrer() {
   afficherAccueil();
 
   // Active le mode hors-ligne
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => {});
+  // updateViaCache 'none' : le téléphone vérifie sw.js ET version.js sans passer par son cache
 }
+
+/* Raccourcis clavier (pratique sur ordinateur) :
+     1 à 9  -> choisir la réponse n° 1 à 9 (QCM, vrai/faux)
+     Entrée -> question suivante / bouton principal
+     Échap  -> fermer la bulle d'un mot, sinon écran précédent */
+addEventListener('keydown', (e) => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const dansUnChamp = e.target.matches('input, textarea');
+  if (e.key === 'Escape') {
+    if ($('#bulle-mot')) $('#bulle-mot').remove(); else if (pile.length > 1) history.back();
+    return;
+  }
+  if (dansUnChamp) return; // la touche Entrée d'un champ est gérée par l'activité elle-même
+  if (e.key === 'Enter' && e.target.matches('button')) return; // bouton déjà sélectionné : Entrée le clique déjà
+  if (/^[1-9]$/.test(e.key)) {
+    const choix = [...document.querySelectorAll('.liste-choix:not([hidden]) .choix:not(:disabled)')];
+    choix[Number(e.key) - 1]?.click();
+  } else if (e.key === 'Enter') {
+    const suivant = document.querySelector('.retour .btn-principal, .resultat .btn-principal');
+    if (suivant) { e.preventDefault(); suivant.click(); }
+  }
+});
 
 demarrer();
