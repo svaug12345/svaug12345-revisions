@@ -1,0 +1,99 @@
+{
+  "maj": "26/10/2026",
+
+  "enfants": [
+    { "id": "tom",   "nom": "Tom",   "avatar": "🦖", "couleur": "#22c55e" },
+    { "id": "gaby",  "nom": "Gaby",  "avatar": "🦄", "couleur": "#ec4899" },
+    { "id": "nanon", "nom": "Nanon", "avatar": "🦊", "couleur": "#f59e0b" }
+  ],
+
+  "lecons": [
+    {
+      "id": "maths-table-7",
+      "pour": ["tom"],
+      "matiere": "Maths",
+      "titre": "La table de 7",
+      "emoji": "✖️",
+      "fiche": [
+        "# La table de 7",
+        "- 7 × 1 = 7",
+        "- 7 × 2 = 14",
+        "- 7 × 3 = 21",
+        "- 7 × 4 = 28",
+        "- 7 × 5 = 35",
+        "- 7 × 6 = 42",
+        "- 7 × 7 = 49",
+        "- 7 × 8 = 56",
+        "- 7 × 9 = 63",
+        "- 7 × 10 = 70",
+        "**Astuce :** 5, 6, 7, 8 → 56 = 7 × 8 !"
+      ],
+      "activites": [
+        { "type": "saisie", "question": "Combien font 7 × 8 ?", "reponse": "56", "explication": "Retiens : 5, 6, 7, 8 → 56 = 7 × 8." },
+        { "type": "qcm", "question": "Combien font 7 × 6 ?", "choix": ["42", "48", "36", "49"] },
+        { "type": "vraifaux", "affirmation": "7 × 9 = 63", "reponse": true },
+        { "type": "vraifaux", "affirmation": "7 × 4 = 24", "reponse": false, "explication": "7 × 4 = 28. C'est 6 × 4 qui fait 24." },
+        { "type": "paires", "consigne": "Relie chaque calcul à son résultat", "paires": [["7 × 3", "21"], ["7 × 5", "35"], ["7 × 7", "49"], ["7 × 10", "70"]] },
+        { "type": "ordre", "consigne": "Range ces résultats du plus petit au plus grand", "elements": ["7", "14", "21", "28", "35"] },
+        { "type": "trous", "texte": "7 × 2 = [14] et 7 × 3 = [21]", "intrus": ["17", "24"] },
+        { "type": "carte", "recto": "7 × 7", "verso": "49" }
+      ]
+    },
+
+    {
+      "id": "francais-classes-de-mots",
+      "pour": ["gaby"],
+      "matiere": "Français",
+      "titre": "Les classes de mots",
+      "emoji": "🔤",
+      "fiche": [
+        "# Les classes de mots",
+        "Chaque mot appartient à une **classe** (on dit aussi sa « nature ») :",
+        "- **Le nom** : une personne, un animal, une chose ou une idée (chat, Paris, joie)",
+        "- **Le déterminant** : se place devant le nom (le, une, des, mon, ce…)",
+        "- **L'adjectif** : précise le nom (petit, rouge, gentil…)",
+        "- **Le verbe** : une action ou un état, il se conjugue (courir, être…)",
+        "- **L'adverbe** : invariable, il précise un verbe ou un adjectif (vite, rapidement, très…)",
+        "- **Le pronom** : remplace un nom (il, elle, nous…)"
+      ],
+      "activites": [
+        { "type": "qcm", "question": "Dans « Le petit chat dort », quelle est la classe de « petit » ?", "choix": ["Adjectif", "Nom", "Verbe", "Adverbe"] },
+        { "type": "qcm", "question": "Dans « Elle mange une pomme », quelle est la classe de « Elle » ?", "choix": ["Pronom", "Déterminant", "Nom", "Adjectif"] },
+        { "type": "vraifaux", "affirmation": "« rapidement » est un adjectif.", "reponse": false, "explication": "C'est un adverbe : il est invariable et précise le verbe." },
+        { "type": "paires", "consigne": "Associe chaque mot à sa classe", "paires": [["maison", "Nom"], ["courir", "Verbe"], ["rouge", "Adjectif"], ["des", "Déterminant"], ["très", "Adverbe"]] },
+        { "type": "trous", "texte": "Le [pronom] remplace un nom. Le [verbe] se conjugue.", "intrus": ["déterminant", "adjectif"] },
+        { "type": "saisie", "question": "Quelle est la classe du mot « joie » ?", "reponse": ["nom", "un nom", "nom commun"] },
+        { "type": "carte", "recto": "Comment reconnaître un verbe ?", "verso": "Il se conjugue : je mange, je mangeais, je mangerai." }
+      ]
+    },
+
+    {
+      "id": "histoire-2gm-dates",
+      "pour": ["nanon"],
+      "matiere": "Histoire",
+      "titre": "Seconde Guerre mondiale : les dates clés",
+      "emoji": "🗓️",
+      "fiche": [
+        "# Les grandes dates",
+        "- **1er septembre 1939** : l'Allemagne envahit la Pologne, début de la guerre en Europe",
+        "- **18 juin 1940** : appel du général de Gaulle depuis Londres",
+        "- **10 juillet 1940** : Pétain reçoit les pleins pouvoirs, début du régime de Vichy",
+        "- **22 juin 1941** : l'Allemagne attaque l'URSS",
+        "- **7 décembre 1941** : attaque japonaise sur Pearl Harbor, les États-Unis entrent en guerre",
+        "- **6 juin 1944** : débarquement allié en Normandie",
+        "- **8 mai 1945** : capitulation de l'Allemagne",
+        "- **6 et 9 août 1945** : bombes atomiques sur Hiroshima et Nagasaki",
+        "- **2 septembre 1945** : capitulation du Japon, fin de la guerre"
+      ],
+      "activites": [
+        { "type": "qcm", "question": "Qui lance un appel à continuer le combat depuis Londres le 18 juin 1940 ?", "choix": ["Le général de Gaulle", "Philippe Pétain", "Jean Moulin", "Winston Churchill"] },
+        { "type": "ordre", "consigne": "Remets ces événements dans l'ordre chronologique", "elements": ["Invasion de la Pologne", "Appel du 18 juin", "Pearl Harbor", "Débarquement en Normandie", "Capitulation de l'Allemagne"] },
+        { "type": "paires", "consigne": "Associe chaque date à son événement", "paires": [["1er sept. 1939", "Invasion de la Pologne"], ["7 déc. 1941", "Pearl Harbor"], ["6 juin 1944", "Débarquement"], ["8 mai 1945", "Capitulation allemande"]] },
+        { "type": "saisie", "question": "En quelle année la Seconde Guerre mondiale se termine-t-elle ?", "reponse": "1945" },
+        { "type": "vraifaux", "affirmation": "Les États-Unis entrent en guerre après l'attaque de Pearl Harbor.", "reponse": true },
+        { "type": "trous", "texte": "Le 6 août 1945, une bombe atomique frappe [Hiroshima], puis le 9 août [Nagasaki].", "intrus": ["Tokyo", "Kyoto"] },
+        { "type": "carte", "recto": "Qu'est-ce que le régime de Vichy ?", "verso": "Le régime dirigé par Pétain (1940-1944), qui collabore avec l'Allemagne nazie." }
+      ]
+    }
+  ]
+}

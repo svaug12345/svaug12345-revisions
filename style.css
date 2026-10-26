@@ -1,0 +1,242 @@
+/* =============================================================
+   MES RÉVISIONS — habillage
+   Couleurs de la marque SV (turquoise / bleu-vert) + touches
+   vives pour les enfants. Tout est regroupé en variables :
+   change une couleur ici et toute l'appli suit.
+   ============================================================= */
+:root {
+  --fond: #ecfeff;
+  --carte: #ffffff;
+  --texte: #134e4a;
+  --doux: #5b7f7b;
+  --principal: #14b8a6;
+  --fonce: #0f766e;
+  --clair: #ccfbf1;
+  --accent: #f59e0b;
+  --bon: #22c55e;
+  --faux: #ef4444;
+  --rayon: 18px;
+  --ombre: 0 4px 0 rgba(15, 118, 110, .18);
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; } /* l'attribut hidden gagne toujours */
+html, body { margin: 0; }
+
+body {
+  font-family: 'Nunito', system-ui, sans-serif;
+  font-weight: 600;
+  color: var(--texte);
+  background: var(--fond);
+  /* deux grosses taches de couleur douces en fond */
+  background-image:
+    radial-gradient(circle at 0% 0%, #ccfbf1 0, transparent 45%),
+    radial-gradient(circle at 100% 40%, #fef3c7 0, transparent 40%);
+  background-attachment: fixed;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  -webkit-tap-highlight-color: transparent; /* pas de flash bleu au toucher */
+  -webkit-user-select: none;
+  user-select: none;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+
+/* ---------- Barre du haut ---------- */
+header {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; align-items: center; gap: 8px;
+  padding: calc(10px + env(safe-area-inset-top)) 12px 10px;
+  background: var(--fonce); color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .15);
+}
+header h1 {
+  flex: 1; margin: 0; font-size: 1.15rem; font-weight: 900;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+#badge-enfant { font-size: 1.6rem; }
+
+.btn-icone {
+  flex-shrink: 0; width: 42px; height: 42px; border: 0; border-radius: 12px;
+  background: rgba(255, 255, 255, .15); font-size: 1.25rem;
+}
+.fiche .btn-icone, .enonce .btn-icone { background: var(--clair); }
+
+main { flex: 1; width: 100%; max-width: 640px; margin: 0 auto; padding: 16px; }
+footer {
+  text-align: center; font-size: .75rem; color: var(--doux);
+  padding: 8px 12px calc(10px + env(safe-area-inset-bottom));
+}
+h2 { font-weight: 900; }
+.chargement, .intro, .maj, .aide { text-align: center; color: var(--doux); }
+.maj { font-size: .8rem; margin-top: 24px; }
+
+/* ---------- Boutons principaux (effet « touche » 3D) ---------- */
+.btn-principal, .btn-secondaire {
+  display: block; width: 100%; margin: 14px 0 0; padding: 16px;
+  border: 0; border-radius: var(--rayon);
+  font-size: 1.1rem; font-weight: 900;
+  transition: transform .08s, box-shadow .08s;
+}
+.btn-principal { background: var(--principal); color: #fff; box-shadow: 0 5px 0 var(--fonce); }
+.btn-secondaire { background: var(--carte); color: var(--fonce); box-shadow: 0 5px 0 var(--clair); }
+.btn-principal:active, .btn-secondaire:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--fonce); }
+.btn-principal:disabled { opacity: .45; transform: none; }
+.collant { position: sticky; bottom: calc(12px + env(safe-area-inset-bottom)); }
+
+/* ---------- Accueil : cartes des enfants ---------- */
+.grille-enfants { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; }
+.carte-enfant {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 20px 10px; border: 0; border-radius: 24px;
+  background: var(--carte); border-bottom: 6px solid var(--c);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .08);
+  transition: transform .1s;
+}
+.carte-enfant:active { transform: scale(.96); }
+.carte-enfant .avatar {
+  font-size: 3rem; width: 84px; height: 84px; display: grid; place-items: center;
+  border-radius: 50%; background: color-mix(in srgb, var(--c) 20%, white);
+}
+.carte-enfant .nom { font-size: 1.3rem; font-weight: 900; }
+.carte-enfant .mini { font-size: .8rem; color: var(--doux); }
+
+/* ---------- Liste des leçons ---------- */
+.groupe h2 { font-size: 1rem; text-transform: uppercase; letter-spacing: .05em; color: var(--fonce); margin: 18px 4px 8px; }
+.carte-lecon {
+  display: flex; align-items: center; gap: 12px; width: 100%; margin-bottom: 10px;
+  padding: 14px; border: 0; border-radius: var(--rayon); text-align: left;
+  background: var(--carte); box-shadow: var(--ombre);
+}
+.carte-lecon:active { transform: translateY(3px); box-shadow: none; }
+.carte-lecon .emoji { font-size: 2rem; }
+.carte-lecon .infos { flex: 1; display: flex; flex-direction: column; }
+.carte-lecon small { color: var(--doux); }
+.carte-lecon .etoiles { color: var(--accent); font-size: 1.2rem; letter-spacing: 2px; }
+
+/* ---------- Fiche de leçon ---------- */
+.tete-lecon { display: flex; align-items: center; gap: 14px; }
+.tete-lecon h2 { margin: 0; }
+.tete-lecon small { color: var(--doux); text-transform: uppercase; font-size: .75rem; }
+.gros-emoji { font-size: 3.2rem; }
+.fiche {
+  margin-top: 14px; padding: 16px 18px; border-radius: var(--rayon);
+  background: var(--carte); box-shadow: var(--ombre); line-height: 1.55;
+  user-select: text; -webkit-user-select: text;
+}
+.fiche-haut { display: flex; justify-content: space-between; align-items: center; }
+.fiche-haut h3 { margin: 0; }
+.fiche h3 { color: var(--fonce); }
+.fiche ul { padding-left: 20px; }
+.fiche li { margin: 6px 0; }
+.fiche b { color: var(--fonce); }
+
+/* ---------- Quiz ---------- */
+.progression { height: 12px; border-radius: 99px; background: var(--clair); overflow: hidden; }
+.barre { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--principal), var(--accent)); transition: width .4s; }
+.compteur { text-align: center; color: var(--doux); font-size: .85rem; margin: 8px 0 14px; }
+
+.enonce {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 18px; border-radius: var(--rayon); background: var(--carte); box-shadow: var(--ombre);
+  animation: apparait .3s ease-out;
+}
+.enonce p { flex: 1; margin: 0; font-size: 1.25rem; font-weight: 800; line-height: 1.4; }
+
+.liste-choix { display: grid; gap: 10px; margin-top: 14px; }
+.liste-choix.deux { grid-template-columns: 1fr 1fr; }
+.choix, .tuile, .etiquette {
+  padding: 14px; border: 3px solid var(--clair); border-radius: 16px;
+  background: var(--carte); font-weight: 800; font-size: 1.05rem;
+  box-shadow: var(--ombre); transition: transform .08s, background .2s;
+}
+.choix:active, .tuile:active, .etiquette:active { transform: translateY(3px); }
+.choix:disabled, .etiquette:disabled, .tuile:disabled { opacity: 1; }
+
+/* états bonne / mauvaise réponse, partagés par toutes les activités */
+.bon { background: #dcfce7 !important; border-color: var(--bon) !important; color: #166534 !important; animation: pop .35s; }
+.faux { background: #fee2e2 !important; border-color: var(--faux) !important; color: #991b1b !important; }
+.secoue { animation: secoue .4s; }
+
+/* Saisie */
+.champ {
+  width: 100%; margin-top: 14px; padding: 16px; font: inherit; font-size: 1.3rem; text-align: center;
+  border: 3px solid var(--clair); border-radius: 16px; outline: none; background: var(--carte);
+  user-select: text; -webkit-user-select: text;
+}
+.champ:focus { border-color: var(--principal); }
+
+/* Texte à trous */
+.phrase-trous {
+  font-size: 1.25rem; line-height: 2.4; padding: 16px; margin: 14px 0 0;
+  background: var(--carte); border-radius: var(--rayon); box-shadow: var(--ombre);
+}
+.trou {
+  min-width: 80px; padding: 2px 10px; margin: 0 2px; border: 0;
+  border-bottom: 3px dashed var(--principal); border-radius: 8px;
+  background: var(--clair); font-weight: 900;
+}
+.trou.rempli { border-bottom-style: solid; }
+.banque { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 14px; }
+.etiquette { padding: 10px 16px; background: #fffbeb; border-color: #fde68a; }
+
+/* Associer */
+.paires { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+.colonne { display: flex; flex-direction: column; gap: 10px; }
+.tuile { min-height: 58px; font-size: .95rem; }
+.tuile.droite { background: #fffbeb; border-color: #fde68a; }
+.tuile.choisie { border-color: var(--principal); background: var(--clair); transform: scale(1.04); }
+
+/* Remettre dans l'ordre : la ligne numérote automatiquement les étiquettes */
+.ligne-ordre {
+  min-height: 70px; margin: 8px 0 0; padding: 10px; list-style: none;
+  display: flex; flex-direction: column; gap: 8px; counter-reset: rang;
+  border: 3px dashed var(--principal); border-radius: var(--rayon); background: rgba(255, 255, 255, .6);
+}
+.ligne-ordre .etiquette { counter-increment: rang; text-align: left; }
+.ligne-ordre .etiquette::before {
+  content: counter(rang); display: inline-grid; place-items: center;
+  width: 26px; height: 26px; margin-right: 10px; border-radius: 50%;
+  background: var(--principal); color: #fff; font-size: .85rem;
+}
+
+/* Carte mémo qui se retourne en 3D */
+.carte-memo { position: relative; height: 210px; margin-top: 14px; perspective: 900px; cursor: pointer; }
+.face {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  padding: 18px; text-align: center; border-radius: 22px; overflow: auto;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  transition: transform .55s; box-shadow: 0 8px 20px rgba(0, 0, 0, .12);
+}
+.recto { background: linear-gradient(135deg, var(--principal), var(--fonce)); color: #fff; font-size: 1.6rem; font-weight: 900; }
+.recto small { font-size: .8rem; opacity: .8; }
+.verso { background: var(--carte); font-size: 1.15rem; font-weight: 800; transform: rotateY(180deg); }
+.carte-memo.retournee .recto { transform: rotateY(-180deg); }
+.carte-memo.retournee .verso { transform: rotateY(0); }
+
+/* Bandeau Bravo / Oups */
+.bandeau { margin-top: 16px; padding: 14px 16px; border-radius: var(--rayon); animation: apparait .3s; }
+.bandeau b:first-child { font-size: 1.3rem; }
+.bandeau p { margin: 6px 0 0; }
+.bandeau.ok { background: #dcfce7; color: #166534; }
+.bandeau.ko { background: #ffedd5; color: #9a3412; }
+.explication { font-weight: 600; }
+
+/* ---------- Résultat ---------- */
+.resultat { text-align: center; padding-top: 10px; }
+.grosses-etoiles { font-size: 4.2rem; letter-spacing: 6px; }
+.grosses-etoiles span { display: inline-block; animation: etoile .6s backwards; }
+.grosses-etoiles .pleine { color: var(--accent); text-shadow: 0 4px 0 #b45309; }
+.grosses-etoiles .eteinte { color: #d1d5db; }
+.score { font-size: 1.2rem; color: var(--doux); }
+
+/* ---------- Divers ---------- */
+.vide { text-align: center; color: var(--doux); padding: 40px 10px; }
+.erreur { white-space: pre-wrap; background: #fee2e2; color: #991b1b; padding: 10px; border-radius: 10px; text-align: left; }
+#confettis { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
+
+/* ---------- Animations ---------- */
+@keyframes apparait { from { opacity: 0; transform: translateY(10px); } }
+@keyframes pop { 50% { transform: scale(1.07); } }
+@keyframes secoue { 20%, 60% { transform: translateX(-7px); } 40%, 80% { transform: translateX(7px); } }
+@keyframes etoile { from { transform: scale(0) rotate(-180deg); opacity: 0; } }

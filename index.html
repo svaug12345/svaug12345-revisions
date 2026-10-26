@@ -1,0 +1,44 @@
+<!doctype html>
+<!--
+  Mes Révisions — page unique de l'appli.
+  Tout l'affichage est construit par app.js à l'intérieur de <main id="ecran">.
+  Le contenu pédagogique (enfants, leçons, questions) vient de lecons.json.
+-->
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <!-- viewport-fit=cover : on utilise tout l'écran, même sous l'encoche du téléphone -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mes Révisions</title>
+  <meta name="theme-color" content="#0f766e">
+  <!-- Le manifest permet d'installer la page comme une vraie appli Android -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <!-- Police ronde et lisible pour les enfants (si pas d'internet, on retombe sur la police du système) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Barre du haut : retour, titre de l'écran, avatar de l'enfant, son on/off -->
+  <header>
+    <button id="btn-retour" class="btn-icone" hidden aria-label="Retour">←</button>
+    <h1 id="titre">Mes Révisions</h1>
+    <span id="badge-enfant"></span>
+    <button id="btn-son" class="btn-icone" aria-label="Activer ou couper le son">🔊</button>
+  </header>
+
+  <!-- Zone où chaque écran est dessiné -->
+  <main id="ecran"><p class="chargement">Chargement des leçons…</p></main>
+
+  <!-- Toile transparente par-dessus tout, pour les confettis de victoire -->
+  <canvas id="confettis"></canvas>
+
+  <footer>Mes Révisions · <span id="version"></span></footer>
+
+  <!-- version.js d'abord : app.js a besoin de la variable VERSION -->
+  <script src="version.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
