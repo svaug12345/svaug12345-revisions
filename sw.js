@@ -11,7 +11,7 @@ const CACHE = 'revisions-' + VERSION;   // un cache par version
 
 // Fichiers mis de côté dès l'installation, pour le mode hors-ligne
 const FICHIERS = [
-  './', 'index.html', 'style.css', 'app.js', 'version.js', 'lecons.json',
+  './', 'index.html', 'style.css', 'app.js', 'visuels.js', 'version.js', 'lecons.json',
   'manifest.json', 'audio/index.json', 'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png',
   'avatars/gaby.svg', 'avatars/tom.svg', 'avatars/nanon.svg'
 ];

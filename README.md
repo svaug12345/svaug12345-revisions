@@ -9,6 +9,7 @@ Hébergée sur GitHub Pages, comme Lecteur QR.
 |---|---|---|
 | `lecons.json` | **Tout le contenu** : enfants, leçons, questions | ✅ oui, c'est le seul |
 | `app.js` | Le moteur (écrans, jeux, scores) | non |
+| `visuels.js` | Les schémas et animations des fiches | non |
 | `style.css` | Couleurs et mise en page | rarement |
 | `version.js` | Numéro de version du code | à chaque modif du code |
 | `sw.js` | Mode hors-ligne | non |
@@ -67,18 +68,39 @@ Options pour toutes les activités : `"explication"` (affichée après la répon
 
 Option de la réponse à taper : `"strict": true` → les accents comptent (pour la dictée, la conjugaison…). Sans elle, « cotes » = « côtés ».
 
-## 🔊 La voix de Papa (depuis la v1.2.0)
+## 🎨 Fiches illustrées (depuis la v1.5.0)
 
-Le bouton 🔊 lit la leçon ou la question avec la voix de Sébastien (clonée sur ElevenLabs).
+Chaque ligne `# Titre` de la fiche ouvre une **carte colorée**. Entre les lignes de texte, on peut glisser des
+**visuels** (schémas animés, petits jeux) : ce sont des objets `{ "visuel": "…" }` dans la liste `"fiche"`.
+Tous acceptent `"titre"` et `"legende"`, et leurs textes acceptent le **gras** et les `{{mots étrangers}}`.
 
-- Chaque phrase lue est un MP3 dans le dossier `audio/`, nommé d'après une **empreinte** du texte
-  (ex. `audio/8469ba9e.mp3`). `audio/index.json` liste toutes les empreintes disponibles.
-- Si un texte n'a pas de MP3 (nouvelle leçon, phrase modifiée…), l'appli utilise
-  automatiquement **la voix du téléphone** : rien ne casse.
-- ⚠️ Modifier ne serait-ce qu'une virgule dans une phrase change son empreinte :
-  elle repasse en voix du téléphone tant qu'on n'a pas régénéré son MP3.
-- Pour les nouvelles leçons : envoyer les photos à Claude, il crée la leçon **et** ses MP3.
-- Les MP3 sont gardés dans le téléphone après la 1re écoute (marche hors-ligne ensuite).
+| Visuel | À quoi ça sert | Exemple |
+|---|---|---|
+| `encadre` | Astuce 💡, attention ⚠️, à retenir 🧠, exemple 👀 | `{"visuel":"encadre","style":"astuce","texte":["…"]}` |
+| `cartes` | Grille de cartes avec emoji | `{"visuel":"cartes","elements":[{"emoji":"🌡️","titre":"…","texte":"…"}]}` |
+| `tuiles` | Petites tuiles (résultats, mots pièges) | `{"visuel":"tuiles","elements":["7 × 1 = **7**"]}` |
+| `conjugaison` | Colonnes de conjugaison, terminaisons en **gras** qui s'allument | `{"visuel":"conjugaison","colonnes":[{"titre":"…","formes":["je chant**ai**"]}]}` |
+| `multiplication` | Table en rangées de points, à manipuler | `{"visuel":"multiplication","table":7}` |
+| `frise` | Frise chronologique | `{"visuel":"frise","elements":[{"date":"1939","emoji":"⚔️","titre":"…","texte":"…"}]}` |
+| `plans` | Imparfait (bande) / passé simple (éclairs ⚡) | `{"visuel":"plans","exemples":[{"phrase":"…","bande":"…","evenements":["…"]}]}` |
+| `decision` | « Dans quel cas ? » : on touche un cas, la règle s'affiche | `{"visuel":"decision","question":"…","choix":[{"si":"…","alors":"…","exemple":"…"}]}` |
+| `machine` | Calcul en chaîne, l'enfant peut changer le nombre | `{"visuel":"machine","depart":41,"operations":["× 2","× 2"]}` |
+| `virgule` | Tableau de numération : × 0,1 / 0,01 / 0,001 | `{"visuel":"virgule","nombre":56,"diviseurs":[10,100,1000]}` |
+| `arbre` | Arbre généalogique (der / die en couleur) | `{"visuel":"arbre","niveaux":[{"titre":"…","membres":[{"emoji":"👴","mot":"{{der Opa}}","fr":"…","genre":"m"}]}]}` |
+| `barres` | Barres qui se remplissent | `{"visuel":"barres","elements":[{"label":"…","valeur":8.2,"texte":"…"}]}` |
+| `densite` | Carrés de 1 km² remplis d'habitants | `{"visuel":"densite","cases":[{"label":"…","points":120}]}` |
+| `eprouvette` | Éprouvette graduée interactive (+ objet à plonger) | `{"visuel":"eprouvette","max":100,"unite":"mL","valeur":50,"objet":{"emoji":"🪨","nom":"caillou","volume":15}}` |
+| `conversion` | Tableau de conversion d'unités | `{"visuel":"conversion","unites":["L","dL","cL","mL"],"exemples":[{"valeur":"2,5","unite":"L"}]}` |
+| `balance` | Balance qui penche | `{"visuel":"balance","gauche":{"label":"…","emoji":"💧","masse":1000},"droite":{…},"unite":"g"}` |
+| `flottaison` | Objets qui flottent ou coulent selon leur densité | `{"visuel":"flottaison","objets":[{"nom":"Chêne","emoji":"🪵","densite":0.7}]}` |
+| `comparaison` | Deux milieux côte à côte avec des jauges | `{"visuel":"comparaison","cotes":[{"titre":"…","mesures":[{"label":"…","valeur":20,"max":35,"unite":"°C"}]}]}` |
+| `liens` | Relations (alimentation, support…) avec flèches | `{"visuel":"liens","types":{…},"liens":[{"de":"…","vers":"…","type":"…","texte":"…"}]}` |
+
+Le code de chaque visuel est dans `visuels.js` (une fonction par visuel, bien commentée).
+
+## 🔊 Audio
+
+La voix (MP3) sert **uniquement aux mots étrangers** des leçons de langues : les autres leçons n'ont plus de lecture audio.
 
 ## 🇬🇧🇩🇪 Leçons de langues : écouter et répéter (depuis la v1.3.0)
 
@@ -95,6 +117,8 @@ Le bouton 🔊 lit la leçon ou la question avec la voix de Sébastien (clonée 
 - Dans les **QCM** et les **paires**, la bonne réponse est prononcée quand elle est trouvée.
 - Une **explication** contenant `{{…}}` est lue juste après la réponse (pratique pour réentendre la phrase complète).
 - Les mots étrangers sont lus avec **la voix de Papa** (clonée sur ElevenLabs, qui parle aussi anglais et allemand).
+  Pour que les petits mots (he, she, we, be…) soient prononcés dans la bonne langue, chaque MP3 est généré avec une
+  **amorce** (« Listen and repeat in English… he. » / « Hör gut zu und sprich nach… ich. ») puis l'amorce est coupée.
   Les MP3 sont nommés d'après l'empreinte de `langue|texte prononcé` ; sans MP3, c'est la voix du téléphone dans la bonne langue.
 - Le micro (🎤) utilise la reconnaissance vocale de Chrome : il faut internet et autoriser le micro la 1re fois.
 

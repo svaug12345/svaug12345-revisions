@@ -1,6 +1,6 @@
 {
   "maj": "27/10/2026",
-  "versionApp": "1.4.0",
+  "versionApp": "1.5.0",
 
   "enfants": [
     {"id": "tom", "nom": "Tom", "avatar": "avatars/tom.svg", "couleur": "#22c55e"},
@@ -17,17 +17,10 @@
       "emoji": "✖️",
       "fiche": [
         "# La table de 7",
-        "- 7 × 1 = 7",
-        "- 7 × 2 = 14",
-        "- 7 × 3 = 21",
-        "- 7 × 4 = 28",
-        "- 7 × 5 = 35",
-        "- 7 × 6 = 42",
-        "- 7 × 7 = 49",
-        "- 7 × 8 = 56",
-        "- 7 × 9 = 63",
-        "- 7 × 10 = 70",
-        "**Astuce :** 5, 6, 7, 8 → 56 = 7 × 8 !"
+        {"visuel": "multiplication", "titre": "7 points par rangée : choisis combien de rangées !", "table": 7, "depart": 3},
+        "# Toute la table",
+        {"visuel": "tuiles", "elements": ["7 × 1 = **7**", "7 × 2 = **14**", "7 × 3 = **21**", "7 × 4 = **28**", "7 × 5 = **35**", "7 × 6 = **42**", "7 × 7 = **49**", "7 × 8 = **56**", "7 × 9 = **63**", "7 × 10 = **70**"]},
+        {"visuel": "encadre", "style": "astuce", "texte": ["**5, 6, 7, 8** → 56 = 7 × 8 !", "Pour 7 × 9 : pars de 7 × 10 = 70 et enlève 7 → **63**."]}
       ],
       "activites": [
         {"type": "saisie", "question": "Combien font 7 × 8 ?", "reponse": "56", "explication": "Retiens : 5, 6, 7, 8 → 56 = 7 × 8."},
@@ -49,15 +42,8 @@
       "emoji": "🗓️",
       "fiche": [
         "# Les grandes dates",
-        "- **1er septembre 1939** : l'Allemagne envahit la Pologne, début de la guerre en Europe",
-        "- **18 juin 1940** : appel du général de Gaulle depuis Londres",
-        "- **10 juillet 1940** : Pétain reçoit les pleins pouvoirs, début du régime de Vichy",
-        "- **22 juin 1941** : l'Allemagne attaque l'URSS",
-        "- **7 décembre 1941** : attaque japonaise sur Pearl Harbor, les États-Unis entrent en guerre",
-        "- **6 juin 1944** : débarquement allié en Normandie",
-        "- **8 mai 1945** : capitulation de l'Allemagne",
-        "- **6 et 9 août 1945** : bombes atomiques sur Hiroshima et Nagasaki",
-        "- **2 septembre 1945** : capitulation du Japon, fin de la guerre"
+        {"visuel": "frise", "titre": "La guerre de 1939 à 1945", "elements": [{"date": "1er septembre 1939", "emoji": "⚔️", "titre": "L'Allemagne envahit la Pologne", "texte": "Début de la guerre en Europe."}, {"date": "18 juin 1940", "emoji": "📻", "titre": "Appel du général de Gaulle", "texte": "Depuis Londres, à la radio : il appelle à continuer le combat."}, {"date": "10 juillet 1940", "emoji": "🏛️", "titre": "Pétain reçoit les pleins pouvoirs", "texte": "Début du régime de Vichy."}, {"date": "22 juin 1941", "emoji": "❄️", "titre": "L'Allemagne attaque l'URSS", "texte": ""}, {"date": "7 décembre 1941", "emoji": "⚓", "titre": "Attaque japonaise sur Pearl Harbor", "texte": "Les États-Unis entrent en guerre."}, {"date": "6 juin 1944", "emoji": "🚢", "titre": "Débarquement allié en Normandie", "texte": ""}, {"date": "8 mai 1945", "emoji": "🕊️", "titre": "Capitulation de l'Allemagne", "texte": "Fin de la guerre en Europe."}, {"date": "6 et 9 août 1945", "emoji": "☢️", "titre": "Bombes atomiques", "texte": "Sur Hiroshima et Nagasaki (Japon)."}, {"date": "2 septembre 1945", "emoji": "🏁", "titre": "Capitulation du Japon", "texte": "Fin de la guerre dans le monde."}]},
+        {"visuel": "encadre", "style": "retenir", "texte": ["La guerre dure **6 ans** : de **1939** à **1945**.", "En Europe elle s’arrête le **8 mai 1945**, dans le monde le **2 septembre 1945**."]}
       ],
       "activites": [
         {"type": "qcm", "question": "Qui lance un appel à continuer le combat depuis Londres le 18 juin 1940 ?", "choix": ["Le général de Gaulle", "Philippe Pétain", "Jean Moulin", "Winston Churchill"]},
@@ -78,23 +64,16 @@
       "emoji": "✍️",
       "fiche": [
         "# Les 3 groupes de verbes",
-        "- **1er groupe** : verbes en -er (sauf aller) → chanter, jouer",
-        "- **2e groupe** : verbes en -ir avec un participe présent en -issant → finir (finissant), grandir",
-        "- **3e groupe** : tous les autres, dont aller, être et avoir → savoir, partir, mettre",
+        {"visuel": "cartes", "elements": [{"emoji": "1️⃣", "titre": "1er groupe", "texte": "verbes en **-er** (sauf aller) : chanter, jouer", "couleur": "#14b8a6"}, {"emoji": "2️⃣", "titre": "2e groupe", "texte": "en **-ir** avec **-issant** : finir → finissant, grandir", "couleur": "#6366f1"}, {"emoji": "3️⃣", "titre": "3e groupe", "texte": "tous les autres : aller, être, avoir, savoir, partir, mettre…", "couleur": "#f59e0b"}]},
         "# Les terminaisons",
-        "- **1er groupe** (en -a) : je montr**ai**, tu montr**as**, il montr**a**, nous montr**âmes**, vous montr**âtes**, ils montr**èrent**",
-        "- **2e groupe** (en -i) : je grand**is**, tu grand**is**, il grand**it**, nous grand**îmes**, vous grand**îtes**, ils grand**irent**",
-        "- **3e groupe** : en -i (je sortis), en -u (je voulus) ou en -in (je vins, je tins)",
+        {"visuel": "conjugaison", "titre": "Les terminaisons s’allument : apprends-les par cœur !", "colonnes": [{"titre": "1er groupe", "sousTitre": "montrer → en -a", "formes": ["je montr**ai**", "tu montr**as**", "il montr**a**", "nous montr**âmes**", "vous montr**âtes**", "ils montr**èrent**"]}, {"titre": "2e groupe", "sousTitre": "grandir → en -i", "formes": ["je grand**is**", "tu grand**is**", "il grand**it**", "nous grand**îmes**", "vous grand**îtes**", "ils grand**irent**"]}, {"titre": "3e groupe", "sousTitre": "vouloir → en -u", "formes": ["je voul**us**", "tu voul**us**", "il voul**ut**", "nous voul**ûmes**", "vous voul**ûtes**", "ils voul**urent**"]}]},
+        "- Au 3e groupe, les terminaisons sont en **-i** (je sortis), en **-u** (je voulus) ou en **-in** (je vins, je tins).",
         "# Cas particuliers",
-        "- Verbes en **-cer** : ç partout sauf ils → je traçai, il traça, mais ils tracèrent",
-        "- Verbes en **-ger** : e après le g partout sauf ils → je plongeai, il plongea, mais ils plongèrent",
-        "- **être** : je fus, tu fus, il fut, nous fûmes, vous fûtes, ils furent",
-        "- **avoir** : j'eus, tu eus, il eut, nous eûmes, vous eûtes, ils eurent",
+        {"visuel": "encadre", "style": "attention", "nom": "Verbes en -cer et -ger", "texte": ["je tra**ç**ai, il tra**ç**a… mais ils tra**c**èrent", "je plong**e**ai, il plong**e**a… mais ils plong**è**rent"]},
+        {"visuel": "conjugaison", "titre": "Être et avoir", "colonnes": [{"titre": "être", "formes": ["je f**us**", "tu f**us**", "il f**ut**", "nous f**ûmes**", "vous f**ûtes**", "ils f**urent**"]}, {"titre": "avoir", "formes": ["j'e**us**", "tu e**us**", "il e**ut**", "nous e**ûmes**", "vous e**ûtes**", "ils e**urent**"]}]},
         "# Verbes du 3e groupe à connaître",
-        "- dire → je dis, nous dîmes · écrire → j'écrivis · faire → je fis, nous fîmes",
-        "- mettre → je mis · naître → je naquis · prendre → je pris · voir → je vis",
-        "- boire → je bus · courir → je courus · lire → je lus · mourir → je mourus",
-        "- pouvoir → je pus · vivre → je vécus · vouloir → je voulus"
+        {"visuel": "tuiles", "elements": ["dire → je **dis**", "écrire → j'**écrivis**", "faire → je **fis**", "mettre → je **mis**", "naître → je **naquis**", "prendre → je **pris**", "voir → je **vis**", "boire → je **bus**", "courir → je **courus**", "lire → je **lus**", "mourir → je **mourus**", "pouvoir → je **pus**", "vivre → je **vécus**", "vouloir → je **voulus**"]},
+        "- Et avec nous : dire → nous **dîmes**, faire → nous **fîmes**."
       ],
       "activites": [
         {"type": "saisie", "strict": true, "question": "Ce soir-là, nous (manger) … plus que de coutume.", "reponse": "mangeâmes", "explication": "Verbe en -ger : on garde le e après le g. Et l'accent circonflexe : nous mangeâmes."},
@@ -124,18 +103,15 @@
       "emoji": "⏳",
       "fiche": [
         "Donner la **valeur** d'un temps, c'est expliquer pourquoi on l'emploie.",
+        {"visuel": "plans", "titre": "Le décor dure… les actions surgissent ⚡", "exemples": [{"phrase": "Les clients **dînaient** encore quand l'incident **se produisit**.", "bande": "les clients dînaient encore", "evenements": ["se produisit"]}, {"phrase": "Alors que tout **était** calme, un bruit **se fit** entendre et **alerta** les habitants.", "bande": "tout était calme", "evenements": ["se fit entendre", "alerta"]}]},
         "# Le passé simple : le premier plan",
         "- Les actions **importantes** qui font **avancer l'histoire**",
         "- Des actions **délimitées dans le temps** (souvent après « un jour », « soudain », « ce jour-là »)",
-        "- Ex : Alors que tout était calme, un bruit **se fit** entendre et **alerta** les habitants.",
         "# L'imparfait : l'arrière-plan",
-        "- une **action secondaire** : Certains échangeaient des nouvelles.",
-        "- une **description** : La fête était vraiment somptueuse.",
-        "- une **action habituelle ou répétée** : Chaque jour, il courait pendant une demi-heure.",
-        "- une **action en cours de réalisation** : Les clients dînaient encore quand l'incident se produisit.",
+        {"visuel": "cartes", "elements": [{"emoji": "🎭", "titre": "Action secondaire", "texte": "Certains **échangeaient** des nouvelles."}, {"emoji": "🖼️", "titre": "Description", "texte": "La fête **était** vraiment somptueuse."}, {"emoji": "🔁", "titre": "Habitude, répétition", "texte": "Chaque jour, il **courait** pendant une demi-heure."}, {"emoji": "⏳", "titre": "Action en cours", "texte": "Les clients **dînaient** encore quand l'incident se produisit."}]},
         "# Astuce : -ais ou -ai ?",
         "- Avec « je », l'imparfait (-ais) et le passé simple (-ai) se prononcent pareil.",
-        "- **Remplace « je » par « il »** : il chantait → je chantais ; il chanta → je chantai."
+        {"visuel": "decision", "question": "Remplace « je » par « il » : qu’est-ce que tu entends ?", "choix": [{"si": "J’entends « il chant**ait** »", "alors": "imparfait → je chant**ais**", "exemple": "Chaque soir, je chantais (il chantait)."}, {"si": "J’entends « il chant**a** »", "alors": "passé simple → je chant**ai**", "exemple": "Soudain, je chantai (il chanta)."}]}
       ],
       "activites": [
         {"type": "qcm", "question": "« Tous les jours, mon père (prendre) le train de 7h49. »", "choix": ["prenait", "prit"], "explication": "« Tous les jours » = action répétée → imparfait."},
@@ -163,20 +139,12 @@
         "# Le texte (d'après Charles Perrault, 1697)",
         "Plus ils marchaient, plus ils s'égaraient et s'enfonçaient dans la forêt. La nuit vint, et il s'éleva un grand vent qui leur faisait épouvantablement peur. Ils croyaient entendre de tous côtés des hurlements de loups qui venaient à eux pour les manger. Ils n'osaient presque pas se parler ni tourner la tête. Il survint une grosse pluie qui les trempa jusqu'aux os ; ils glissaient à chaque pas et tombaient dans la boue.",
         "# Les mots pièges",
-        "- s'enfon**ç**aient (ç devant le a)",
-        "- la for**ê**t · de tous c**ô**tés · la t**ê**te",
-        "- **épouvantablement** (é-pou-van-ta-ble-ment)",
-        "- des hurlements de loup**s**",
-        "- ils ven**aient**, ils n'os**aient**, ils gliss**aient** (imparfait)",
-        "- la nuit v**int**, il surv**int**, la pluie les tremp**a** (passé simple)",
-        "- jusqu'**aux** os (aux = à + les)",
-        "- la bou**e**",
+        {"visuel": "tuiles", "elements": ["s'enfon**ç**aient", "la for**ê**t", "de tous c**ô**tés", "la t**ê**te", "**épouvantablement**", "des hurlements de loup**s**", "jusqu'**aux** os", "la bou**e**"]},
+        {"visuel": "encadre", "style": "exemple", "nom": "Imparfait ou passé simple ?", "texte": ["ils ven**aient**, ils n'os**aient**, ils gliss**aient** → **imparfait** (le décor, ce qui dure)", "la nuit v**int**, il surv**int**, la pluie les tremp**a** → **passé simple** (les actions)"]},
+        "- jusqu'**aux** os : aux = à + les",
         "# L'accord de « leur »",
-        "- Devant un **verbe**, « leur » remplace « à eux » : il est **invariable** → le vent **leur** faisait peur.",
-        "- Devant un **nom au pluriel**, il s'accorde → ils prennent **leurs** voitures.",
-        "- Devant un nom au singulier → ils prennent **leur** voiture.",
-        "- Précédé de « les » → les **leurs**.",
-        "**Astuce :** si je peux remplacer par « lui », pas de s : il **leur** parle → il **lui** parle."
+        {"visuel": "decision", "question": "Où se trouve « leur » ? Touche le bon cas.", "choix": [{"si": "devant un **verbe**", "alors": "**leur**, jamais de s (il veut dire « à eux »)", "exemple": "Le vent **leur** faisait peur."}, {"si": "devant un **nom au pluriel**", "alors": "**leurs**, avec un s", "exemple": "Ils prennent **leurs** voitures."}, {"si": "devant un **nom au singulier**", "alors": "**leur**, sans s", "exemple": "Ils prennent **leur** voiture."}, {"si": "après « les »", "alors": "**les leurs**", "exemple": "Ces voitures sont **les leurs**."}]},
+        {"visuel": "encadre", "style": "astuce", "texte": ["Si je peux remplacer par « **lui** », pas de s : il **leur** parle → il **lui** parle."]}
       ],
       "activites": [
         {"type": "trous", "texte": "Plus ils marchaient, plus ils s'égaraient et s'[enfonçaient] dans la [forêt].", "intrus": ["enfoncaient", "foret"]},
@@ -203,17 +171,16 @@
       "emoji": "🧮",
       "fiche": [
         "# Multiplier par 0,5 ; 0,1 ; 0,01 ; 0,001",
-        "- × 0,5 = **diviser par 2** → 800 × 0,5 = 400",
-        "- × 0,1 = **diviser par 10** → 56 × 0,1 = 5,6",
-        "- × 0,01 = **diviser par 100** → 56 × 0,01 = 0,56",
-        "- × 0,001 = **diviser par 1 000** → 56 × 0,001 = 0,056",
+        {"visuel": "machine", "titre": "× 0,5 = diviser par 2", "depart": 800, "operations": [": 2"]},
+        {"visuel": "virgule", "titre": "× 0,1 ; × 0,01 ; × 0,001 : chaque chiffre recule de 1, 2 ou 3 rangs", "nombre": 56, "diviseurs": [10, 100, 1000]},
+        "- × 0,1 = **: 10** · × 0,01 = **: 100** · × 0,001 = **: 1 000**",
         "# Multiplier et diviser par 4 ou 5",
-        "- × 4 = **× 2 puis × 2** → 41 × 4 : 41 × 2 = 82, 82 × 2 = 164",
-        "- × 5 = **× 10 puis : 2** → 14 × 5 : 14 × 10 = 140, 140 : 2 = 70",
-        "- : 4 = **: 2 puis : 2** → 52 : 4 : 52 : 2 = 26, 26 : 2 = 13",
-        "- : 5 = **: 10 puis × 2** → 160 : 5 : 160 : 10 = 16, 16 × 2 = 32",
+        {"visuel": "machine", "titre": "× 4 = × 2 puis × 2", "depart": 41, "operations": ["× 2", "× 2"]},
+        {"visuel": "machine", "titre": "× 5 = × 10 puis : 2", "depart": 14, "operations": ["× 10", ": 2"]},
+        {"visuel": "machine", "titre": ": 4 = : 2 puis : 2", "depart": 52, "operations": [": 2", ": 2"]},
+        {"visuel": "machine", "titre": ": 5 = : 10 puis × 2", "depart": 160, "operations": [": 10", "× 2"]},
         "# Diviser avec les tables",
-        "- 63 : 9 = ? → je cherche **9 × ? = 63** → 7"
+        {"visuel": "encadre", "style": "astuce", "texte": ["63 : 9 = ? → je cherche **9 × ? = 63** → **7**", "La division, c’est la multiplication « à l’envers » !"]}
       ],
       "activites": [
         {"type": "qcm", "question": "Multiplier par 0,5, c'est…", "choix": ["diviser par 2", "multiplier par 2", "diviser par 5", "ajouter 0,5"]},
@@ -245,19 +212,14 @@
       "langue": "en",
       "emoji": "🦇",
       "fiche": [
-        "# BE = être (ce que l'on est)",
-        "- {{I **am**}} · {{you **are**}} · {{he / she / it **is**|he is. she is. it is.}}",
-        "- {{we **are**}} · {{you **are**}} · {{they **are**}}",
-        "- Négatif : {{I'm **not**}} · {{he **isn't**}} · {{they **aren't**}}",
-        "- ⚠️ L'âge se dit avec BE : **{{She is 12.}}** (et pas « she has 12 »)",
-        "# HAVE = avoir (ce que l'on a)",
-        "- {{I **have**}} · {{you **have**}} · {{he / she / it **has**|he has. she has. it has.}}",
-        "- {{we **have**}} · {{you **have**}} · {{they **have**}}",
-        "- Négatif : {{I **don't have**}} · {{he / she / it **doesn't have**|he doesn't have. she doesn't have. it doesn't have.}} (jamais « doesn't has » !)",
-        "- ⚠️ Pas de « a » devant hair ou skin : {{He has black hair.}} {{They have pale skin.}}",
+        "# {{BE|be}} = être (ce que l'on est)",
+        {"visuel": "conjugaison", "titre": "Touche une forme pour l’entendre 🔈", "colonnes": [{"titre": "Affirmatif", "formes": ["{{I **am**}}", "{{you **are**}}", "{{he / she / it **is**|he is. she is. it is.}}", "{{we **are**}}", "{{you **are**}}", "{{they **are**}}"]}, {"titre": "Négatif", "formes": ["{{I'm **not**}}", "{{he **isn't**}}", "{{they **aren't**}}"]}]},
+        {"visuel": "encadre", "style": "attention", "texte": ["L'âge se dit avec BE : {{**She is 12.**|She is 12.}} (et pas « she has 12 »)"]},
+        "# {{HAVE|have}} = avoir (ce que l'on a)",
+        {"visuel": "conjugaison", "colonnes": [{"titre": "Affirmatif", "formes": ["{{I **have**}}", "{{you **have**}}", "{{he / she / it **has**|he has. she has. it has.}}", "{{we **have**}}", "{{you **have**}}", "{{they **have**}}"]}, {"titre": "Négatif", "formes": ["{{I **don't have**}}", "{{he / she / it **doesn't have**|he doesn't have. she doesn't have. it doesn't have.}}"]}]},
+        {"visuel": "encadre", "style": "attention", "texte": ["Jamais « doesn't **has** » : le s est déjà dans doe**s**n't !", "Pas de « a » devant hair ou skin : {{He has black hair.}} {{They have pale skin.}}"]},
         "# Les pronoms sujets",
-        "- Morticia → **{{she}}** · Gomez → **{{he}}** · Thing (la main) → **{{it}}**",
-        "- {{My friend and I}} → **{{we}}** · Gomez and Morticia → **{{they}}**"
+        {"visuel": "cartes", "titre": "Qui est qui ? Touche le pronom pour l’entendre", "elements": [{"emoji": "👩", "titre": "Morticia", "texte": "→ {{**she**|she}}"}, {"emoji": "👨", "titre": "Gomez", "texte": "→ {{**he**|he}}"}, {"emoji": "✋", "titre": "Thing (la main)", "texte": "→ {{**it**|it}}"}, {"emoji": "🧑‍🤝‍🧑", "titre": "{{My friend and I}}", "texte": "→ {{**we**|we}}"}, {"emoji": "👫", "titre": "Gomez and Morticia", "texte": "→ {{**they**|they}}"}]}
       ],
       "activites": [
         {"type": "qcm", "question": "Pugsley … a striped T-shirt.", "choix": ["has", "is", "have", "are"], "explication": "{{Pugsley has a striped T-shirt.}}"},
@@ -285,20 +247,8 @@
       "emoji": "👨‍👩‍👧‍👦",
       "fiche": [
         "# {{die Familie}} = la famille",
-        "- **{{der Großvater (Opa)|der Großvater. Opa.}}** : le grand-père",
-        "- **{{die Großmutter (Oma)|die Großmutter. Oma.}}** : la grand-mère",
-        "- **{{die Großeltern}}** : les grands-parents",
-        "- **{{der Vater (Papa)|der Vater. Papa.}}** : le père",
-        "- **{{die Mutter (Mama)|die Mutter. Mama.}}** : la mère",
-        "- **{{die Eltern}}** : les parents",
-        "- **{{der Onkel}}** : l'oncle",
-        "- **{{die Tante}}** : la tante",
-        "- **{{der Cousin}}** : le cousin",
-        "- **{{die Cousine}}** : la cousine",
-        "- **{{der Bruder}}** : le frère",
-        "- **{{die Schwester}}** : la sœur",
-        "- **{{ich}}** : moi",
-        "**Astuce :** der = masculin, die = féminin… et aussi pluriel ({{die Eltern}}, {{die Großeltern}})."
+        {"visuel": "arbre", "titre": "L’arbre de la famille : touche un mot pour l’entendre 🔈", "niveaux": [{"titre": "{{die Großeltern}} = les grands-parents", "membres": [{"emoji": "👴", "mot": "{{der Großvater (Opa)|der Großvater. Opa.}}", "fr": "le grand-père", "genre": "m"}, {"emoji": "👵", "mot": "{{die Großmutter (Oma)|die Großmutter. Oma.}}", "fr": "la grand-mère", "genre": "f"}]}, {"titre": "{{die Eltern}} = les parents, avec l’oncle et la tante", "membres": [{"emoji": "👨", "mot": "{{der Vater (Papa)|der Vater. Papa.}}", "fr": "le père", "genre": "m"}, {"emoji": "👩", "mot": "{{die Mutter (Mama)|die Mutter. Mama.}}", "fr": "la mère", "genre": "f"}, {"emoji": "🧔", "mot": "{{der Onkel}}", "fr": "l'oncle", "genre": "m"}, {"emoji": "👩‍🦰", "mot": "{{die Tante}}", "fr": "la tante", "genre": "f"}]}, {"titre": "Les enfants", "membres": [{"emoji": "🙋", "mot": "{{ich}}", "fr": "moi", "genre": "moi"}, {"emoji": "👦", "mot": "{{der Bruder}}", "fr": "le frère", "genre": "m"}, {"emoji": "👧", "mot": "{{die Schwester}}", "fr": "la sœur", "genre": "f"}, {"emoji": "🧒", "mot": "{{der Cousin}}", "fr": "le cousin", "genre": "m"}, {"emoji": "👱‍♀️", "mot": "{{die Cousine}}", "fr": "la cousine", "genre": "f"}]}]},
+        {"visuel": "encadre", "style": "astuce", "texte": ["**der** = masculin 🔵 · **die** = féminin 🌸", "**die** aussi au pluriel 💜 : {{die Eltern}}, {{die Großeltern}}"]}
       ],
       "activites": [
         {"type": "paires", "consigne": "Associe le mot allemand au mot français", "paires": [["{{der Vater}}", "le père"], ["{{die Mutter}}", "la mère"], ["{{der Bruder}}", "le frère"], ["{{die Schwester}}", "la sœur"], ["{{der Onkel}}", "l'oncle"]]},
@@ -322,20 +272,20 @@
       "emoji": "🌍",
       "fiche": [
         "# Combien sommes-nous ?",
-        "- En 2026 : plus de **8 milliards** d'habitants sur Terre",
-        "- En 2050 : environ **10 milliards**",
+        {"visuel": "barres", "titre": "La population mondiale grandit", "max": 10, "elements": [{"label": "En 2026", "valeur": 8.2, "texte": "plus de 8 milliards", "couleur": "#14b8a6"}, {"label": "En 2050", "valeur": 9.7, "texte": "environ 10 milliards", "couleur": "#6366f1"}]},
         "# Une population très inégalement répartie",
         "- **Foyer de population** : région du monde qui concentre un grand nombre d'habitants.",
-        "- **3 grands foyers** regroupent plus de la moitié de la population mondiale : **l'Asie du Sud**, **l'Asie de l'Est** et **l'Europe**. Les densités y sont très élevées.",
+        {"visuel": "barres", "titre": "Les 3 grands foyers (nombre d’habitants, environ)", "elements": [{"label": "🌏 Asie du Sud (Inde, Pakistan, Bangladesh…)", "valeur": 2, "texte": "≈ 2 milliards", "couleur": "#f59e0b"}, {"label": "🌏 Asie de l’Est (Chine, Japon, Corée…)", "valeur": 1.65, "texte": "≈ 1,6 milliard", "couleur": "#ec4899"}, {"label": "🌍 Europe", "valeur": 0.75, "texte": "≈ 750 millions", "couleur": "#6366f1"}], "legende": "À eux trois, ils regroupent plus de la moitié de l’humanité !"},
         "- Ces 3 foyers sont les mêmes depuis **2 000 ans** ; on y pratique l'agriculture depuis au moins **7 000 ans**.",
         "- Autres foyers : le **Nord-Est américain**, le **golfe de Guinée**, le **Sud-Est du Brésil**, l'île de **Java**.",
         "- **Densité de population** : nombre moyen d'habitants par km².",
+        {"visuel": "densite", "titre": "La densité : combien d’habitants sur 1 km² ?", "cases": [{"label": "Foyer de population", "points": 120, "texte": "densité très élevée (plus de 100 hab./km²)"}, {"label": "Désert humain", "points": 4, "texte": "5 hab./km² au maximum"}]},
         "# Les déserts humains",
         "- **Désert humain** : territoire faiblement peuplé où la densité ne dépasse pas **5 habitants par km²**.",
-        "- Exemples : le **Grand Nord canadien**, le **Groenland**, la **Sibérie**, le **Sahara**, l'**Arabie**, le **désert australien**, l'**Antarctique**.",
+        {"visuel": "cartes", "elements": [{"emoji": "🥶", "titre": "Trop froid", "texte": "Grand Nord canadien, Groenland, Sibérie, Antarctique", "couleur": "#0ea5e9"}, {"emoji": "🏜️", "titre": "Trop sec", "texte": "Sahara, Arabie, désert australien", "couleur": "#f59e0b"}]},
         "# Les migrations",
         "- **Migration** : déplacement d'une personne (ou d'une population) qui quitte son lieu de résidence pour aller en habiter un autre.",
-        "- Le peuplement de l'Amérique : les **Européens** et la **traite des Noirs** (XVIIe-XIXe siècle), puis les **Latino-Américains** et les **Asiatiques** (XXe siècle)."
+        {"visuel": "frise", "titre": "Le peuplement de l’Amérique", "elements": [{"date": "XVIIe – XIXe siècle", "emoji": "⛵", "titre": "Les Européens et la traite des Noirs", "texte": "Des Européens s’installent en Amérique ; des Africains y sont déportés de force comme esclaves."}, {"date": "XXe siècle", "emoji": "✈️", "titre": "Les Latino-Américains et les Asiatiques", "texte": "De nouvelles migrations continuent de peupler l’Amérique."}]}
       ],
       "activites": [
         {"type": "qcm", "question": "Combien d'habitants y a-t-il sur Terre en 2026 ?", "choix": ["Plus de 8 milliards", "Environ 5 milliards", "Plus de 12 milliards", "Environ 800 millions"]},
@@ -362,25 +312,25 @@
       "emoji": "🧪",
       "fiche": [
         "# La masse",
-        "- La **masse** correspond à la quantité de matière d'un objet.",
+        "- La **masse** correspond à la quantité de matière d'un objet. Instrument : la **balance** ⚖️.",
         "- Unité : le **kilogramme (kg)**. On utilise aussi la tonne (t), le gramme (g), le milligramme (mg).",
         "- 1 t = 1 000 kg · 1 kg = 1 000 g · 1 g = 1 000 mg",
-        "- Instrument de mesure : la **balance**.",
-        "- Masse d'un liquide : je pèse le récipient vide, puis plein, et je fais la **différence** (ou j'utilise la tare).",
+        {"visuel": "conversion", "titre": "Le tableau de conversion des masses (choisis un exemple)", "unites": ["kg", "hg", "dag", "g"], "exemples": [{"valeur": "1", "unite": "kg"}, {"valeur": "2,5", "unite": "kg"}, {"valeur": "350", "unite": "g"}]},
+        {"visuel": "encadre", "style": "exemple", "texte": ["Masse d'un liquide : je pèse le récipient **vide**, puis **plein**, et je fais la **différence** (ou j'utilise la tare)."]},
         "# Le volume",
         "- Le **volume** est la place occupée par un objet.",
         "- Unités : le **litre (L)** et le **mètre cube (m³)**. Aussi : dL, cL, mL, dm³, cm³.",
-        "- 1 L = 10 dL = 100 cL = 1 000 mL",
-        "- **1 L = 1 dm³** · **1 mL = 1 cm³** · **1 m³ = 1 000 L**",
-        "- Instrument : l'**éprouvette graduée**. On lit le volume **en bas du ménisque**, l'œil à la hauteur du liquide, en vérifiant l'unité (mL ou cL ?).",
+        {"visuel": "conversion", "titre": "Le tableau de conversion des volumes", "unites": ["L", "dL", "cL", "mL"], "exemples": [{"valeur": "1", "unite": "L"}, {"valeur": "2,5", "unite": "L"}, {"valeur": "35", "unite": "cL"}, {"valeur": "750", "unite": "mL"}]},
+        {"visuel": "encadre", "style": "retenir", "texte": ["**1 L = 1 dm³** · **1 mL = 1 cm³** · **1 m³ = 1 000 L**"]},
+        {"visuel": "eprouvette", "titre": "L’éprouvette graduée : lis le volume, puis plonge le caillou", "max": 100, "unite": "mL", "valeur": 50, "objet": {"emoji": "🪨", "nom": "caillou", "volume": 15}, "legende": "On lit **en bas du ménisque**, l’œil à la hauteur du liquide, en vérifiant l’unité (mL ou cL ?)."},
         "- Volume d'un solide : je le plonge dans l'eau ; volume du solide = **volume final − volume initial**.",
         "- Volume d'un gaz : je le recueille dans une éprouvette remplie d'eau et retournée ; le volume d'eau chassée = volume du gaz.",
         "# Relation entre masse et volume",
         "- Pour une même matière, masse et volume sont **proportionnels** : 1 L d'eau = 1 kg, 2 L d'eau = 2 kg.",
+        {"visuel": "balance", "titre": "Même volume, masses différentes", "gauche": {"label": "1 L d’eau", "emoji": "💧", "masse": 1000}, "droite": {"label": "1 L de sable", "emoji": "⏳", "masse": 1600}, "unite": "g", "legende": "Deux matières différentes de **même volume** n’ont **pas la même masse** (le sable : environ 1 600 g par litre)."},
         "- Deux matières différentes de même masse n'ont **pas le même volume**.",
-        "- Deux matières différentes de même volume n'ont **pas la même masse**.",
         "- À volume égal, la matière la plus lourde est la plus **dense**.",
-        "- Une matière **moins dense que l'eau flotte** (bois de chêne, polystyrène)."
+        {"visuel": "flottaison", "titre": "Flotte ou coule ? Tout dépend de la densité", "objets": [{"nom": "Polystyrène", "emoji": "📦", "densite": 0.03}, {"nom": "Chêne", "emoji": "🪵", "densite": 0.7}, {"nom": "Glaçon", "emoji": "🧊", "densite": 0.92}, {"nom": "Caillou", "emoji": "🪨", "densite": 2.6}, {"nom": "Fer", "emoji": "🔩", "densite": 7.8}], "legende": "Une matière **moins dense que l’eau** (moins de 1 kg par litre) **flotte**."}
       ],
       "activites": [
         {"type": "qcm", "question": "Quelle est l'unité de la masse ?", "choix": ["le kilogramme (kg)", "le litre (L)", "le mètre cube (m³)", "le degré (°)"]},
@@ -411,22 +361,15 @@
       "fiche": [
         "# L'environnement",
         "- **Définition** : l'environnement est l'ensemble des éléments qui nous entourent.",
-        "- Il se compose d'**êtres vivants** (animaux, végétaux) et de ce qui provient d'un être vivant (feuille, plume),",
-        "- d'**éléments minéraux** (roche, air, eau),",
-        "- et de **traces de l'activité humaine** (bâtiments, bancs).",
+        {"visuel": "cartes", "titre": "Il se compose de…", "elements": [{"emoji": "🐞🌿", "titre": "Êtres vivants", "texte": "animaux, végétaux… et ce qui vient d’eux (feuille, plume)", "couleur": "#22c55e"}, {"emoji": "🪨💧", "titre": "Éléments minéraux", "texte": "roche, air, eau", "couleur": "#0ea5e9"}, {"emoji": "🏢🪑", "titre": "Traces humaines", "texte": "bâtiments, bancs", "couleur": "#f59e0b"}]},
         "# La répartition des êtres vivants",
-        "- Les êtres vivants sont **différents d'un endroit à l'autre**.",
-        "- Ils **ne sont pas répartis au hasard**.",
+        "- Les êtres vivants sont **différents d'un endroit à l'autre** : ils **ne sont pas répartis au hasard**.",
         "- Leur répartition dépend des **facteurs physiques du milieu** : **température**, **éclairement** et **humidité**.",
-        "- Au collège : la **haie** (20 °C, 75 %, 5 000 lux) abrite cloportes, araignées, mousse et lierre ; le **parking** (28 °C, 50 %, 30 000 lux) abrite papillons, fourmis, pins et lilas.",
+        {"visuel": "comparaison", "titre": "Au collège : deux milieux, deux populations", "cotes": [{"titre": "La haie", "emoji": "🌳", "texte": "🐛 cloportes, 🕷️ araignées, mousse, lierre", "mesures": [{"label": "🌡️ Température", "valeur": 20, "max": 35, "unite": "°C", "couleur": "#ef4444"}, {"label": "💧 Humidité", "valeur": 75, "max": 100, "unite": "%", "couleur": "#0ea5e9"}, {"label": "💡 Éclairement", "valeur": 5000, "max": 30000, "unite": "lux", "couleur": "#eab308"}]}, {"titre": "Le parking", "emoji": "🅿️", "texte": "🦋 papillons, 🐜 fourmis, 🌲 pins, lilas", "mesures": [{"label": "🌡️ Température", "valeur": 28, "max": 35, "unite": "°C", "couleur": "#ef4444"}, {"label": "💧 Humidité", "valeur": 50, "max": 100, "unite": "%", "couleur": "#0ea5e9"}, {"label": "💡 Éclairement", "valeur": 30000, "max": 30000, "unite": "lux", "couleur": "#eab308"}]}], "legende": "La haie est plus **fraîche**, plus **humide** et plus **sombre** : on n’y trouve pas les mêmes êtres vivants."},
         "# Les appareils de mesure",
-        "- Température → **thermomètre**, en **degrés Celsius (°C)** : chaud / froid",
-        "- Éclairement → **luxmètre**, en **lux** : éclairé / sombre",
-        "- Humidité → **hygromètre**, en **%** : humide / sec",
+        {"visuel": "cartes", "elements": [{"emoji": "🌡️", "titre": "Température", "texte": "**thermomètre**, en **°C** : chaud / froid", "couleur": "#ef4444"}, {"emoji": "💡", "titre": "Éclairement", "texte": "**luxmètre**, en **lux** : éclairé / sombre", "couleur": "#eab308"}, {"emoji": "💧", "titre": "Humidité", "texte": "**hygromètre**, en **%** : humide / sec", "couleur": "#0ea5e9"}]},
         "# Les relations entre les éléments",
-        "- **Alimentation** : le papillon butine l'arbre aux papillons ; le ragondin mange une moule ; le saule absorbe l'eau.",
-        "- **Support** : la toile d'araignée s'accroche sur la ronce ; le lierre grimpe le long du mur.",
-        "- **Reproduction** : le canard colvert mâle a la tête vert brillant pour attirer la femelle."
+        {"visuel": "liens", "types": {"alimentation": {"label": "Alimentation", "couleur": "#22c55e", "emoji": "🍽️"}, "support": {"label": "Support", "couleur": "#0ea5e9", "emoji": "🧱"}, "reproduction": {"label": "Reproduction", "couleur": "#ec4899", "emoji": "💕"}}, "liens": [{"de": "🦋 Papillon", "vers": "🌸 Arbre aux papillons", "type": "alimentation", "texte": "butine"}, {"de": "🦫 Ragondin", "vers": "🦪 Moule", "type": "alimentation", "texte": "mange"}, {"de": "🌳 Saule", "vers": "💧 Eau", "type": "alimentation", "texte": "absorbe"}, {"de": "🕸️ Toile d’araignée", "vers": "🌿 Ronce", "type": "support", "texte": "s’accroche sur"}, {"de": "🍃 Lierre", "vers": "🧱 Mur", "type": "support", "texte": "grimpe le long du"}, {"de": "🦆 Colvert mâle", "vers": "🦆 Femelle", "type": "reproduction", "texte": "tête vert brillant pour attirer"}]}
       ],
       "activites": [
         {"type": "qcm", "question": "Qu'est-ce que l'environnement ?", "choix": ["L'ensemble des éléments qui nous entourent", "Uniquement les animaux et les plantes", "Uniquement la nature sauvage", "Les bâtiments et les routes"]},

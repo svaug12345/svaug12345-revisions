@@ -108,8 +108,6 @@ function miseEnForme(texte) {
   return html;
 }
 
-// La fiche peut être écrite dans le JSON comme un tableau de lignes (plus pratique) ou un seul texte
-const texteFiche = (lecon) => (Array.isArray(lecon.fiche) ? lecon.fiche.join('\n') : lecon.fiche || '');
 
 // Leçons visibles par un enfant : "pour" absent ou contenant son id ou "tous"
 function leconsDe(idEnfant) {
@@ -124,6 +122,12 @@ function dessinAvatar(enfant, classe = 'avatar') {
   return /\.(svg|png|jpe?g|webp)$/i.test(a)
     ? el('img', { class: classe + ' avatar-img', src: a, alt: enfant.nom })
     : el('span', { class: classe }, a);
+}
+
+/** Remplace le contenu d'un élément (l'écran par défaut). Contrairement à replaceChildren,
+    les valeurs null / false / undefined sont ignorées : replaceChildren(null) écrirait « null » à l'écran. */
+function afficher(...enfants) {
+  ecran.replaceChildren(...enfants.flat().filter((c) => c !== null && c !== undefined && c !== false));
 }
 
 const pluriel = (n, mot) => `${n} ${mot}${n > 1 ? 's' : ''}`;
@@ -241,20 +245,6 @@ function voixDuTelephone(texte, langue = 'fr-FR', vitesse = 0.95) {
   speechSynthesis.speak(phrase);
 }
 
-/** Lit un texte à voix haute : la voix de Papa si le MP3 existe, sinon celle du téléphone. */
-function parler(texte) {
-  // retire la mise en forme (**gras**, # titres, - puces, {{mots étrangers}}) :
-  // l'empreinte reste la même qu'avant l'ajout des {{ }}, donc les MP3 existants marchent toujours
-  const propre = sansMots(texte).replace(/\*\*|^#\s|^-\s/gm, '');
-  couperVoix();
-  const h = empreinte(propre);
-  if (audiosDispo.has(h)) {
-    lecteur = new Audio('audio/' + h + '.mp3');
-    lecteur.play().catch(() => voixDuTelephone(propre)); // MP3 illisible (hors-ligne…) : plan B
-  } else {
-    voixDuTelephone(propre);
-  }
-}
 
 /* ---------- MOTS ÉTRANGERS : écouter et répéter -------------
    Dans lecons.json, une leçon de langue a "langue": "en" ou "de",
@@ -359,20 +349,6 @@ function ouvrirBulleMot(affiche, dit) {
   prononcer(dit);
 }
 
-/** Texte simple -> morceaux de texte + boutons cliquables pour les {{mots étrangers}}. */
-function riche(texte) {
-  const morceaux = [];
-  let fin = 0;
-  for (const m of String(texte).matchAll(MOT_ETRANGER)) {
-    morceaux.push(texte.slice(fin, m.index));
-    const affiche = m[1].replace(/\*\*/g, '');
-    const dit = (m[2] || m[1]).replace(/\*\*/g, '');
-    morceaux.push(el('button', { class: 'mot', onclick: (e) => { e.stopPropagation(); ouvrirBulleMot(affiche, dit); } }, affiche));
-    fin = m.index + m[0].length;
-  }
-  morceaux.push(String(texte).slice(fin));
-  return morceaux;
-}
 
 // Petite vibration (si le téléphone le permet)
 const vibrer = (ms) => navigator.vibrate?.(ms);
@@ -457,7 +433,7 @@ function afficherAccueil() {
   etat.enfant = null;
   entete('Qui révise ?');
   const d = etat.donnees;
-  ecran.replaceChildren(
+  afficher(
     el('p', { class: 'intro' }, 'Choisis ton profil pour commencer 👇'),
     el('div', { class: 'grille-enfants' },
       d.enfants.map((enfant) => {
@@ -500,7 +476,7 @@ function afficherLecons() {
       }, '📤 Ressortir')))) : null;
 
   if (!lecons.length) {
-    ecran.replaceChildren(el('div', { class: 'vide' },
+    afficher(el('div', { class: 'vide' },
       el('div', { class: 'gros-emoji' }, '📭'),
       el('p', {}, archivees.length ? 'Toutes tes leçons sont archivées 📦' : 'Pas encore de leçon ici. Demande à Papa d’en ajouter 😉')),
       blocArchives);
@@ -515,7 +491,7 @@ function afficherLecons() {
     groupes.get(m).push(l);
   }
 
-  ecran.replaceChildren(...[...groupes].map(([matiere, liste]) =>
+  afficher(...[...groupes].map(([matiere, liste]) =>
     el('section', { class: 'groupe' },
       el('h2', {}, matiere),
       liste.map((l) => el('button', { class: 'carte-lecon', onclick: () => aller(afficherLecon, l) },
@@ -532,23 +508,12 @@ function afficherLecons() {
 function afficherLecon(lecon) {
   entete(lecon.titre);
   langueLecon = lecon.langue || null;
-  const fiche = texteFiche(lecon);
   const nb = (lecon.activites || []).length;
-  ecran.replaceChildren(
+  afficher(
     el('div', { class: 'tete-lecon' },
       el('span', { class: 'gros-emoji' }, lecon.emoji || '📘'),
       el('div', {}, el('small', {}, lecon.matiere || ''), el('h2', {}, lecon.titre))),
-    fiche ? el('article', { class: 'fiche' },
-      el('div', { class: 'fiche-haut' },
-        el('h3', {}, '📖 La leçon'),
-        el('button', { class: 'btn-icone', 'aria-label': 'Écouter la leçon', onclick: () => parler(fiche) }, '🔊')),
-      el('div', {
-        html: miseEnForme(fiche),
-        onclick: (e) => { // un mot étranger touché ?
-          const mot = e.target.closest('.mot');
-          if (mot) ouvrirBulleMot(mot.innerHTML.replace(/<\/?b>/g, '**').replace(/&amp;/g, '&'), mot.dataset.dit);
-        },
-      })) : null,
+    dessinerFiche(lecon),
     nb
       ? el('button', { class: 'btn-principal collant', onclick: () => aller(lancerQuiz, lecon) },
         `🚀 C'est parti ! (${pluriel(nb, 'question')})`)
@@ -571,6 +536,47 @@ function toast(texte) {
   const t = el('div', { id: 'toast', class: 'toast' }, texte);
   document.body.append(t);
   setTimeout(() => t.remove(), 2200);
+}
+
+/**
+ * La fiche est découpée en BLOCS : chaque ligne « # Titre » ouvre un nouveau bloc (une carte colorée).
+ * Dans un bloc, les lignes de texte sont mises en forme (puces, gras, mots étrangers)
+ * et les objets { "visuel": ... } deviennent des schémas / animations (voir visuels.js).
+ */
+function dessinerFiche(lecon) {
+  const lignes = Array.isArray(lecon.fiche) ? lecon.fiche : lecon.fiche ? [lecon.fiche] : [];
+  if (!lignes.length) return null;
+  const blocs = [{ titre: null, contenu: [] }];
+  for (const l of lignes) {
+    if (typeof l === 'string' && l.startsWith('# ')) blocs.push({ titre: l.slice(2), contenu: [] });
+    else blocs.at(-1).contenu.push(l);
+  }
+  const couleurs = ['#14b8a6', '#6366f1', '#f59e0b', '#ec4899', '#22c55e', '#0ea5e9'];
+  return el('article', {
+    class: 'fiche',
+    onclick: (e) => { // mot étranger dans le texte mis en forme (HTML) ?
+      const mot = e.target.closest('.mot[data-dit]');
+      if (mot) ouvrirBulleMot(mot.innerHTML.replace(/<\/?b>/g, '**').replace(/&amp;/g, '&'), mot.dataset.dit);
+    },
+  }, blocs.filter((b) => b.titre || b.contenu.length).map((b, i) => el('section', {
+    class: 'bloc' + (b.titre ? '' : ' intro'),
+    style: `--teinte:${couleurs[i % couleurs.length]}`,
+  },
+    b.titre ? el('h3', { html: miseEnForme('# ' + b.titre).replace(/^<h3>|<\/h3>$/g, '') }) : null,
+    contenuBloc(b.contenu))));
+}
+
+// Regroupe les lignes de texte qui se suivent (pour les puces), et dessine les visuels
+function contenuBloc(contenu) {
+  const morceaux = [];
+  let texte = [];
+  const viderTexte = () => { if (texte.length) morceaux.push(el('div', { class: 'texte', html: miseEnForme(texte.join('\n')) })); texte = []; };
+  for (const c of contenu) {
+    if (typeof c === 'string') texte.push(c);
+    else { viderTexte(); morceaux.push(dessinerVisuel(c)); }
+  }
+  viderTexte();
+  return morceaux;
 }
 
 // --- Le quiz : on enchaîne les activités dans un ordre mélangé ---
@@ -602,7 +608,7 @@ function questionSuivante(q) {
 
   const zone = el('div', { class: 'zone-question' });
   const retour = el('div', { class: 'retour' });
-  ecran.replaceChildren(
+  afficher(
     el('div', { class: 'progression' },
       el('div', { class: 'barre', style: `width:${(q.i / q.questions.length) * 100}%` })),
     el('p', { class: 'compteur' }, `${q.entrainement ? '🔁 Deuxième chance · ' : ''}Question ${q.i + 1} / ${q.questions.length}`),
@@ -620,7 +626,7 @@ function questionSuivante(q) {
       el('div', { class: 'bandeau ' + (reussi ? 'ok' : 'ko') },
         el('b', {}, auHasard(reussi ? BRAVO : OUPS)),
         !reussi && bonneReponse ? el('p', {}, 'La bonne réponse : ', el('b', {}, sansMots(bonneReponse))) : null,
-        activite.explication ? el('p', { class: 'explication' }, '💡 ', riche(activite.explication)) : null),
+        activite.explication ? el('p', { class: 'explication' }, '💡 ', enrichir(activite.explication)) : null),
       el('button', { class: 'btn-principal', onclick: () => { q.i++; questionSuivante(q); scrollTo(0, 0); } },
         derniere ? (q.entrainement ? 'Voir mon bilan 🏁' : 'Voir mon score 🏁') : 'Question suivante →'),
     );
@@ -652,7 +658,7 @@ function afficherResultat(q) {
 // Écran intermédiaire : score du 1er passage + annonce du rattrapage
 function ecranDeuxiemeChance(q) {
   const n = q.erreurs.length;
-  ecran.replaceChildren(el('div', { class: 'resultat' },
+  afficher(el('div', { class: 'resultat' },
     dessinGrossesEtoiles(q.premier.etoiles),
     el('p', { class: 'score' }, `${q.premier.bons} / ${q.premier.total} du premier coup`),
     el('div', { class: 'deuxieme-chance' },
@@ -671,7 +677,7 @@ function ecranFinal(lecon, premier, rattrapage, erreursNonRevues = []) {
   const messages = ['On recommence ? Tu vas y arriver 💪', 'Pas mal ! Encore un petit effort 🙂', 'Très bien ! 👏', 'Magnifique ! 🏆'];
   const qRelance = { lecon, erreurs: restantes, premier };
 
-  ecran.replaceChildren(el('div', { class: 'resultat' },
+  afficher(el('div', { class: 'resultat' },
     dessinGrossesEtoiles(premier.etoiles),
     el('h2', {}, messages[premier.etoiles]),
     el('p', { class: 'score' }, `${premier.bons} / ${premier.total} du premier coup`),
@@ -702,11 +708,9 @@ function revoirErreurs(q) {
 // Chaque fonction reçoit : l'activité (lue dans le JSON), la zone où
 // dessiner, et fin(reussi, bonneReponse) à appeler quand c'est répondu.
 
-// Énoncé + bouton 🔊 pour l'écouter (pratique pour les plus jeunes)
+// Énoncé de la question (les {{mots étrangers}} restent cliquables pour les écouter)
 function enonce(texte) {
-  return el('div', { class: 'enonce' },
-    el('p', {}, riche(texte)),
-    el('button', { class: 'btn-icone', 'aria-label': 'Lire à voix haute', onclick: () => parler(texte) }, '🔊'));
+  return el('div', { class: 'enonce' }, el('p', {}, enrichir(texte)));
 }
 
 const ACTIVITES = {
@@ -936,8 +940,8 @@ const ACTIVITES = {
         if (aDire) setTimeout(() => prononcer(aDire), 400); // laisse le temps à la carte de tourner
       },
     },
-      el('div', { class: 'face recto' }, el('span', {}, riche(act.recto)), el('small', {}, 'Touche pour retourner')),
-      el('div', { class: 'face verso' }, el('span', {}, riche(act.verso))));
+      el('div', { class: 'face recto' }, el('span', {}, enrichir(act.recto)), el('small', {}, 'Touche pour retourner')),
+      el('div', { class: 'face verso' }, el('span', {}, enrichir(act.verso))));
     zone.append(enonce(act.consigne || 'Réfléchis, puis retourne la carte'), carte, boutons);
   },
 };
@@ -986,7 +990,7 @@ async function demarrer() {
     }
     sessionStorage.removeItem('revisions-maj');
   } catch (err) {
-    ecran.replaceChildren(el('div', { class: 'vide' },
+    afficher(el('div', { class: 'vide' },
       el('div', { class: 'gros-emoji' }, '😵'),
       el('p', {}, 'Impossible de lire les leçons.'),
       el('pre', { class: 'erreur' }, err.message),

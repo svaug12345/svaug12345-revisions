@@ -119,17 +119,26 @@ h2 { font-weight: 900; }
 .tete-lecon h2 { margin: 0; }
 .tete-lecon small { color: var(--doux); text-transform: uppercase; font-size: .75rem; }
 .gros-emoji { font-size: 3.2rem; }
-.fiche {
-  margin-top: 14px; padding: 16px 18px; border-radius: var(--rayon);
-  background: var(--carte); box-shadow: var(--ombre); line-height: 1.55;
-  user-select: text; -webkit-user-select: text;
-}
-.fiche-haut { display: flex; justify-content: space-between; align-items: center; }
-.fiche-haut h3 { margin: 0; }
-.fiche h3 { color: var(--fonce); }
-.fiche ul { padding-left: 20px; }
+.fiche { margin-top: 14px; line-height: 1.55; user-select: text; -webkit-user-select: text; }
+.fiche ul { padding-left: 20px; margin: 6px 0; }
 .fiche li { margin: 6px 0; }
+.fiche li::marker { color: var(--teinte); }
 .fiche b { color: var(--fonce); }
+.fiche p { margin: 8px 0; }
+
+/* Chaque partie de la leçon = une carte avec un bandeau de couleur */
+.bloc {
+  --teinte: var(--principal);
+  margin-bottom: 16px; padding: 14px 16px 16px; border-radius: var(--rayon);
+  background: var(--carte); box-shadow: var(--ombre);
+  border-top: 6px solid var(--teinte);
+  animation: apparait .4s backwards;
+}
+.bloc.intro { border-top: 0; background: color-mix(in srgb, var(--teinte) 10%, white); font-weight: 700; }
+.bloc h3 {
+  margin: -2px 0 8px; font-size: 1.15rem; font-weight: 900;
+  color: color-mix(in srgb, var(--teinte) 70%, black);
+}
 
 /* ---------- Quiz ---------- */
 .progression { height: 12px; border-radius: 99px; background: var(--clair); overflow: hidden; }
@@ -358,3 +367,252 @@ button { cursor: pointer; }
   /* aide clavier affichée seulement sur grand écran */
   .compteur::after { content: '  ·  ⌨️ 1-4 pour répondre, Entrée pour continuer'; color: var(--doux); font-weight: 600; font-size: .8rem; }
 }
+
+/* =============================================================
+   VISUELS PÉDAGOGIQUES (voir visuels.js)
+   Les animations démarrent quand le visuel devient visible :
+   visuels.js ajoute alors la classe .vu au cadre <figure>.
+   --i (posé par visuels.js) = rang de l'élément, pour une apparition en cascade.
+   ============================================================= */
+.visuel {
+  margin: 14px 0 6px; padding: 14px; border-radius: 16px;
+  background: color-mix(in srgb, var(--teinte, var(--principal)) 8%, white);
+  border: 2px solid color-mix(in srgb, var(--teinte, var(--principal)) 25%, white);
+  user-select: none; -webkit-user-select: none;
+}
+.visuel figcaption { font-weight: 900; color: var(--fonce); margin-bottom: 10px; font-size: 1.02rem; }
+.visuel .legende { color: var(--doux); font-size: .9rem; margin: 10px 0 0; }
+.btn-visuel {
+  font: inherit; font-weight: 800; border: 0; border-radius: 12px; padding: 10px 14px; margin-top: 10px;
+  background: var(--fonce); color: #fff; box-shadow: 0 3px 0 rgba(0, 0, 0, .2);
+}
+.btn-visuel:active { transform: translateY(2px); box-shadow: none; }
+.defile { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* Apparition en cascade (utilisée par plusieurs visuels) */
+.carte-info, .tuile-info, .conjugaison li, .frise li, .arbre-niveau, .barre-ligne, .jauge, .lien,
+.table-virgule tbody tr, .machine-chaine > * { opacity: 0; }
+.vu .carte-info, .vu .tuile-info, .vu .frise li, .vu .arbre-niveau, .vu .barre-ligne, .vu .jauge, .vu .lien,
+.vu .table-virgule tbody tr, .machine-chaine > *, .vu .conjugaison li {
+  animation: monteDoux .5s calc(var(--i, 0) * .12s) forwards;
+}
+@keyframes monteDoux { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* --- Encadré --- */
+.encadre { border-radius: 14px; padding: 10px 14px; border-left: 6px solid; }
+.encadre p { margin: 4px 0; }
+.encadre-titre { font-weight: 900; }
+.encadre.astuce { background: #fef9c3; border-color: #eab308; }
+.encadre.attention { background: #fee2e2; border-color: #ef4444; }
+.encadre.retenir { background: #e0e7ff; border-color: #6366f1; }
+.encadre.exemple { background: #dcfce7; border-color: #22c55e; }
+.visuel-encadre { padding: 0; border: 0; background: none; }
+
+/* --- Cartes --- */
+.grille-cartes { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; }
+.carte-info {
+  background: #fff; border-radius: 14px; padding: 12px; text-align: center;
+  border-bottom: 4px solid var(--teinte, var(--principal)); box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+}
+.carte-info p { margin: 4px 0 0; font-size: .86rem; line-height: 1.35; }
+.carte-emoji { font-size: 2.1rem; line-height: 1.2; }
+
+/* --- Tuiles --- */
+.grille-tuiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
+.tuile-info { background: #fff; border-radius: 12px; padding: 10px; text-align: center; font-weight: 800; box-shadow: 0 2px 6px rgba(0, 0, 0, .06); }
+
+/* --- Conjugaison --- */
+.conjugaison { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.colonne-conj { background: #fff; border-radius: 14px; padding: 10px 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, .06); }
+.tete-conj { display: flex; flex-direction: column; border-bottom: 2px dashed var(--clair); padding-bottom: 6px; margin-bottom: 4px; }
+.tete-conj small { color: var(--doux); }
+.conjugaison ul { list-style: none; padding: 0; margin: 0; }
+.conjugaison li { margin: 4px 0; }
+/* la terminaison (en gras) est colorée et « s'allume » */
+.conjugaison li b { color: #db2777; background: #fce7f3; border-radius: 6px; padding: 0 3px; }
+.vu .conjugaison li b { animation: allume .6s calc(var(--i, 0) * .12s + .3s) both; }
+@keyframes allume { 0% { background: #fce7f3; } 50% { background: #f9a8d4; transform: scale(1.12); } 100% { background: #fce7f3; } }
+
+/* --- Table de multiplication en points --- */
+.mult-boutons { display: flex; flex-wrap: wrap; gap: 6px; }
+.mult-boutons button { font: inherit; font-weight: 800; border: 0; border-radius: 10px; padding: 6px 10px; background: #fff; color: var(--fonce); box-shadow: 0 2px 0 var(--clair); }
+.mult-boutons button.actif { background: var(--principal); color: #fff; }
+.mult-resultat { font-size: 2rem; font-weight: 900; text-align: center; margin: 12px 0 8px; color: var(--fonce); }
+.mult-resultat b { color: #db2777; }
+.mult-points { display: flex; flex-direction: column; gap: 5px; align-items: center; }
+.rangee { display: flex; gap: 5px; align-items: center; animation: monteDoux .35s calc(var(--i) * .07s) backwards; }
+.rangee .point { width: 18px; height: 18px; border-radius: 50%; background: hsl(var(--h) 75% 55%); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .15); }
+.rangee small { width: 30px; text-align: right; color: var(--doux); font-weight: 800; }
+
+/* --- Frise --- */
+.frise { list-style: none; padding: 0 0 0 8px; margin: 0; position: relative; }
+.frise::before { content: ''; position: absolute; left: 25px; top: 6px; bottom: 6px; width: 4px; border-radius: 4px; background: var(--clair); }
+.frise li { display: flex; gap: 12px; align-items: flex-start; margin: 10px 0; position: relative; }
+.frise-pastille {
+  flex: none; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center;
+  background: #fff; border: 3px solid var(--principal); font-size: 1.1rem; z-index: 1;
+}
+.frise-carte { background: #fff; border-radius: 12px; padding: 8px 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, .06); flex: 1; }
+.frise-carte p { margin: 2px 0 0; font-size: .93rem; }
+.frise-date { display: block; font-weight: 900; color: #b45309; }
+
+/* --- Plans du récit (imparfait / passé simple) --- */
+.plans-choix { display: flex; gap: 6px; margin-bottom: 6px; }
+.plans-choix button, .conversion-choix button {
+  font: inherit; font-weight: 800; border: 0; border-radius: 10px; padding: 6px 12px; background: #fff; color: var(--fonce);
+}
+.plans-choix button.actif, .conversion-choix button.actif { background: var(--fonce); color: #fff; }
+.plans-phrase { font-size: 1.05rem; font-style: italic; background: #fff; padding: 8px 12px; border-radius: 12px; }
+.plans-scene { position: relative; height: 170px; margin: 8px 0; }
+.plans-axe { position: absolute; left: 0; right: 0; bottom: 18px; height: 3px; background: #94a3b8; }
+.plans-axe::after { content: ''; position: absolute; right: -2px; top: -6px; border: 7px solid transparent; border-left: 12px solid #94a3b8; }
+.plans-axe span { position: absolute; right: 0; top: 6px; font-size: .75rem; color: var(--doux); }
+.plans-bande {
+  position: absolute; left: 0; right: 0; bottom: 30px; height: 46px; border-radius: 10px;
+  background: repeating-linear-gradient(45deg, #bfdbfe, #bfdbfe 10px, #dbeafe 10px, #dbeafe 20px);
+  display: flex; align-items: center; font-weight: 800; color: #1e3a8a; padding: 0 10px; font-size: .88rem;
+  transform-origin: left; animation: deroule 1s ease-out backwards;
+}
+@keyframes deroule { from { transform: scaleX(0); } }
+.plans-bande span { max-width: 54%; line-height: 1.2; }
+.plans-eclair {
+  position: absolute; bottom: 70px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center;
+  animation: tombe .5s backwards;
+}
+/* trait d'impact orange dans la bande, là où l'action surgit */
+.plans-impact { position: absolute; bottom: 30px; height: 46px; width: 5px; margin-left: -2px; border-radius: 3px; background: #f59e0b; animation: fondu .3s backwards; }
+.plans-eclair .eclair { font-size: 2.2rem; line-height: 1; filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .25)); }
+.plans-etiquette { background: #fef3c7; border: 2px solid #f59e0b; color: #92400e; font-weight: 900; border-radius: 10px; padding: 3px 8px; font-size: .8rem; white-space: nowrap; margin-bottom: 2px; }
+@keyframes tombe { from { opacity: 0; transform: translate(-50%, -60px) scale(1.6); } 70% { transform: translate(-50%, 4px); } }
+.plans-legende { display: flex; flex-direction: column; gap: 4px; font-size: .85rem; font-weight: 700; }
+.puce-bande::before { content: ''; display: inline-block; width: 22px; height: 12px; margin-right: 6px; border-radius: 3px; background: #bfdbfe; vertical-align: middle; }
+
+/* --- Décision --- */
+.decision-question { font-weight: 900; margin-top: 0; }
+.decision-liste { display: grid; gap: 8px; }
+.decision-choix { font: inherit; text-align: left; border: 2px solid var(--clair); border-radius: 12px; padding: 10px 12px; background: #fff; color: var(--texte); font-weight: 700; }
+.decision-choix::before { content: 'Si « leur » est devant… '; display: none; }
+.decision-choix.actif { border-color: var(--principal); background: var(--clair); }
+.decision-reponse { margin-top: 10px; padding: 12px; border-radius: 12px; background: #dcfce7; color: #14532d; }
+.decision-reponse p { margin: 6px 0 0; }
+.decision-reponse.pop { animation: pop .35s; }
+
+/* --- Machine à calculer --- */
+.machine-chaine { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; justify-content: center; }
+.machine-nombre { font-size: 1.5rem; font-weight: 900; background: #fff; border-radius: 12px; padding: 6px 12px; box-shadow: 0 3px 0 var(--clair); }
+.machine-nombre.final { background: #fce7f3; color: #be185d; box-shadow: 0 3px 0 #f9a8d4; }
+.machine-op { display: flex; flex-direction: column; align-items: center; font-weight: 900; color: #6366f1; }
+.machine-op i { font-style: normal; font-size: 1.3rem; }
+.machine-chaine > * { animation-delay: calc(var(--i, 0) * .35s) !important; }
+.machine-essai { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
+.machine-champ { font: inherit; font-weight: 800; width: 90px; padding: 8px; border-radius: 10px; border: 2px solid var(--clair); text-align: center; }
+.machine-essai .btn-visuel { margin-top: 0; }
+
+/* --- Tableau de la virgule --- */
+.table-virgule, .table-conversion { border-collapse: collapse; margin: 0 auto; background: #fff; border-radius: 10px; overflow: hidden; }
+.table-virgule th, .table-virgule td, .table-conversion th, .table-conversion td { border: 1px solid #e2e8f0; padding: 5px 6px; text-align: center; min-width: 24px; }
+.table-virgule thead th, .table-conversion thead th { background: var(--fonce); color: #fff; }
+.table-virgule tbody th { text-align: right; font-size: .85rem; color: var(--doux); white-space: nowrap; }
+.table-virgule td { font-size: 1.25rem; font-weight: 900; }
+.table-virgule .col-virgule { color: #db2777; min-width: 12px; padding: 6px 2px; }
+.table-virgule .egal { font-size: .95rem; color: #be185d; border: 0; white-space: nowrap; }
+
+/* --- Arbre généalogique --- */
+.arbre { display: flex; flex-direction: column; gap: 18px; }
+.arbre-niveau { position: relative; }
+.arbre-niveau + .arbre-niveau::before { content: ''; position: absolute; left: 50%; top: -18px; height: 18px; border-left: 3px dotted #94a3b8; }
+.arbre-titre { text-align: center; font-weight: 900; color: var(--doux); font-size: .85rem; margin-bottom: 6px; }
+.arbre-membres { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.arbre-membre { flex: 0 1 calc(100% / var(--n, 2) - 8px); min-width: 0; display: flex; flex-direction: column; align-items: center; text-align: center; background: #fff; border-radius: 14px; padding: 8px 6px; border-bottom: 4px solid; box-shadow: 0 2px 8px rgba(0, 0, 0, .06); font-size: .88rem; }
+.arbre-emoji { font-size: 1.9rem; }
+.arbre-mot { font-weight: 900; margin: 2px 0; }
+.arbre-membre small { color: var(--doux); }
+.genre-m { border-color: #3b82f6; } .genre-f { border-color: #ec4899; } .genre-pl { border-color: #a855f7; }
+.arbre-legende { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; font-size: .8rem; font-weight: 800; }
+.arbre-legende span { border-bottom: 4px solid; padding: 2px 6px; background: #fff; border-radius: 6px; }
+
+/* --- Barres --- */
+.barres { display: grid; gap: 10px; }
+.barre-label { display: block; font-weight: 800; font-size: .9rem; }
+.barre-fond { height: 28px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+.barre-remplie { height: 100%; width: 0; background: var(--teinte); border-radius: 99px; display: flex; align-items: center; justify-content: flex-end; }
+.barre-remplie span { color: #fff; font-weight: 900; font-size: .85rem; padding: 0 10px; white-space: nowrap; }
+.vu .barre-remplie { animation: remplit 1.2s calc(var(--i, 0) * .25s + .2s) ease-out forwards; }
+@keyframes remplit { to { width: var(--w); } }
+
+/* --- Densité --- */
+.densite { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; text-align: center; }
+.densite-case { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.densite-carre { position: relative; width: 100%; max-width: 160px; aspect-ratio: 1; background: #fff; border: 3px solid #94a3b8; border-radius: 8px; }
+.habitant { position: absolute; width: 7px; height: 7px; border-radius: 50%; background: #ef4444; opacity: 0; }
+.vu .habitant { animation: popPoint .3s forwards; }
+@keyframes popPoint { from { opacity: 0; transform: scale(3); } to { opacity: 1; transform: none; } }
+.densite small { color: var(--doux); }
+
+/* --- Éprouvette --- */
+.eprouvette { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: center; }
+.eprouvette-svg { width: 200px; max-width: 60%; }
+.eprouvette-svg .grad { font-size: 11px; fill: #475569; font-weight: 700; }
+.eprouvette-svg .liquide { fill: #7dd3fc; stroke: #0284c7; stroke-width: 1.5; transition: d .3s; }
+.eprouvette-svg .ligne-lecture { stroke: #db2777; stroke-width: 2; }
+.eprouvette-svg .oeil { font-size: 20px; }
+.eprouvette-svg .objet-plonge { font-size: 30px; transition: opacity .4s; }
+.eprouvette-commandes { flex: 1; min-width: 180px; display: flex; flex-direction: column; gap: 10px; }
+.eprouvette-commandes label { display: flex; flex-direction: column; font-size: .85rem; font-weight: 800; color: var(--doux); }
+.eprouvette-commandes input[type=range] { width: 100%; accent-color: var(--principal); }
+.eprouvette-lecture { margin: 0; background: #fff; padding: 10px; border-radius: 12px; }
+.surligne { background: #fce7f3; color: #be185d; padding: 0 4px; border-radius: 6px; }
+
+/* --- Conversion --- */
+.conversion-choix { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.table-conversion td { font-size: 1.5rem; font-weight: 900; height: 46px; min-width: 48px; position: relative; }
+.table-conversion .unite-depart { background: #fef3c7; }
+.virgule-conv { color: #db2777; position: absolute; right: -6px; bottom: 4px; }
+.conversion-resultats { font-weight: 800; text-align: center; }
+.vu .table-conversion td { animation: monteDoux .4s calc(var(--i, 0) * .1s) backwards; }
+
+/* --- Balance --- */
+.balance { text-align: center; }
+.balance-svg { width: 100%; max-width: 330px; }
+.balance-etiquettes { display: flex; justify-content: space-between; max-width: 330px; margin: 0 auto; font-size: .85rem; }
+.balance-etiquettes span { flex: 1; }
+
+/* --- Flotte ou coule --- */
+.bac { position: relative; height: 240px; border: 4px solid #94a3b8; border-top: 0; border-radius: 0 0 18px 18px; overflow: hidden; background: #f8fafc; }
+.eau { position: absolute; left: 0; right: 0; bottom: 0; top: 40%; background: linear-gradient(#7dd3fc, #0ea5e9); }
+.eau span { position: absolute; left: 8px; bottom: 6px; color: #fff; font-size: .75rem; font-weight: 800; }
+.objet-bac { position: absolute; top: -30%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; text-align: center; }
+.objet-emoji { font-size: 2.1rem; line-height: 1; }
+.objet-bac small { font-size: .68rem; font-weight: 800; background: rgba(255, 255, 255, .85); border-radius: 6px; padding: 1px 4px; }
+.vu .objet-bac { animation: plonge 1.6s forwards; }
+@keyframes plonge {
+  0% { top: -30%; }
+  45% { top: calc(var(--fin) + 6%); }
+  70% { top: calc(var(--fin) - 3%); }
+  100% { top: var(--fin); }
+}
+.objet-bac.coule small { background: rgba(254, 226, 226, .95); }
+
+/* --- Comparaison de milieux --- */
+.comparaison { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cote { background: #fff; border-radius: 14px; padding: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, .06); }
+.cote-titre { display: flex; align-items: center; gap: 6px; font-size: 1.05rem; margin-bottom: 6px; }
+.cote-titre span { font-size: 1.7rem; }
+.jauge { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 6px; margin: 6px 0; font-size: .8rem; }
+.jauge-label { grid-column: 1 / -1; font-weight: 800; }
+.jauge-fond { height: 12px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+.jauge-remplie { height: 100%; width: 0; background: var(--teinte); border-radius: 99px; }
+.vu .jauge-remplie { animation: remplit 1.1s calc(var(--i, 0) * .2s + .3s) ease-out forwards; }
+.cote-texte { font-size: .85rem; margin: 8px 0 0; }
+
+/* --- Liens (relations) --- */
+.liens { display: grid; gap: 8px; }
+.liens-legende { display: flex; flex-wrap: wrap; gap: 6px; }
+.liens-legende span { background: color-mix(in srgb, var(--teinte) 20%, white); color: color-mix(in srgb, var(--teinte) 70%, black); border-radius: 99px; padding: 3px 10px; font-weight: 800; font-size: .8rem; }
+.lien { display: grid; grid-template-columns: 1fr minmax(70px, 1.1fr) 1fr; align-items: center; gap: 6px; background: #fff; border-radius: 12px; padding: 8px; border-left: 5px solid var(--teinte); }
+.lien-bout { text-align: center; font-weight: 800; font-size: .9rem; }
+.lien-fleche { display: flex; flex-direction: column; align-items: center; color: color-mix(in srgb, var(--teinte) 70%, black); min-width: 70px; }
+.lien-fleche small { font-size: .7rem; font-weight: 800; text-align: center; }
+.lien-fleche i { display: block; width: 100%; height: 3px; background: var(--teinte); position: relative; }
+.lien-fleche i::after { content: ''; position: absolute; right: -2px; top: -5px; border: 6px solid transparent; border-left: 9px solid var(--teinte); }
+.genre-moi { border-color: #f59e0b; }
