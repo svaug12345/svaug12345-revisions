@@ -297,58 +297,91 @@ function ressemble(entendu, attendu) {
   return d[a.length][b.length] / Math.max(a.length, b.length) <= 0.25; // 75 % de lettres justes suffisent
 }
 
-/** Ouvre la bulle d'un mot : il est prononcé tout de suite, puis l'enfant peut réécouter ou essayer. */
+/* Le LECTEUR de mots étrangers : une petite barre posée en bas de l'écran.
+   Il ne bloque rien (pas de fond grisé) : on peut toucher un autre mot directement,
+   le lecteur se met à jour et le prononce. Il se range tout seul après quelques
+   secondes sans action (sauf pendant que le micro écoute). */
+let lecteurMot = null; // { panneau, mot, message, micro, dit, ecoute, minuteur }
+
+function fermerLecteurMot() {
+  if (!lecteurMot) return;
+  lecteurMot.ecoute?.abort();
+  clearTimeout(lecteurMot.minuteur);
+  const panneau = lecteurMot.panneau;
+  panneau.classList.add('sortie');                  // petite animation de sortie
+  setTimeout(() => panneau.remove(), 200);
+  document.body.classList.remove('avec-lecteur');
+  lecteurMot = null;
+}
+
+// Relance le compte à rebours de rangement automatique (8 s sans toucher au lecteur)
+function minuterieLecteur() {
+  if (!lecteurMot) return;
+  clearTimeout(lecteurMot.minuteur);
+  lecteurMot.minuteur = setTimeout(() => { if (lecteurMot && !lecteurMot.ecoute) fermerLecteurMot(); }, 8000);
+}
+
+/** Prononce un mot et l'affiche dans le lecteur (créé au premier mot touché). */
 function ouvrirBulleMot(affiche, dit) {
-  $('#bulle-mot')?.remove();
-  const message = el('p', { class: 'bulle-message' }, Reconnaissance ? 'Écoute, puis répète !' : 'Écoute, puis répète à voix haute !');
-  let ecoute = null; // reconnaissance vocale en cours
+  if (!lecteurMot) creerLecteurMot();
+  const L = lecteurMot;
+  L.ecoute?.abort();
+  L.dit = dit;
+  L.mot.innerHTML = echapper(affiche).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+  L.mot.classList.remove('pop'); void L.mot.offsetWidth; L.mot.classList.add('pop'); // relance l'animation
+  L.message.className = 'bulle-message';
+  L.message.textContent = Reconnaissance ? 'Écoute, puis touche 🎤 pour répéter' : 'Écoute, puis répète à voix haute';
+  prononcer(dit);
+  minuterieLecteur();
+}
 
-  const fermer = () => { ecoute?.abort(); couperVoix(); fond.remove(); };
-  const micro = Reconnaissance ? el('button', { class: 'btn-bulle micro', onclick: essayer }, '🎤 À toi !') : null;
+function creerLecteurMot() {
+  const L = (lecteurMot = {});
+  L.mot = el('p', { class: 'bulle-mot' });
+  L.message = el('p', { class: 'bulle-message' });
+  L.micro = Reconnaissance ? el('button', { class: 'btn-bulle micro', 'aria-label': 'Répéter au micro', onclick: essayer }, '🎤') : null;
 
+  // Le micro écoute l'enfant et compare avec le mot attendu
   function essayer() {
-    if (ecoute) { ecoute.stop(); return; } // 2e appui = j'ai fini de parler
+    if (L.ecoute) { L.ecoute.stop(); return; } // 2e appui = j'ai fini de parler
     couperVoix();
-    ecoute = new Reconnaissance();
+    clearTimeout(L.minuteur);
+    const ecoute = (L.ecoute = new Reconnaissance());
     ecoute.lang = LANGUES[langueLecon] || langueLecon;
     ecoute.maxAlternatives = 5;   // le micro propose plusieurs "j'ai peut-être entendu…"
     ecoute.interimResults = false;
-    micro.classList.add('en-cours');
-    micro.textContent = '👂 Je t’écoute…';
-    message.textContent = 'Parle maintenant !';
-    message.className = 'bulle-message';
+    L.micro.classList.add('en-cours');
+    L.message.className = 'bulle-message';
+    L.message.textContent = 'Parle maintenant !';
     ecoute.onresult = (e) => {
       const entendus = [...e.results[0]].map((alt) => alt.transcript);
-      const reussi = entendus.some((t) => ressemble(t, dit));
-      message.className = 'bulle-message ' + (reussi ? 'ok' : 'ko');
-      message.textContent = reussi ? auHasard(['Bravo ! 🎉', 'Parfait ! 🌟', 'Super prononciation ! 👏'])
+      const reussi = entendus.some((t) => ressemble(t, L.dit));
+      L.message.className = 'bulle-message ' + (reussi ? 'ok' : 'ko');
+      L.message.textContent = reussi ? auHasard(['Bravo ! 🎉', 'Parfait ! 🌟', 'Super prononciation ! 👏'])
         : `J’ai entendu « ${entendus[0]} »… Réécoute et réessaie 💪`;
       son(reussi ? 'bon' : 'petit');
       if (reussi) vibrer(60);
     };
     ecoute.onerror = (e) => {
-      message.className = 'bulle-message ko';
-      message.textContent = e.error === 'not-allowed' ? 'Autorise le micro pour t’entendre 🎤'
+      L.message.className = 'bulle-message ko';
+      L.message.textContent = e.error === 'not-allowed' ? 'Autorise le micro pour t’entendre 🎤'
         : e.error === 'no-speech' ? 'Je n’ai rien entendu… Parle plus fort !'
         : e.error === 'network' ? 'Le micro a besoin d’internet 📶' : 'Oups, réessaie !';
     };
-    ecoute.onend = () => { ecoute = null; micro.classList.remove('en-cours'); micro.textContent = '🎤 À toi !'; };
+    ecoute.onend = () => { L.ecoute = null; L.micro.classList.remove('en-cours'); minuterieLecteur(); };
     ecoute.start();
   }
 
-  const fond = el('div', { id: 'bulle-mot', class: 'fond-bulle', onclick: (e) => { if (e.target === fond) fermer(); } },
-    el('div', { class: 'bulle' },
-      el('button', { class: 'fermer-bulle', 'aria-label': 'Fermer', onclick: fermer }, '✕'),
-      el('p', { class: 'bulle-mot', html: echapper(affiche).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>') }),
-      el('div', { class: 'boutons-bulle' },
-        el('button', { class: 'btn-bulle', onclick: () => prononcer(dit) }, '🔊 Écouter'),
-        el('button', { class: 'btn-bulle', onclick: () => prononcer(dit, true) }, '🐢 Lentement'),
-        micro),
-      message));
-  document.body.append(fond);
-  prononcer(dit);
+  L.panneau = el('div', { id: 'bulle-mot', class: 'lecteur-mot', role: 'region', 'aria-label': 'Prononciation' },
+    el('div', { class: 'lecteur-texte' }, L.mot, L.message),
+    el('div', { class: 'boutons-bulle' },
+      el('button', { class: 'btn-bulle', 'aria-label': 'Réécouter', onclick: () => { prononcer(L.dit); minuterieLecteur(); } }, '🔊'),
+      el('button', { class: 'btn-bulle', 'aria-label': 'Lentement', onclick: () => { prononcer(L.dit, true); minuterieLecteur(); } }, '🐢'),
+      L.micro,
+      el('button', { class: 'fermer-bulle', 'aria-label': 'Fermer', onclick: fermerLecteurMot }, '✕')));
+  document.body.append(L.panneau);
+  document.body.classList.add('avec-lecteur'); // laisse de la place en bas de page pour ne rien cacher
 }
-
 
 // Petite vibration (si le téléphone le permet)
 const vibrer = (ms) => navigator.vibrate?.(ms);
@@ -423,7 +456,7 @@ function entete(titre) {
   $('#btn-retour').hidden = pile.length <= 1;
   $('#badge-enfant').replaceChildren(etat.enfant ? dessinAvatar(etat.enfant, 'mini-avatar') : '');
   couperVoix(); // on coupe la voix en changeant d'écran
-  $('#bulle-mot')?.remove(); // et on ferme la bulle d'un mot étranger
+  fermerLecteurMot(); // et on range le lecteur de mots étrangers
 }
 
 /* ---------- 5. LES ÉCRANS ------------------------------------ */
@@ -462,18 +495,18 @@ function afficherLecons() {
   const lecons = toutes.filter((l) => !estArchivee(enfant.id, l));
   const archivees = toutes.filter((l) => estArchivee(enfant.id, l));
 
-  // Bloc "📦 Leçons archivées" (replié par défaut), avec un bouton pour sortir chaque leçon
+  // Bloc "📦 Leçons archivées" (replié par défaut), rangé lui aussi par matière,
+  // avec un bouton pour ressortir chaque leçon
   const blocArchives = archivees.length ? el('details', { class: 'archives' },
     el('summary', {}, `📦 Leçons archivées (${archivees.length})`),
-    archivees.map((l) => el('div', { class: 'ligne-archive' },
-      el('button', { class: 'carte-lecon archivee', onclick: () => aller(afficherLecon, l) },
-        el('span', { class: 'emoji' }, l.emoji || '📘'),
-        el('span', { class: 'infos' }, el('b', {}, l.titre), el('small', {}, l.matiere || '')),
-        el('span', { class: 'etoiles' }, dessinEtoiles(etoilesDe(enfant.id, l.id)))),
-      el('button', {
-        class: 'btn-petit', title: 'Remettre dans mes leçons',
-        onclick: () => { changerArchive(enfant.id, l, false); afficherLecons(); },
-      }, '📤 Ressortir')))) : null;
+    parMatiere(archivees).map(([matiere, liste]) => el('section', { class: 'groupe' },
+      el('h2', {}, matiere),
+      liste.map((l) => el('div', { class: 'ligne-archive' },
+        carteLecon(l, 'archivee'),
+        el('button', {
+          class: 'btn-petit', title: 'Remettre dans mes leçons',
+          onclick: () => { changerArchive(enfant.id, l, false); afficherLecons(); },
+        }, '📤 Ressortir')))))) : null;
 
   if (!lecons.length) {
     afficher(el('div', { class: 'vide' },
@@ -483,25 +516,30 @@ function afficherLecons() {
     return;
   }
 
-  // Regroupe par matière en gardant l'ordre du fichier
+  afficher(...parMatiere(lecons).map(([matiere, liste]) =>
+    el('section', { class: 'groupe' },
+      el('h2', {}, matiere),
+      liste.map((l) => carteLecon(l)),
+    )), blocArchives);
+}
+
+// Regroupe des leçons par matière, en gardant l'ordre du fichier : [["Maths", [...]], ...]
+function parMatiere(lecons) {
   const groupes = new Map();
   for (const l of lecons) {
     const m = l.matiere || 'Divers';
     if (!groupes.has(m)) groupes.set(m, []);
     groupes.get(m).push(l);
   }
+  return [...groupes];
+}
 
-  afficher(...[...groupes].map(([matiere, liste]) =>
-    el('section', { class: 'groupe' },
-      el('h2', {}, matiere),
-      liste.map((l) => el('button', { class: 'carte-lecon', onclick: () => aller(afficherLecon, l) },
-        el('span', { class: 'emoji' }, l.emoji || '📘'),
-        el('span', { class: 'infos' },
-          el('b', {}, l.titre),
-          el('small', {}, pluriel((l.activites || []).length, 'question'))),
-        el('span', { class: 'etoiles' }, dessinEtoiles(etoilesDe(enfant.id, l.id))),
-      )),
-    )), blocArchives);
+// Carte d'une leçon dans une liste : emoji, titre, étoiles (sans le nombre de questions)
+function carteLecon(l, classe = '') {
+  return el('button', { class: 'carte-lecon ' + classe, onclick: () => aller(afficherLecon, l) },
+    el('span', { class: 'emoji' }, l.emoji || '📘'),
+    el('span', { class: 'infos' }, el('b', {}, l.titre)),
+    el('span', { class: 'etoiles' }, dessinEtoiles(etoilesDe(etat.enfant.id, l.id))));
 }
 
 // --- Une leçon : la fiche à relire + le bouton pour lancer le quiz ---
@@ -584,7 +622,45 @@ function lancerQuiz(lecon) {
   langueLecon = lecon.langue || null;
   entete(lecon.titre);
   const questions = lecon.melanger === false ? [...lecon.activites] : melanger(lecon.activites);
-  questionSuivante({ lecon, questions, i: 0, bons: 0, erreurs: [], entrainement: false });
+  questionSuivante({ lecon, questions, i: 0, bons: 0, erreurs: [], entrainement: false, serie: 0, historique: [] });
+}
+
+/* Habillage de chaque type de question : emoji, petite consigne, couleur de la carte */
+const STYLE_QUESTION = {
+  qcm: ['🎯', 'Choisis la bonne réponse', '#6366f1'],
+  vraifaux: ['⚖️', 'Vrai ou faux ?', '#f59e0b'],
+  saisie: ['✍️', 'À toi d’écrire', '#ec4899'],
+  trous: ['🧩', 'Complète la phrase', '#14b8a6'],
+  paires: ['🔗', 'Relie les paires', '#0ea5e9'],
+  ordre: ['🔢', 'Remets dans l’ordre', '#22c55e'],
+  carte: ['🃏', 'Carte mémo', '#a855f7'],
+};
+
+/** La piste de course : une case par question (verte = juste, orange = raté),
+    l'avatar de l'enfant avance jusqu'au drapeau 🏁. */
+function dessinPiste(q) {
+  const n = q.questions.length;
+  return el('div', { class: 'piste', 'aria-label': `Question ${q.i + 1} sur ${n}` },
+    el('div', { class: 'piste-cases' }, q.questions.map((_, k) => el('span', {
+      class: 'case' + (k < q.historique.length ? (q.historique[k] ? ' ok' : ' ko') : '') + (k === q.i ? ' actuelle' : ''),
+    }))),
+    el('div', { class: 'piste-coureur', style: `left:${((q.i + 0.5) / n) * 100}%` }, dessinAvatar(etat.enfant, 'mini-avatar')),
+    el('span', { class: 'piste-arrivee' }, '🏁'));
+}
+
+/** Petite gerbe d'emojis qui jaillit d'un élément (bonne réponse !) */
+function eclats(element, emojis = ['⭐', '✨', '🎉', '💫']) {
+  const r = element.getBoundingClientRect();
+  for (let k = 0; k < 14; k++) {
+    const angle = (Math.PI * 2 * k) / 14 + Math.random() * 0.4;
+    const distance = 60 + Math.random() * 70;
+    const e = el('span', {
+      class: 'eclat',
+      style: `left:${r.left + r.width / 2}px;top:${r.top + r.height / 2}px;--dx:${Math.cos(angle) * distance}px;--dy:${Math.sin(angle) * distance - 30}px`,
+    }, auHasard(emojis));
+    document.body.append(e);
+    setTimeout(() => e.remove(), 900);
+  }
 }
 
 const BRAVO = ['Bravo ! 🎉', 'Super ! ⭐', 'Génial ! 🚀', 'Excellent ! 👏', 'Trop fort ! 💪', 'Parfait ! ✨'];
@@ -606,25 +682,41 @@ function questionSuivante(q) {
     return questionSuivante(q);
   }
 
+  q.serie ??= 0; q.historique ??= [];
+  const [emoji, consigne, teinte] = STYLE_QUESTION[activite.type] || ['❓', 'Question', '#14b8a6'];
   const zone = el('div', { class: 'zone-question' });
+  const carte = el('div', { class: 'carte-question', style: `--teinte:${teinte}` },
+    el('div', { class: 'type-question' }, el('span', {}, emoji), consigne),
+    zone);
   const retour = el('div', { class: 'retour' });
   afficher(
-    el('div', { class: 'progression' },
-      el('div', { class: 'barre', style: `width:${(q.i / q.questions.length) * 100}%` })),
-    el('p', { class: 'compteur' }, `${q.entrainement ? '🔁 Deuxième chance · ' : ''}Question ${q.i + 1} / ${q.questions.length}`),
-    zone,
+    dessinPiste(q),
+    el('p', { class: 'compteur' }, `${q.entrainement ? '🔁 Deuxième chance · ' : ''}Question ${q.i + 1} / ${q.questions.length}`,
+      q.serie >= 2 ? el('span', { class: 'serie' }, ` · 🔥 ${q.serie} d’affilée`) : null),
+    carte,
     retour,
   );
 
   dessiner(activite, zone, (reussi, bonneReponse) => {
     if (reussi) q.bons++; else q.erreurs.push(activite);
+    q.historique[q.i] = reussi;
+    q.serie = reussi ? q.serie + 1 : 0;
     son(reussi ? 'bon' : 'faux');
-    if (!reussi) vibrer(120);
+    if (reussi) eclats(carte, q.serie >= 3 ? ['🔥', '⭐', '🚀', '✨'] : undefined);
+    else { vibrer(120); secouer(carte); }
+    // la case de la piste se colore tout de suite
+    $('.piste .case.actuelle')?.classList.add(reussi ? 'ok' : 'ko');
+
+    // Petits messages de série (3, 5, 10 bonnes réponses d'affilée)
+    const serie = { 3: '🔥 3 d’affilée, ça chauffe !', 5: '🚀 5 d’affilée, tu es lancé·e !', 10: '🏆 10 d’affilée, incroyable !' }[q.serie];
 
     const derniere = q.i + 1 >= q.questions.length;
     retour.replaceChildren(
       el('div', { class: 'bandeau ' + (reussi ? 'ok' : 'ko') },
-        el('b', {}, auHasard(reussi ? BRAVO : OUPS)),
+        el('div', { class: 'bandeau-tete' },
+          el('span', { class: 'mascotte ' + (reussi ? 'contente' : 'triste') }, dessinAvatar(etat.enfant, 'mini-avatar')),
+          el('b', {}, auHasard(reussi ? BRAVO : OUPS))),
+        serie ? el('p', { class: 'message-serie' }, serie) : null,
         !reussi && bonneReponse ? el('p', {}, 'La bonne réponse : ', el('b', {}, sansMots(bonneReponse))) : null,
         activite.explication ? el('p', { class: 'explication' }, '💡 ', enrichir(activite.explication)) : null),
       el('button', { class: 'btn-principal', onclick: () => { q.i++; questionSuivante(q); scrollTo(0, 0); } },
@@ -700,7 +792,7 @@ const dessinGrossesEtoiles = (n) => el('div', { class: 'grosses-etoiles' },
 
 // Rejoue seulement les questions ratées (q.premier est transmis pour l'écran final)
 function revoirErreurs(q) {
-  questionSuivante({ lecon: q.lecon, questions: melanger(q.erreurs), i: 0, bons: 0, erreurs: [], entrainement: true, premier: q.premier });
+  questionSuivante({ lecon: q.lecon, questions: melanger(q.erreurs), i: 0, bons: 0, erreurs: [], entrainement: true, premier: q.premier, serie: 0, historique: [] });
   scrollTo(0, 0);
 }
 
@@ -719,9 +811,9 @@ const ACTIVITES = {
   qcm(act, zone, fin) {
     zone.append(enonce(act.question));
     const bonne = String(act.choix[0]);
-    const boutons = melanger(act.choix.map(String)).map((texte) =>
+    const boutons = melanger(act.choix.map(String)).map((texte, k) =>
       el('button', {
-        class: 'choix',
+        class: 'choix', 'data-lettre': 'ABCDEF'[k],
         onclick: (e) => {
           boutons.forEach((b) => (b.disabled = true));
           const ok = texte === bonne;
@@ -958,6 +1050,13 @@ function plusAncienne(a, b) {
 async function demarrer() {
   $('#version').textContent = 'v' + VERSION;
 
+  // Écran de lancement : on laisse le logo SV se dessiner (≈ 1,6 s) puis il s'efface en fondu.
+  // Toucher l'écran le fait disparaître tout de suite.
+  const lancement = $('#lancement');
+  const finLancement = () => { lancement?.classList.add('fini'); setTimeout(() => lancement?.remove(), 500); };
+  lancement?.addEventListener('click', finLancement);
+  setTimeout(finLancement, 2100);
+
   // Bouton retour de la barre = bouton retour d'Android
   $('#btn-retour').addEventListener('click', () => history.back());
 
@@ -1022,7 +1121,7 @@ addEventListener('keydown', (e) => {
   if (e.ctrlKey || e.metaKey || e.altKey) return;
   const dansUnChamp = e.target.matches('input, textarea');
   if (e.key === 'Escape') {
-    if ($('#bulle-mot')) $('#bulle-mot').remove(); else if (pile.length > 1) history.back();
+    if (lecteurMot) fermerLecteurMot(); else if (pile.length > 1) history.back();
     return;
   }
   if (dansUnChamp) return; // la touche Entrée d'un champ est gérée par l'activité elle-même

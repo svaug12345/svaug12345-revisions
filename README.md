@@ -112,8 +112,9 @@ La voix (MP3) sert **uniquement aux mots étrangers** des leçons de langues : l
 | `{{der Vater}}` | der Vater 🔈 | « der Vater » |
 | `{{he / she / it is\|he is. she is. it is.}}` | he / she / it is 🔈 | « he is. she is. it is. » |
 
-- Dans la **fiche** et les **énoncés**, le mot devient un bouton : on le touche → une bulle s'ouvre avec
-  🔊 Écouter, 🐢 Lentement et 🎤 **À toi !** (le micro écoute l'enfant et lui dit si c'est bien prononcé).
+- Dans la **fiche** et les **énoncés**, le mot devient un bouton : on le touche → il est prononcé et un petit
+  **lecteur** apparaît en bas de l'écran (🔊 réécouter, 🐢 lentement, 🎤 répéter : le micro dit si c'est bien prononcé).
+  Le lecteur ne bloque rien : on peut toucher le mot suivant directement ; il se range tout seul après 8 secondes.
 - Dans les **QCM** et les **paires**, la bonne réponse est prononcée quand elle est trouvée.
 - Une **explication** contenant `{{…}}` est lue juste après la réponse (pratique pour réentendre la phrase complète).
 - Les mots étrangers sont lus avec **la voix de Papa** (clonée sur ElevenLabs, qui parle aussi anglais et allemand).
@@ -152,6 +153,32 @@ La page s'élargit sur grand écran (leçons sur 2 colonnes) et se pilote au cla
 `lecons.json` contient `"versionApp"` : la version minimale du moteur nécessaire. Si un appareil a gardé
 un vieux `app.js`, il se met à jour et recharge tout seul. **Quand on ajoute une nouveauté au moteur
 utilisée par les leçons, on augmente ce numéro en même temps que `version.js`.**
+
+## 🎙️ Fabriquer les sons des mots étrangers (pour Claude / Papa)
+
+Une seule amorce par langue pour tout un lot de mots (≈ 60 % de crédits ElevenLabs en moins) :
+
+1. Générer **un** enregistrement avec la voix « Sébastien Vaug » :
+   `Listen and repeat in English... we are... you are... they are... she... he.`
+   (en allemand : `Hör gut zu und sprich nach... der Vater... die Mutter...`). Éviter les points **à l'intérieur**
+   d'un élément (mettre des virgules), les « ... » servent de séparateurs.
+2. Le faire transcrire (ElevenLabs Scribe) : on obtient le début et la fin de chaque mot.
+3. `python3 outils/decoupe_lot.py lot.mp3 transcription.json elements.json audio/` coupe un MP3 par élément,
+   nommé comme l'appli l'attend, et affiche « attendu / entendu » pour vérifier chaque mot.
+4. Mettre à jour `audio/index.json` (la liste des empreintes).
+
+## 🎮 Quiz
+
+- Une **piste de course** en haut : une case par question (verte = juste, orange = raté), l'avatar avance vers 🏁.
+- Chaque type de question a sa couleur et son badge (🎯 QCM, ⚖️ Vrai ou faux, ✍️ À toi d'écrire, 🧩 Complète…).
+- Réponses de QCM avec pastilles **A B C D** ; gerbe d'emojis quand c'est juste ; la carte tremble quand c'est raté.
+- **Séries** : 🔥 3, 🚀 5, 🏆 10 bonnes réponses d'affilée ; l'avatar saute de joie ou fait la moue.
+
+## ✍️ Écran de lancement
+
+Le logo **SV** (charte « SV ») se dessine comme un coup de pinceau, en partant d'en haut à droite :
+la virgule, l'épingle, puis le long trait. Le tracé est exactement celui du logo, dévoilé par des masques qui suivent
+la ligne médiane de chaque trait (`#lancement` dans `index.html`, `.sv-pinceau` dans `style.css`). Toucher l'écran pour passer.
 
 ## Étoiles
 

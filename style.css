@@ -225,7 +225,7 @@ h2 { font-weight: 900; }
 
 /* Bandeau Bravo / Oups */
 .bandeau { margin-top: 16px; padding: 14px 16px; border-radius: var(--rayon); animation: apparait .3s; }
-.bandeau b:first-child { font-size: 1.3rem; }
+.bandeau-tete b { font-size: 1.3rem; }
 .bandeau p { margin: 6px 0 0; }
 .bandeau.ok { background: #dcfce7; color: #166534; }
 .bandeau.ko { background: #ffedd5; color: #9a3412; }
@@ -266,41 +266,39 @@ h2 { font-weight: 900; }
 .mot::after { content: ' 🔈'; font-size: .75em; }
 .mot:active { transform: scale(.95); background: #99f6e4; }
 
-/* Bulle qui s'ouvre en bas de l'écran quand on touche un mot */
-.fond-bulle {
-  position: fixed; inset: 0; z-index: 50;
-  background: rgba(19, 78, 74, .35);
-  display: flex; align-items: flex-end; justify-content: center;
-  animation: fondu .2s ease-out;
+/* Lecteur de mots étrangers : barre posée en bas de l'écran, sans fond grisé.
+   On peut continuer à toucher les autres mots de la page pendant qu'il est ouvert. */
+.lecteur-mot {
+  position: fixed; z-index: 50; left: 50%; transform: translateX(-50%);
+  bottom: calc(10px + env(safe-area-inset-bottom));
+  width: min(calc(100% - 20px), 560px);
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 10px 10px 16px; border-radius: 20px;
+  background: var(--carte); border: 2px solid var(--clair);
+  box-shadow: 0 10px 30px rgba(15, 118, 110, .25);
+  animation: monteLecteur .25s ease-out;
 }
-.bulle {
-  position: relative;
-  width: min(100%, 520px);
-  background: var(--carte);
-  border-radius: 24px 24px 0 0;
-  padding: 22px 18px calc(22px + env(safe-area-inset-bottom));
-  box-shadow: 0 -6px 24px rgba(0, 0, 0, .15);
-  text-align: center;
-  animation: monte .25s ease-out;
-}
-.bulle-mot { font-size: 1.9rem; margin: 6px 0 16px; color: var(--fonce); }
-.boutons-bulle { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.lecteur-mot.sortie { animation: descendLecteur .2s ease-in forwards; }
+@keyframes monteLecteur { from { transform: translate(-50%, 120%); } }
+@keyframes descendLecteur { to { transform: translate(-50%, 140%); opacity: 0; } }
+.lecteur-texte { flex: 1; min-width: 0; }
+.bulle-mot { font-size: 1.35rem; margin: 0; color: var(--fonce); font-weight: 900; overflow-wrap: anywhere; }
+.bulle-mot.pop { animation: pop .3s; }
+.boutons-bulle { display: flex; gap: 6px; flex: none; }
 .btn-bulle {
-  font: inherit; font-size: 1.05rem;
-  border: none; border-radius: 14px;
-  padding: 12px 16px;
-  background: var(--clair); color: var(--fonce);
-  box-shadow: var(--ombre);
+  font: inherit; font-size: 1.25rem; border: none; border-radius: 14px;
+  width: 46px; height: 46px; display: grid; place-items: center;
+  background: var(--clair); color: var(--fonce); box-shadow: 0 3px 0 rgba(15, 118, 110, .18);
 }
+.btn-bulle:active { transform: translateY(2px); box-shadow: none; }
 .btn-bulle.micro { background: var(--accent); color: #fff; }
 .btn-bulle.micro.en-cours { background: var(--faux); animation: pulse 1s infinite; }
-.bulle-message { margin: 16px 0 0; min-height: 1.4em; color: var(--doux); }
-.bulle-message.ok { color: var(--bon); font-size: 1.2rem; }
+.bulle-message { margin: 2px 0 0; font-size: .85rem; color: var(--doux); }
+.bulle-message.ok { color: var(--bon); font-weight: 900; }
 .bulle-message.ko { color: #b45309; }
-.fermer-bulle {
-  position: absolute; top: 10px; right: 12px;
-  border: none; background: none; font-size: 1.3rem; color: var(--doux);
-}
+.fermer-bulle { border: none; background: none; font-size: 1.1rem; color: var(--doux); width: 30px; }
+/* place libre en bas de page quand le lecteur est ouvert, pour qu'il ne cache rien */
+body.avec-lecteur main { padding-bottom: 110px; }
 @keyframes monte { from { transform: translateY(100%); } }
 @keyframes fondu { from { opacity: 0; } }
 @keyframes pulse { 50% { transform: scale(1.06); } }
@@ -318,6 +316,7 @@ h2 { font-weight: 900; }
 }
 .archives summary::-webkit-details-marker { display: none; }
 .archives[open] summary { margin-bottom: 10px; }
+.archives .groupe h2 { font-size: .85rem; opacity: .8; }
 .ligne-archive { display: flex; gap: 8px; align-items: stretch; }
 .carte-lecon.archivee { opacity: .7; filter: grayscale(.5); }
 .btn-petit {
@@ -363,7 +362,6 @@ button { cursor: pointer; }
   .fiche { font-size: 1.1rem; }
   .liste-choix:not(.deux) { grid-template-columns: 1fr 1fr; }
   .collant { position: static; }
-  .bulle { border-radius: 24px; margin-bottom: 30px; }
   /* aide clavier affichée seulement sur grand écran */
   .compteur::after { content: '  ·  ⌨️ 1-4 pour répondre, Entrée pour continuer'; color: var(--doux); font-weight: 600; font-size: .8rem; }
 }
@@ -418,8 +416,13 @@ button { cursor: pointer; }
 .carte-emoji { font-size: 2.1rem; line-height: 1.2; }
 
 /* --- Tuiles --- */
-.grille-tuiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
-.tuile-info { background: #fff; border-radius: 12px; padding: 10px; text-align: center; font-weight: 800; box-shadow: 0 2px 6px rgba(0, 0, 0, .06); }
+/* Les tuiles prennent la largeur de leur texte (un mot long comme « épouvantablement » ne déborde plus) */
+.grille-tuiles { display: flex; flex-wrap: wrap; gap: 8px; }
+.tuile-info {
+  flex: 1 1 auto; min-width: 0; max-width: 100%;
+  background: #fff; border-radius: 12px; padding: 10px 12px; text-align: center; font-weight: 800;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .06); overflow-wrap: anywhere;
+}
 
 /* --- Conjugaison --- */
 .conjugaison { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
@@ -616,3 +619,85 @@ button { cursor: pointer; }
 .lien-fleche i { display: block; width: 100%; height: 3px; background: var(--teinte); position: relative; }
 .lien-fleche i::after { content: ''; position: absolute; right: -2px; top: -5px; border: 6px solid transparent; border-left: 9px solid var(--teinte); }
 .genre-moi { border-color: #f59e0b; }
+
+
+/* =============================================================
+   QUIZ PLUS VIVANT
+   ============================================================= */
+/* Piste de course : une case par question, l'avatar avance jusqu'au drapeau */
+.piste { position: relative; padding: 22px 34px 4px 4px; }
+.piste-cases { display: flex; gap: 4px; }
+.piste-cases .case { flex: 1; height: 12px; border-radius: 99px; background: var(--clair); transition: background .3s; }
+.piste-cases .case.ok { background: var(--bon); }
+.piste-cases .case.ko { background: #fb923c; }
+.piste-cases .case.actuelle:not(.ok):not(.ko) { background: color-mix(in srgb, var(--principal) 45%, white); animation: clignote 1.2s infinite; }
+@keyframes clignote { 50% { opacity: .5; } }
+.piste-coureur { position: absolute; top: -4px; transform: translateX(-50%); transition: left .5s cubic-bezier(.3, 1.6, .5, 1); animation: sautille 1.6s infinite; }
+.piste-coureur .mini-avatar { width: 30px; height: 30px; font-size: 1.3rem; display: grid; place-items: center; }
+@keyframes sautille { 0%, 70%, 100% { transform: translate(-50%, 0); } 80% { transform: translate(-50%, -5px); } }
+.piste-arrivee { position: absolute; right: 2px; top: 14px; font-size: 1.4rem; }
+.compteur .serie { color: #ea580c; font-weight: 900; }
+
+/* Carte de la question : bandeau coloré selon le type, arrivée en glissant */
+.carte-question {
+  background: var(--carte); border-radius: 22px; padding: 14px 16px 18px;
+  box-shadow: 0 6px 0 color-mix(in srgb, var(--teinte) 35%, white), 0 10px 24px rgba(0, 0, 0, .06);
+  border-top: 6px solid var(--teinte);
+  animation: arriveQuestion .45s cubic-bezier(.2, 1.3, .4, 1);
+}
+@keyframes arriveQuestion { from { opacity: 0; transform: translateX(40px) rotate(2deg); } }
+.type-question {
+  display: inline-flex; align-items: center; gap: 6px; margin-bottom: 10px;
+  padding: 4px 12px 4px 6px; border-radius: 99px; font-size: .82rem; font-weight: 900;
+  background: color-mix(in srgb, var(--teinte) 14%, white); color: color-mix(in srgb, var(--teinte) 70%, black);
+}
+.type-question span { font-size: 1.15rem; animation: pop .5s .2s backwards; }
+.carte-question .enonce { background: none; padding: 0; box-shadow: none; }
+
+/* Réponses de QCM : une pastille de couleur avec la lettre A, B, C, D */
+.choix[data-lettre] { display: flex; align-items: center; gap: 12px; text-align: left; }
+.choix[data-lettre]::before {
+  content: attr(data-lettre); flex: none; width: 30px; height: 30px; border-radius: 50%;
+  display: grid; place-items: center; font-weight: 900; color: #fff; background: #6366f1;
+}
+.choix[data-lettre="B"]::before { background: #ec4899; }
+.choix[data-lettre="C"]::before { background: #f59e0b; }
+.choix[data-lettre="D"]::before { background: #14b8a6; }
+.choix.bon[data-lettre]::before { content: '✓'; background: var(--bon); }
+.choix.faux[data-lettre]::before { content: '✗'; background: var(--faux); }
+.liste-choix .choix { animation: monteDoux .35s backwards; }
+.liste-choix .choix:nth-child(2) { animation-delay: .06s; }
+.liste-choix .choix:nth-child(3) { animation-delay: .12s; }
+.liste-choix .choix:nth-child(4) { animation-delay: .18s; }
+.choix.bon { animation: pop .4s; }
+
+/* Gerbe d'emojis quand c'est juste */
+.eclat {
+  position: fixed; z-index: 70; pointer-events: none; font-size: 1.4rem;
+  transform: translate(-50%, -50%); animation: jaillit .9s ease-out forwards;
+}
+@keyframes jaillit {
+  to { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.6) rotate(200deg); opacity: 0; }
+}
+
+/* La mascotte (l'avatar de l'enfant) réagit à la réponse */
+.bandeau-tete { display: flex; align-items: center; gap: 10px; }
+.mascotte .mini-avatar { width: 40px; height: 40px; font-size: 1.6rem; display: grid; place-items: center; }
+.mascotte.contente { animation: saute .6s 2; }
+.mascotte.triste { animation: penche .8s; }
+@keyframes saute { 40% { transform: translateY(-10px) rotate(-8deg); } 60% { transform: translateY(0) rotate(8deg); } }
+@keyframes penche { 30% { transform: rotate(-15deg); } 60% { transform: rotate(10deg); } }
+.message-serie { font-weight: 900; color: #ea580c; animation: pop .5s; }
+
+/* ---------- Écran de lancement : le logo SV se dessine ---------- */
+#lancement {
+  position: fixed; inset: 0; z-index: 100; display: grid; place-items: center;
+  background: #f6f9f9; transition: opacity .45s ease;
+}
+#lancement.fini { opacity: 0; pointer-events: none; }
+#lancement .sv-logo { width: min(42vw, 190px); height: auto; color: #0f7c7b; } /* couleur « teal » de la charte */
+/* Chaque masque est un trait de « pinceau » de longueur 1 (pathLength="1") :
+   en faisant passer stroke-dashoffset de 1 à 0, le trait se dessine du début à la fin. */
+.sv-pinceau { stroke-dasharray: 1; stroke-dashoffset: 1; animation: sv-trace linear forwards; }
+@keyframes sv-trace { to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) { .sv-pinceau { animation: none; stroke-dashoffset: 0; } }

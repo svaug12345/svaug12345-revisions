@@ -10,4 +10,4 @@
 //  ("var" et pas "const" : la variable doit être globale pour
 //   être visible aussi dans le service worker.)
 // =============================================================
-var VERSION = '1.5.0'; // 1.5.0 : fiches illustrées (schémas, animations), audio réservé aux langues ; 1.4.0 : avatars, archives, deuxième chance, version PC, mots avec la voix de Papa ; 1.3.0 : mots étrangers cliquables (écouter / répéter) ; 1.2.0 : voix de Papa (MP3 ElevenLabs) ; 1.1.0 : option "strict"
+var VERSION = '1.6.0'; // 1.6.0 : logo SV qui se dessine, lecteur de mots sans clic, quiz plus vivant ; 1.5.0 : fiches illustrées (schémas, animations), audio réservé aux langues ; 1.4.0 : avatars, archives, deuxième chance, version PC, mots avec la voix de Papa ; 1.3.0 : mots étrangers cliquables (écouter / répéter) ; 1.2.0 : voix de Papa (MP3 ElevenLabs) ; 1.1.0 : option "strict"
