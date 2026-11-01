@@ -8,7 +8,7 @@
    Plan du fichier :
      1. Outils (créer des éléments, mélanger, comparer des réponses…)
      2. Progrès des enfants (étoiles, sauvegardées dans le téléphone)
-     3. Sons, voix et confettis
+     3. Sons, voix et confettis (+ 3 bis : Alex, le coach vocal)
      4. Navigation (pile d'écrans + bouton retour d'Android)
      5. Les écrans : accueil, liste des leçons, fiche, quiz, résultat
      6. Les types d'activités (qcm, vraifaux, saisie, trous, paires, ordre, carte)
@@ -131,6 +131,20 @@ function afficher(...enfants) {
 }
 
 const pluriel = (n, mot) => `${n} ${mot}${n > 1 ? 's' : ''}`;
+
+/**
+ * Date d'ajout d'une leçon, écrite discrètement : "ajoutee": "2026-10-26" -> « ajoutée le 26 oct. »
+ * La date se modifie à la main dans lecons.json (format AAAA-MM-JJ). Absente ou invalide -> rien.
+ * (On ajoute « T12:00 » pour que le fuseau horaire ne fasse pas reculer d'un jour.)
+ */
+function dateAjout(lecon) {
+  if (!lecon.ajoutee) return null;
+  const d = new Date(lecon.ajoutee + 'T12:00');
+  if (isNaN(d)) return null;
+  const memeAnnee = d.getFullYear() === new Date().getFullYear();
+  return 'ajoutée le ' + d.toLocaleDateString('fr-FR',
+    memeAnnee ? { day: 'numeric', month: 'short' } : { day: 'numeric', month: 'short', year: 'numeric' });
+}
 
 /* ---------- 2. PROGRÈS (sauvegardés dans le téléphone) ------- */
 // localStorage garde les données même quand on ferme l'appli.
@@ -427,6 +441,118 @@ function secouer(element) {
   element.classList.add('secoue');
 }
 
+/* ---------- 3 bis. ALEX, LE COACH VOCAL (ElevenLabs) ------------
+   Sur les leçons marquées "assistant": true, une carte « Réviser avec Alex »
+   permet de PARLER avec un coach : poser des questions, se faire interroger,
+   demander des exemples concrets.
+
+   Comment ça marche ?
+   - Il n'y a qu'UN agent ElevenLabs (son identifiant est dans lecons.json,
+     rubrique "assistant"). À chaque appel, l'appli lui envoie des « variables
+     dynamiques » : le prénom, l'âge, la fiche et le quiz de la leçon ouverte.
+     Ses consignes (dans ElevenLabs) contiennent {{prenom}}, {{fiche}}… qui sont
+     remplacés par ces valeurs : chaque leçon a donc « son » Alex, sans rien
+     créer de plus quand on ajoute une leçon.
+   - Le SDK officiel « @elevenlabs/client » n'est téléchargé qu'au premier appel
+     (version figée, la même que sur les autres pages de baiji.fr).
+   - Côté ElevenLabs : mode « zéro conservation » (rien n'est enregistré),
+     appels acceptés seulement depuis baiji.fr, 30 appels par jour maximum.
+   ------------------------------------------------------------- */
+
+let alex = null; // { conversation, carte } pendant un appel, sinon null
+
+/** Transforme la fiche en texte simple pour Alex (sans ** ni {{ }}, schémas résumés en JSON). */
+function texteFiche(lecon) {
+  const lignes = Array.isArray(lecon.fiche) ? lecon.fiche : lecon.fiche ? [lecon.fiche] : [];
+  // Enlève la mise en forme : {{mot|prononcé}} -> mot, **gras** -> gras
+  const nettoyer = (t) => t.replace(MOT_ETRANGER, (_, affiche) => affiche).replace(/\*\*/g, '');
+  return lignes.map((l) => {
+    if (typeof l !== 'string') {
+      const { visuel, ...donnees } = l; // un schéma : on donne son type et ses données brutes
+      return `[Schéma « ${visuel} » : ${nettoyer(JSON.stringify(donnees))}]`;
+    }
+    return nettoyer(l);
+  }).join('\n');
+}
+
+/** Le quiz en texte (une question par ligne, avec sa réponse) : Alex s'en sert pour interroger. */
+function texteQuestions(lecon) {
+  return (lecon.activites || []).map((a) => '- ' + JSON.stringify(a)).join('\n') || '(pas de quiz)';
+}
+
+/** La carte « Réviser avec Alex » sous la fiche (null si la leçon n'a pas d'Alex). */
+function blocAlex(lecon) {
+  const agentId = etat.donnees.assistant?.agentId;
+  if (!lecon.assistant || !agentId || !etat.enfant) return null;
+  const etatTexte = el('span', { class: 'alex-etat' }, 'Questions, exemples, interro : demande-lui !');
+  const bouton = el('button', { class: 'alex-bouton' }, '📞 Appeler Alex');
+  const carte = el('section', { class: 'alex' },
+    el('div', { class: 'alex-visage', 'aria-hidden': 'true' }, '🎧'),
+    el('div', { class: 'alex-textes' }, el('b', {}, 'Réviser avec Alex'), etatTexte),
+    bouton);
+  carte._etat = etatTexte; // on garde les éléments sous la main pour les mettre à jour
+  carte._bouton = bouton;
+  bouton.addEventListener('click', () => (alex ? raccrocherAlex() : appelerAlex(lecon, carte, agentId)));
+  return carte;
+}
+
+/** Change l'apparence de la carte : 'repos', 'connexion', 'ecoute' (Alex écoute) ou 'parle'. */
+function etatAlex(carte, mode, texte) {
+  carte.dataset.mode = mode;
+  if (texte) carte._etat.textContent = texte;
+  carte._bouton.textContent = mode === 'repos' ? '📞 Appeler Alex' : mode === 'connexion' ? '⏳ Ça sonne…' : '✖ Raccrocher';
+}
+
+async function appelerAlex(lecon, carte, agentId) {
+  if (carte.dataset.mode === 'connexion') return; // anti double-clic
+  couperVoix(); fermerLecteurMot();
+  etatAlex(carte, 'connexion', 'Autorise le micro si le téléphone le demande 🎤');
+  try {
+    // 1) Le micro (le navigateur demande l'autorisation la première fois)
+    await navigator.mediaDevices.getUserMedia({ audio: true });
+    // 2) Le SDK ElevenLabs, chargé seulement maintenant
+    const { Conversation } = await import('https://cdn.jsdelivr.net/npm/@elevenlabs/client@1.32.1/+esm');
+    // 3) L'appel, avec la leçon en « variables dynamiques »
+    const enfant = etat.enfant;
+    const appel = { carte, conversation: null };
+    alex = appel;
+    const conversation = await Conversation.startSession({
+      agentId,
+      dynamicVariables: {
+        prenom: enfant.nom,
+        age: String(enfant.age || 10),
+        matiere: lecon.matiere || 'Révisions',
+        titre: lecon.titre,
+        fiche: texteFiche(lecon),
+        questions: texteQuestions(lecon),
+      },
+      onConnect: () => etatAlex(carte, 'parle', 'Alex te parle…'),
+      onModeChange: ({ mode }) => etatAlex(carte, mode === 'speaking' ? 'parle' : 'ecoute',
+        mode === 'speaking' ? 'Alex te parle…' : 'À toi ! Alex t’écoute 👂'),
+      onDisconnect: () => { alex = null; etatAlex(carte, 'repos', 'À bientôt ! Tu peux rappeler Alex quand tu veux.'); },
+      onError: (e) => console.warn('Alex :', e),
+    });
+    // Raccroché (ou écran quitté) pendant que ça sonnait : on coupe tout de suite
+    if (alex !== appel) { conversation.endSession(); return; }
+    appel.conversation = conversation;
+  } catch (e) {
+    console.warn('Alex :', e);
+    alex = null;
+    const micro = e && (e.name === 'NotAllowedError' || e.name === 'NotFoundError');
+    etatAlex(carte, 'repos', micro ? 'Il faut autoriser le micro pour parler à Alex 🎤'
+      : 'Alex n’est pas joignable (connexion internet ?). Réessaie plus tard.');
+  }
+}
+
+/** Termine l'appel en cours (bouton Raccrocher, changement d'écran…). */
+function raccrocherAlex() {
+  if (!alex) return;
+  const { conversation, carte } = alex;
+  alex = null;
+  conversation?.endSession().catch(() => {});
+  if (carte.isConnected) etatAlex(carte, 'repos', 'À bientôt ! Tu peux rappeler Alex quand tu veux.');
+}
+
 /* ---------- 4. NAVIGATION ------------------------------------ */
 // On garde une "pile" des écrans ouverts. Chaque nouvel écran ajoute
 // une entrée dans l'historique du navigateur : ainsi le bouton retour
@@ -457,6 +583,7 @@ function entete(titre) {
   $('#badge-enfant').replaceChildren(etat.enfant ? dessinAvatar(etat.enfant, 'mini-avatar') : '');
   couperVoix(); // on coupe la voix en changeant d'écran
   fermerLecteurMot(); // et on range le lecteur de mots étrangers
+  raccrocherAlex();   // et on termine un éventuel appel avec Alex
 }
 
 /* ---------- 5. LES ÉCRANS ------------------------------------ */
@@ -538,7 +665,8 @@ function parMatiere(lecons) {
 function carteLecon(l, classe = '') {
   return el('button', { class: 'carte-lecon ' + classe, onclick: () => aller(afficherLecon, l) },
     el('span', { class: 'emoji' }, l.emoji || '📘'),
-    el('span', { class: 'infos' }, el('b', {}, l.titre)),
+    el('span', { class: 'infos' }, el('b', {}, l.titre),
+      dateAjout(l) ? el('small', { class: 'date-ajout' }, dateAjout(l)) : null),
     el('span', { class: 'etoiles' }, dessinEtoiles(etoilesDe(etat.enfant.id, l.id))));
 }
 
@@ -550,7 +678,9 @@ function afficherLecon(lecon) {
   afficher(
     el('div', { class: 'tete-lecon' },
       el('span', { class: 'gros-emoji' }, lecon.emoji || '📘'),
-      el('div', {}, el('small', {}, lecon.matiere || ''), el('h2', {}, lecon.titre))),
+      el('div', {}, el('small', {}, lecon.matiere || ''), el('h2', {}, lecon.titre),
+        dateAjout(lecon) ? el('span', { class: 'date-ajout' }, dateAjout(lecon)) : null)),
+    blocAlex(lecon), // carte « Réviser avec Alex », bien visible en haut (seulement si "assistant": true)
     dessinerFiche(lecon),
     nb
       ? el('button', { class: 'btn-principal collant', onclick: () => aller(lancerQuiz, lecon) },

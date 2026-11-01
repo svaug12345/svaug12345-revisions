@@ -206,3 +206,15 @@ L'appli du Play Store est une **TWA** (Trusted Web Activity) : une fenêtre Chro
 - Confidentialité : `https://baiji.fr/svaug12345-revisions/confidentialite.html`
 
 **Piste et testeurs** : `fastlane/publication.json` dit où va chaque nouvelle version (`internal`, `alpha` = test fermé, `production`) et quels groupes Google peuvent tester. Le robot inscrit ces groupes lui-même (`outils/testeurs_play.py`).
+
+## 🎧 Alex, le coach vocal (depuis la v1.7.0)
+
+Sur une leçon qui a `"assistant": true`, la carte « Réviser avec Alex » permet de parler avec un coach (agent ElevenLabs, voix « Alexandre – Calm, Warm »). Il répond aux questions, interroge l'enfant une question à la fois, donne des exemples concrets et des astuces pour retenir.
+
+- **Un seul agent** pour toutes les leçons : son identifiant est dans `lecons.json` (rubrique `"assistant"`). À chaque appel, l'appli lui envoie en « variables dynamiques » le prénom, l'âge (`"age"` dans `enfants`), la matière, le titre, la fiche et le quiz. Ajouter une leçon avec `"assistant": true` suffit : rien à créer chez ElevenLabs.
+- **Réglages de l'agent** (ElevenLabs) : mode zéro conservation (ni voix ni texte gardés), appels acceptés seulement depuis baiji.fr et svaug12345.github.io, 30 appels/jour, 2 en même temps, 10 min par appel.
+- Pour l'instant : les 9 leçons de Gaby.
+
+## 📅 Date d'ajout d'une leçon
+
+`"ajoutee": "2026-10-26"` (format AAAA-MM-JJ) après `"emoji"` : affichée discrètement (« ajoutée le 26 oct. ») dans la liste et sur la fiche. À modifier à la main si besoin ; sans ce champ, rien ne s'affiche.

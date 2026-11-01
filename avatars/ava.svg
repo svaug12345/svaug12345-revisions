@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Avatar d'Ava : une tête de chat tout doux. Dessin original. -->
+  <!-- Oreilles (extérieur puis intérieur rose) -->
+  <path d="M20 46L24 12l26 20z" fill="#f59e0b"/>
+  <path d="M80 46L76 12 50 32z" fill="#f59e0b"/>
+  <path d="M26 38l2-17 14 11z" fill="#fbcfe8"/>
+  <path d="M74 38l-2-17-14 11z" fill="#fbcfe8"/>
+  <!-- Tête -->
+  <ellipse cx="50" cy="58" rx="34" ry="30" fill="#fbbf24"/>
+  <!-- Rayures sur le front -->
+  <path d="M50 30v10M42 31l2 8M58 31l-2 8" stroke="#d97706" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- Museau clair -->
+  <ellipse cx="50" cy="70" rx="17" ry="12" fill="#fef3c7"/>
+  <!-- Yeux -->
+  <ellipse cx="36" cy="55" rx="6" ry="7.5" fill="#1e293b"/>
+  <ellipse cx="64" cy="55" rx="6" ry="7.5" fill="#1e293b"/>
+  <circle cx="38" cy="52" r="2.2" fill="#fff"/>
+  <circle cx="66" cy="52" r="2.2" fill="#fff"/>
+  <!-- Nez et bouche -->
+  <path d="M45.5 64h9l-4.5 5z" fill="#ec4899"/>
+  <path d="M50 69q-3 5-8 3M50 69q3 5 8 3" stroke="#92400e" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Moustaches -->
+  <g stroke="#92400e" stroke-width="1.8" stroke-linecap="round">
+    <path d="M30 66l-18-3M30 70l-17 3M70 66l18-3M70 70l17 3"/>
+  </g>
+  <!-- Joues roses -->
+  <circle cx="28" cy="68" r="4" fill="#f9a8d4" opacity=".7"/>
+  <circle cx="72" cy="68" r="4" fill="#f9a8d4" opacity=".7"/>
+</svg>

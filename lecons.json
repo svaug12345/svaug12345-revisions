@@ -1,12 +1,19 @@
 {
-  "maj": "27/10/2026",
+  "maj": "01/11/2026",
   "versionApp": "1.5.0",
 
   "enfants": [
-    {"id": "tom", "nom": "Tom", "avatar": "avatars/tom.svg", "couleur": "#22c55e"},
-    {"id": "gaby", "nom": "Gaby", "avatar": "avatars/gaby.svg", "couleur": "#ec4899"},
-    {"id": "nanon", "nom": "Nanon", "avatar": "avatars/nanon.svg", "couleur": "#f59e0b"}
+    {"id": "tom", "nom": "Tom", "avatar": "avatars/tom.svg", "couleur": "#22c55e", "age": 6},
+    {"id": "gaby", "nom": "Gaby", "avatar": "avatars/gaby.svg", "couleur": "#ec4899", "age": 12},
+    {"id": "nanon", "nom": "Nanon", "avatar": "avatars/nanon.svg", "couleur": "#f59e0b", "age": 14},
+    {"id": "titouan", "nom": "Titouan", "avatar": "avatars/titouan.svg", "couleur": "#3b82f6", "age": 9},
+    {"id": "ava", "nom": "Ava", "avatar": "avatars/ava.svg", "couleur": "#a855f7", "age": 6}
   ],
+
+  "assistant": {
+    "_explication": "Alex, le coach vocal (agent ElevenLabs). Il reçoit la fiche et le quiz de la leçon ouverte. Il n'apparaît que sur les leçons qui ont \"assistant\": true.",
+    "agentId": "agent_7401m6bb2175fbj9x1z3y88n246t"
+  },
 
   "lecons": [
     {
@@ -15,6 +22,7 @@
       "matiere": "Maths",
       "titre": "La table de 7",
       "emoji": "✖️",
+      "ajoutee": "2026-10-26",
       "fiche": [
         "# La table de 7",
         {"visuel": "multiplication", "titre": "7 points par rangée : choisis combien de rangées !", "table": 7, "depart": 3},
@@ -40,6 +48,7 @@
       "matiere": "Histoire",
       "titre": "Seconde Guerre mondiale : les dates clés",
       "emoji": "🗓️",
+      "ajoutee": "2026-10-26",
       "fiche": [
         "# Les grandes dates",
         {"visuel": "frise", "titre": "La guerre de 1939 à 1945", "elements": [{"date": "1er septembre 1939", "emoji": "⚔️", "titre": "L'Allemagne envahit la Pologne", "texte": "Début de la guerre en Europe."}, {"date": "18 juin 1940", "emoji": "📻", "titre": "Appel du général de Gaulle", "texte": "Depuis Londres, à la radio : il appelle à continuer le combat."}, {"date": "10 juillet 1940", "emoji": "🏛️", "titre": "Pétain reçoit les pleins pouvoirs", "texte": "Début du régime de Vichy."}, {"date": "22 juin 1941", "emoji": "❄️", "titre": "L'Allemagne attaque l'URSS", "texte": ""}, {"date": "7 décembre 1941", "emoji": "⚓", "titre": "Attaque japonaise sur Pearl Harbor", "texte": "Les États-Unis entrent en guerre."}, {"date": "6 juin 1944", "emoji": "🚢", "titre": "Débarquement allié en Normandie", "texte": ""}, {"date": "8 mai 1945", "emoji": "🕊️", "titre": "Capitulation de l'Allemagne", "texte": "Fin de la guerre en Europe."}, {"date": "6 et 9 août 1945", "emoji": "☢️", "titre": "Bombes atomiques", "texte": "Sur Hiroshima et Nagasaki (Japon)."}, {"date": "2 septembre 1945", "emoji": "🏁", "titre": "Capitulation du Japon", "texte": "Fin de la guerre dans le monde."}]},
@@ -62,6 +71,8 @@
       "matiere": "Français",
       "titre": "Le passé simple",
       "emoji": "✍️",
+      "ajoutee": "2026-10-26",
+      "assistant": true,
       "fiche": [
         "# Les 3 groupes de verbes",
         {"visuel": "cartes", "elements": [{"emoji": "1️⃣", "titre": "1er groupe", "texte": "verbes en **-er** (sauf aller) : chanter, jouer", "couleur": "#14b8a6"}, {"emoji": "2️⃣", "titre": "2e groupe", "texte": "en **-ir** avec **-issant** : finir → finissant, grandir", "couleur": "#6366f1"}, {"emoji": "3️⃣", "titre": "3e groupe", "texte": "tous les autres : aller, être, avoir, savoir, partir, mettre…", "couleur": "#f59e0b"}]},
@@ -101,6 +112,8 @@
       "matiere": "Français",
       "titre": "Imparfait ou passé simple ?",
       "emoji": "⏳",
+      "ajoutee": "2026-10-26",
+      "assistant": true,
       "fiche": [
         "Donner la **valeur** d'un temps, c'est expliquer pourquoi on l'emploie.",
         {"visuel": "plans", "titre": "Le décor dure… les actions surgissent ⚡", "exemples": [{"phrase": "Les clients **dînaient** encore quand l'incident **se produisit**.", "bande": "les clients dînaient encore", "evenements": ["se produisit"]}, {"phrase": "Alors que tout **était** calme, un bruit **se fit** entendre et **alerta** les habitants.", "bande": "tout était calme", "evenements": ["se fit entendre", "alerta"]}]},
@@ -135,6 +148,8 @@
       "matiere": "Français",
       "titre": "Dictée : le Petit Poucet",
       "emoji": "📝",
+      "ajoutee": "2026-10-26",
+      "assistant": true,
       "fiche": [
         "# Le texte (d'après Charles Perrault, 1697)",
         "Plus ils marchaient, plus ils s'égaraient et s'enfonçaient dans la forêt. La nuit vint, et il s'éleva un grand vent qui leur faisait épouvantablement peur. Ils croyaient entendre de tous côtés des hurlements de loups qui venaient à eux pour les manger. Ils n'osaient presque pas se parler ni tourner la tête. Il survint une grosse pluie qui les trempa jusqu'aux os ; ils glissaient à chaque pas et tombaient dans la boue.",
@@ -169,6 +184,8 @@
       "matiere": "Maths",
       "titre": "Calcul mental : 0,5 · 4 · 5",
       "emoji": "🧮",
+      "ajoutee": "2026-10-26",
+      "assistant": true,
       "fiche": [
         "# Multiplier par 0,5 ; 0,1 ; 0,01 ; 0,001",
         {"visuel": "machine", "titre": "× 0,5 = diviser par 2", "depart": 800, "operations": [": 2"]},
@@ -211,6 +228,8 @@
       "titre": "BE et HAVE (The Addams Family)",
       "langue": "en",
       "emoji": "🦇",
+      "ajoutee": "2026-10-26",
+      "assistant": true,
       "fiche": [
         "# {{BE|be}} = être (ce que l'on est)",
         {"visuel": "conjugaison", "titre": "Touche une forme pour l’entendre 🔈", "colonnes": [{"titre": "Affirmatif", "formes": ["{{I **am**}}", "{{you **are**}}", "{{he / she / it **is**|he is. she is. it is.}}", "{{we **are**}}", "{{you **are**}}", "{{they **are**}}"]}, {"titre": "Négatif", "formes": ["{{I'm **not**}}", "{{he **isn't**}}", "{{they **aren't**}}"]}]},
@@ -245,6 +264,8 @@
       "titre": "die Familie",
       "langue": "de",
       "emoji": "👨‍👩‍👧‍👦",
+      "ajoutee": "2026-10-26",
+      "assistant": true,
       "fiche": [
         "# {{die Familie}} = la famille",
         {"visuel": "arbre", "titre": "L’arbre de la famille : touche un mot pour l’entendre 🔈", "niveaux": [{"titre": "{{die Großeltern}} = les grands-parents", "membres": [{"emoji": "👴", "mot": "{{der Großvater (Opa)|der Großvater. Opa.}}", "fr": "le grand-père", "genre": "m"}, {"emoji": "👵", "mot": "{{die Großmutter (Oma)|die Großmutter. Oma.}}", "fr": "la grand-mère", "genre": "f"}]}, {"titre": "{{die Eltern}} = les parents, avec l’oncle et la tante", "membres": [{"emoji": "👨", "mot": "{{der Vater (Papa)|der Vater. Papa.}}", "fr": "le père", "genre": "m"}, {"emoji": "👩", "mot": "{{die Mutter (Mama)|die Mutter. Mama.}}", "fr": "la mère", "genre": "f"}, {"emoji": "🧔", "mot": "{{der Onkel}}", "fr": "l'oncle", "genre": "m"}, {"emoji": "👩‍🦰", "mot": "{{die Tante}}", "fr": "la tante", "genre": "f"}]}, {"titre": "Les enfants", "membres": [{"emoji": "🙋", "mot": "{{ich}}", "fr": "moi", "genre": "moi"}, {"emoji": "👦", "mot": "{{der Bruder}}", "fr": "le frère", "genre": "m"}, {"emoji": "👧", "mot": "{{die Schwester}}", "fr": "la sœur", "genre": "f"}, {"emoji": "🧒", "mot": "{{der Cousin}}", "fr": "le cousin", "genre": "m"}, {"emoji": "👱‍♀️", "mot": "{{die Cousine}}", "fr": "la cousine", "genre": "f"}]}]},
@@ -270,12 +291,14 @@
       "matiere": "Géographie",
       "titre": "La répartition de la population mondiale",
       "emoji": "🌍",
+      "ajoutee": "2026-10-26",
+      "assistant": true,
       "fiche": [
         "# Combien sommes-nous ?",
         {"visuel": "barres", "titre": "La population mondiale grandit", "max": 10, "elements": [{"label": "En 2026", "valeur": 8.2, "texte": "plus de 8 milliards", "couleur": "#14b8a6"}, {"label": "En 2050", "valeur": 9.7, "texte": "environ 10 milliards", "couleur": "#6366f1"}]},
         "# Une population très inégalement répartie",
         "- **Foyer de population** : région du monde qui concentre un grand nombre d'habitants.",
-        {"visuel": "barres", "titre": "Les 3 grands foyers (nombre d’habitants, environ)", "elements": [{"label": "🌏 Asie du Sud (Inde, Pakistan, Bangladesh…)", "valeur": 2, "texte": "≈ 2 milliards", "couleur": "#f59e0b"}, {"label": "🌏 Asie de l’Est (Chine, Japon, Corée…)", "valeur": 1.65, "texte": "≈ 1,6 milliard", "couleur": "#ec4899"}, {"label": "🌍 Europe", "valeur": 0.75, "texte": "≈ 750 millions", "couleur": "#6366f1"}], "legende": "À eux trois, ils regroupent plus de la moitié de l’humanité !"},
+        {"visuel": "barres", "titre": "Les 3 grands foyers (nombre d’habitants, environ)", "elements": [{"label": "🌏 Asie du Sud (Inde, Pakistan, Bangladesh…)", "valeur": 2, "texte": "≈ 2 milliards", "couleur": "#f59e0b"}, {"label": "🌏 Asie de l’Est (Chine, Japon, Corée…)", "valeur": 1.65, "texte": "≈ 1,6 milliard", "couleur": "#ec4899", "age": 12}, {"label": "🌍 Europe", "valeur": 0.75, "texte": "≈ 750 millions", "couleur": "#6366f1"}], "legende": "À eux trois, ils regroupent plus de la moitié de l’humanité !"},
         "- Ces 3 foyers sont les mêmes depuis **2 000 ans** ; on y pratique l'agriculture depuis au moins **7 000 ans**.",
         "- Autres foyers : le **Nord-Est américain**, le **golfe de Guinée**, le **Sud-Est du Brésil**, l'île de **Java**.",
         "- **Densité de population** : nombre moyen d'habitants par km².",
@@ -310,6 +333,8 @@
       "matiere": "Physique-Chimie",
       "titre": "Masse et volume",
       "emoji": "🧪",
+      "ajoutee": "2026-10-26",
+      "assistant": true,
       "fiche": [
         "# La masse",
         "- La **masse** correspond à la quantité de matière d'un objet. Instrument : la **balance** ⚖️.",
@@ -358,10 +383,12 @@
       "matiere": "SVT",
       "titre": "Notre environnement et les êtres vivants",
       "emoji": "🌿",
+      "ajoutee": "2026-10-26",
+      "assistant": true,
       "fiche": [
         "# L'environnement",
         "- **Définition** : l'environnement est l'ensemble des éléments qui nous entourent.",
-        {"visuel": "cartes", "titre": "Il se compose de…", "elements": [{"emoji": "🐞🌿", "titre": "Êtres vivants", "texte": "animaux, végétaux… et ce qui vient d’eux (feuille, plume)", "couleur": "#22c55e"}, {"emoji": "🪨💧", "titre": "Éléments minéraux", "texte": "roche, air, eau", "couleur": "#0ea5e9"}, {"emoji": "🏢🪑", "titre": "Traces humaines", "texte": "bâtiments, bancs", "couleur": "#f59e0b"}]},
+        {"visuel": "cartes", "titre": "Il se compose de…", "elements": [{"emoji": "🐞🌿", "titre": "Êtres vivants", "texte": "animaux, végétaux… et ce qui vient d’eux (feuille, plume)", "couleur": "#22c55e", "age": 6}, {"emoji": "🪨💧", "titre": "Éléments minéraux", "texte": "roche, air, eau", "couleur": "#0ea5e9"}, {"emoji": "🏢🪑", "titre": "Traces humaines", "texte": "bâtiments, bancs", "couleur": "#f59e0b"}]},
         "# La répartition des êtres vivants",
         "- Les êtres vivants sont **différents d'un endroit à l'autre** : ils **ne sont pas répartis au hasard**.",
         "- Leur répartition dépend des **facteurs physiques du milieu** : **température**, **éclairement** et **humidité**.",

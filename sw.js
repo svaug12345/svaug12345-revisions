@@ -13,7 +13,7 @@ const CACHE = 'revisions-' + VERSION;   // un cache par version
 const FICHIERS = [
   './', 'index.html', 'style.css', 'app.js', 'visuels.js', 'version.js', 'lecons.json',
   'manifest.json', 'audio/index.json', 'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png',
-  'avatars/gaby.svg', 'avatars/tom.svg', 'avatars/nanon.svg'
+  'avatars/gaby.svg', 'avatars/tom.svg', 'avatars/nanon.svg', 'avatars/titouan.svg', 'avatars/ava.svg'
 ];
 
 // Installation : on remplit le cache puis on s'active sans attendre
