@@ -1,6 +1,7 @@
 {
-  "_explication": "Réglages de publication lus par le robot (.github/workflows/play-store.yml). piste = où va chaque nouvelle version envoyée par un push : internal (test interne), alpha (test fermé), production. testeurs = pour chaque piste, les groupes Google (ou adresses Gmail) autorisés à installer l'appli.",
+  "_explication": "Réglages de publication lus par le robot (.github/workflows/play-store.yml). piste = où va chaque nouvelle version envoyée par un push : internal (test interne), alpha (test fermé), production. testeurs = pour chaque piste, les groupes Google (ou adresses Gmail) autorisés à installer l'appli. statut = completed (publié directement) ou draft (brouillon : obligatoire tant que Google n'a pas examiné l'appli une première fois ; on valide alors dans la console avec « Envoyer pour examen »).",
   "piste": "alpha",
+  "statut": "draft",
   "testeurs": {
     "alpha": [
       "testers-community@googlegroups.com",

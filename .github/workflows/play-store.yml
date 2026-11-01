@@ -56,7 +56,7 @@ jobs:
     env:
       # Lancement à la main : la piste choisie ; sinon (push) celle de fastlane/publication.json
       PISTE_CHOISIE: ${{ inputs.piste }}
-      STATUT: ${{ inputs.statut || 'completed' }}
+      STATUT_CHOISI: ${{ inputs.statut }}
     steps:
       - name: Récupérer le code
         uses: actions/checkout@v4
@@ -76,6 +76,9 @@ jobs:
           # Piste : celle choisie à la main, sinon celle du fichier de réglages, sinon « internal »
           PISTE="${PISTE_CHOISIE:-$(jq -r '.piste // "internal"' fastlane/publication.json 2>/dev/null || echo internal)}"
           echo "PISTE=$PISTE" >> "$GITHUB_ENV"
+          # Statut : même logique (completed = publié, draft = brouillon à valider dans la console)
+          STATUT="${STATUT_CHOISI:-$(jq -r '.statut // "completed"' fastlane/publication.json 2>/dev/null || echo completed)}"
+          echo "STATUT=$STATUT" >> "$GITHUB_ENV"
           # versionName = le numéro de version.js (ex. 1.6.1)
           NOM=$(grep -oP "VERSION = '\K[^']+" version.js)
           # versionCode = un entier qui augmente toujours : 100 + numéro d'exécution du robot
