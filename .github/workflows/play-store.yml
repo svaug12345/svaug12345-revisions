@@ -83,23 +83,27 @@ jobs:
         env:
           CLE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
         run: |
-          if [ -z "$CLE_B64" ]; then echo "::error::Secret ANDROID_KEYSTORE_BASE64 manquant"; exit 1; fi
+          # Sans clé, on construit quand même (pour vérifier que tout compile), mais on n'enverra rien
+          if [ -z "$CLE_B64" ]; then echo "::warning::Secret ANDROID_KEYSTORE_BASE64 manquant : appli NON signée"; exit 0; fi
           # La clé est écrite hors du dépôt, dans le dossier temporaire du robot
           echo "$CLE_B64" | base64 -d > "$RUNNER_TEMP/revisions-upload.jks"
+          echo "CLE_FICHIER=$RUNNER_TEMP/revisions-upload.jks" >> "$GITHUB_ENV"
 
       - name: Construire l'appli (.aab signé)
         working-directory: android
         env:
-          CLE_FICHIER: ${{ runner.temp }}/revisions-upload.jks
           CLE_MOT_DE_PASSE: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           VERSION_CODE: ${{ steps.version.outputs.code }}
           VERSION_NAME: ${{ steps.version.outputs.nom }}
         run: |
           chmod +x gradlew
-          ./gradlew --no-daemon bundleRelease
+          # Le journal est gardé pour le compte rendu (pipefail : un échec de Gradle fait échouer l'étape)
+          set -o pipefail
+          ./gradlew --no-daemon bundleRelease 2>&1 | tee "$RUNNER_TEMP/gradle.log"
           cp app/build/outputs/bundle/release/app-release.aab "$RUNNER_TEMP/mes-revisions-${{ steps.version.outputs.nom }}-${{ steps.version.outputs.code }}.aab"
 
       - name: Déposer le .aab dans les « Releases » du dépôt
+        if: env.CLE_FICHIER != ''
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -110,6 +114,7 @@ jobs:
 
       - name: Envoyer sur le Play Store (fastlane supply)
         id: play
+        if: env.CLE_FICHIER != ''
         env:
           CLE_PLAY: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
         run: |
@@ -123,6 +128,7 @@ jobs:
           cp fastlane/metadata/android/fr-FR/changelogs/default.txt \
              "fastlane/metadata/android/fr-FR/changelogs/${{ steps.version.outputs.code }}.txt"
           # supply envoie : le .aab + la fiche (titre, descriptions, icône, captures)
+          set -o pipefail
           fastlane supply \
             --package_name io.github.svaug12345.revisions \
             --json_key "$RUNNER_TEMP/play.json" \
@@ -130,26 +136,29 @@ jobs:
             --track "$PISTE" \
             --release_status "$STATUT" \
             --metadata_path fastlane/metadata/android \
-            --skip_upload_apk true
+            --skip_upload_apk true 2>&1 | tee "$RUNNER_TEMP/fastlane.log"
           echo "envoye=oui" >> "$GITHUB_OUTPUT"
 
       # Toujours exécutée, même en cas d'échec : écrit le compte rendu sur la branche statut-play
       - name: Écrire le compte rendu (branche statut-play)
         if: always()
         run: |
-          cat > "$RUNNER_TEMP/statut.json" <<FIN
-          {
-            "date": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-            "resultat": "${{ job.status }}",
-            "version": "${{ steps.version.outputs.nom }}",
-            "versionCode": "${{ steps.version.outputs.code }}",
-            "piste": "$PISTE",
-            "statutPlay": "$STATUT",
-            "envoyeSurPlay": "${{ steps.play.outputs.envoye || 'non' }}",
-            "commit": "${{ github.sha }}",
-            "lien": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          }
-          FIN
+          # jq fabrique un JSON propre ; « journal » = les 40 dernières lignes de Gradle ou fastlane
+          # (Claude n'a pas accès aux journaux des Actions : c'est sa seule façon de comprendre une erreur)
+          touch "$RUNNER_TEMP/gradle.log" "$RUNNER_TEMP/fastlane.log"
+          jq -n \
+            --arg date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --arg resultat "${{ job.status }}" \
+            --arg version "${{ steps.version.outputs.nom }}" \
+            --arg versionCode "${{ steps.version.outputs.code }}" \
+            --arg piste "$PISTE" --arg statutPlay "$STATUT" \
+            --arg signee "$([ -n "$CLE_FICHIER" ] && echo oui || echo non)" \
+            --arg envoyeSurPlay "${{ steps.play.outputs.envoye || 'non' }}" \
+            --arg commit "${{ github.sha }}" \
+            --arg lien "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --arg gradle "$(tail -n 40 "$RUNNER_TEMP/gradle.log")" \
+            --arg fastlane "$(tail -n 40 "$RUNNER_TEMP/fastlane.log")" \
+            '$ARGS.named' > "$RUNNER_TEMP/statut.json"
           cd "$RUNNER_TEMP"
           git init -q statut && cd statut
           git config user.name "robot-play-store"
