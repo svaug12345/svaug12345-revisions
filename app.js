@@ -538,6 +538,8 @@ async function appelerAlex(lecon, carte, agentId) {
         titre: lecon.titre,
         fiche: texteFiche(lecon),
         questions: texteQuestions(lecon),
+        // Consignes d'accompagnement propres à l'enfant (lecons.json > enfants > "conseilsAlex")
+        conseils: enfant.conseilsAlex || 'Aucune consigne particulière.',
       },
       onConnect: () => { debut = Date.now(); etatAlex(carte, 'parle'); },
       onModeChange: ({ mode }) => { if (alex) etatAlex(carte, mode === 'speaking' ? 'parle' : 'ecoute'); },
@@ -776,8 +778,24 @@ function contenuBloc(contenu) {
 function lancerQuiz(lecon) {
   langueLecon = lecon.langue || null;
   entete(lecon.titre);
-  const questions = lecon.melanger === false ? [...lecon.activites] : melanger(lecon.activites);
+  const questions = etat.enfant?.coupDePouce ? mancheDouce(lecon.activites, etat.enfant.questionsParManche || 10)
+    : lecon.melanger === false ? [...lecon.activites] : melanger(lecon.activites);
   questionSuivante({ lecon, questions, i: 0, bons: 0, erreurs: [], entrainement: false, serie: 0, historique: [] });
+}
+
+/* ---- MODE « COUP DE POUCE » (enfant avec "coupDePouce": true dans lecons.json) ----
+   But : enchaîner les réussites pour reprendre confiance.
+   - manche courte (10 questions par défaut, "questionsParManche" pour changer) ;
+   - on commence par les questions faciles : chaque question peut avoir "niveau": 1 (facile),
+     2 (moyen) ou 3 (difficile) ; sans niveau = 2. On mélange à l'intérieur d'un même niveau,
+     donc chaque partie est un peu différente ;
+   - une 2e chance tout de suite après une erreur (voir questionSuivante), avec un "indice". */
+function mancheDouce(activites, combien) {
+  const parNiveau = [1, 2, 3].map((n) => melanger(activites.filter((a) => (a.niveau || 2) === n)));
+  // On garde la proportion de chaque niveau dans la manche (au moins 1 question si le niveau existe)
+  const total = activites.length;
+  const pris = parNiveau.map((liste) => liste.slice(0, liste.length ? Math.max(1, Math.round((liste.length / total) * combien)) : 0));
+  return pris.flat().slice(0, combien);
 }
 
 /* Habillage de chaque type de question : emoji, petite consigne, couleur de la carte */
@@ -819,6 +837,9 @@ function eclats(element, emojis = ['⭐', '✨', '🎉', '💫']) {
 }
 
 const BRAVO = ['Bravo ! 🎉', 'Super ! ⭐', 'Génial ! 🚀', 'Excellent ! 👏', 'Trop fort ! 💪', 'Parfait ! ✨'];
+// Messages du mode coup de pouce : après une 1re erreur, puis réussite au 2e essai
+const ENCORE = ['Presque ! Essaie encore une fois 💪', 'Pas grave, tu as une 2e chance ! 🍀', 'Réfléchis bien, tu peux y arriver ! 🧠'];
+const BRAVO_ESSAI2 = ['Bravo, tu as trouvé ! 💪', 'Yes ! Au 2e essai, c\'est gagné ! ⚽', 'Super, tu n\'as rien lâché ! 🏆'];
 const OUPS = ['Oups, presque ! 🙈', 'Pas tout à fait… 🤔', 'Raté, mais tu vas y arriver ! 💪'];
 
 /**
@@ -853,6 +874,24 @@ function questionSuivante(q) {
   );
 
   dessiner(activite, zone, (reussi, bonneReponse) => {
+    // Coup de pouce : 1re erreur -> pas de note, un indice et on réessaie la même question
+    if (!reussi && etat.enfant?.coupDePouce && !q.essai2 && !q.entrainement) {
+      q.essai2 = true;
+      son('faux');
+      // L'activité a peut-être déjà coloré la bonne réponse en vert : on la cache, sinon plus de suspense !
+      zone.querySelectorAll('.bon').forEach((e) => e.classList.remove('bon'));
+      retour.replaceChildren(
+        el('div', { class: 'bandeau essai' },
+          el('div', { class: 'bandeau-tete' },
+            el('span', { class: 'mascotte' }, dessinAvatar(etat.enfant, 'mini-avatar')),
+            el('b', {}, auHasard(ENCORE))),
+          activite.indice ? el('p', { class: 'explication' }, '🔎 Indice : ', enrichir(activite.indice)) : null),
+        el('button', { class: 'btn-principal', onclick: () => { questionSuivante(q); scrollTo(0, 0); } }, '🔁 Je réessaie'));
+      retour.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      return;
+    }
+    const auDeuxiemeEssai = reussi && q.essai2;
+    q.essai2 = false;
     if (reussi) q.bons++; else q.erreurs.push(activite);
     q.historique[q.i] = reussi;
     q.serie = reussi ? q.serie + 1 : 0;
@@ -870,7 +909,7 @@ function questionSuivante(q) {
       el('div', { class: 'bandeau ' + (reussi ? 'ok' : 'ko') },
         el('div', { class: 'bandeau-tete' },
           el('span', { class: 'mascotte ' + (reussi ? 'contente' : 'triste') }, dessinAvatar(etat.enfant, 'mini-avatar')),
-          el('b', {}, auHasard(reussi ? BRAVO : OUPS))),
+          el('b', {}, auDeuxiemeEssai ? auHasard(BRAVO_ESSAI2) : auHasard(reussi ? BRAVO : OUPS))),
         serie ? el('p', { class: 'message-serie' }, serie) : null,
         !reussi && bonneReponse ? el('p', {}, 'La bonne réponse : ', el('b', {}, sansMots(bonneReponse))) : null,
         activite.explication ? el('p', { class: 'explication' }, '💡 ', enrichir(activite.explication)) : null),

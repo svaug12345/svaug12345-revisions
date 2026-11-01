@@ -682,4 +682,33 @@ const VISUELS = {
       el('div', { class: 'defile' }, el('table', { class: 'table-posee' }, corps)),
       texte, el('div', { class: 'posee-boutons' }, suivant, reprendre, toutVoir));
   },
+
+  /* RANGS DES CHIFFRES (rappel) : { nombre: "658 741" }
+     Tableau de numération : classe des mille / classe des unités. On touche un chiffre :
+     son rang s'affiche (« 7 est le chiffre des dizaines »). */
+  rangs(v) {
+    const NOMS = ['unités', 'dizaines', 'centaines', 'unités de mille', 'dizaines de mille', 'centaines de mille'];
+    const COURTS = ['u', 'd', 'c', 'u', 'd', 'c'];
+    const chiffres = String(v.nombre).replace(/\s/g, '').split('');
+    const n = chiffres.length;
+    const texte = el('p', { class: 'rangs-texte' }, '👆 Touche un chiffre');
+    const cases = chiffres.map((c, i) => {
+      const rang = n - 1 - i; // 0 = unités
+      return el('button', {
+        class: 'rangs-chiffre' + (rang >= 3 ? ' mille' : ''), style: cascade(i),
+        onclick: (e) => {
+          cases.forEach((b) => b.classList.remove('actif'));
+          e.currentTarget.classList.add('actif');
+          texte.replaceChildren(el('b', {}, c), ` est le chiffre des `, el('b', {}, NOMS[rang]), '.');
+          texte.classList.remove('pop'); void texte.offsetWidth; texte.classList.add('pop');
+        },
+      }, el('small', {}, COURTS[rang]), c);
+    });
+    const mille = cases.filter((_, i) => n - 1 - i >= 3), unites = cases.filter((_, i) => n - 1 - i < 3);
+    return el('div', {},
+      el('div', { class: 'rangs' },
+        mille.length ? el('div', { class: 'rangs-classe mille' }, el('span', {}, 'classe des mille'), el('div', {}, mille)) : null,
+        el('div', { class: 'rangs-classe' }, el('span', {}, 'classe des unités'), el('div', {}, unites))),
+      texte);
+  },
 };

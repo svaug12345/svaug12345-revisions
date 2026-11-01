@@ -865,6 +865,23 @@ button { cursor: pointer; }
 .posee-boutons .btn-visuel:disabled { opacity: .45; }
 .btn-visuel.secondaire { background: #fff; color: var(--fonce); border: 2px solid var(--clair); box-shadow: none; }
 
+/* RANGS DES CHIFFRES (rappel) */
+.rangs { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.rangs-classe { text-align: center; }
+.rangs-classe > span { display: block; font-size: .75rem; font-weight: 900; color: #0369a1; text-transform: uppercase; margin-bottom: 4px; }
+.rangs-classe.mille > span { color: #7c3aed; }
+.rangs-classe > div { display: flex; gap: 4px; padding: 6px; border-radius: 12px; background: #e0f2fe; }
+.rangs-classe.mille > div { background: #ede9fe; }
+.rangs-chiffre {
+  display: flex; flex-direction: column; align-items: center; width: 42px; padding: 4px 0 6px;
+  border: 0; border-radius: 10px; background: #fff; font: 900 1.5rem/1.1 Nunito, system-ui, sans-serif; color: var(--fonce);
+  box-shadow: 0 3px 0 rgba(15, 118, 110, .15);
+}
+.rangs-chiffre small { font-size: .7rem; color: var(--doux); }
+.rangs-chiffre.actif { background: #fef08a; transform: translateY(-3px); }
+.rangs-texte { text-align: center; margin: 10px 0 0; }
+.bandeau.essai { background: #e0e7ff; color: #3730a3; }
+
 /* ---------- Date d'ajout d'une leçon (discrète) ---------- */
 .date-ajout { color: var(--doux); font-size: .72rem; opacity: .8; }
 .tete-lecon .date-ajout { display: block; margin-top: 2px; }

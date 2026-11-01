@@ -65,6 +65,7 @@ Hébergée sur GitHub Pages, comme Lecteur QR.
 | **Carte mémo** — l'enfant dit s'il savait | `{ "type": "carte", "recto": "7 × 7", "verso": "49" }` |
 
 Options pour toutes les activités : `"explication"` (affichée après la réponse, 💡) et `"consigne"`.
+Pour le mode coup de pouce : `"niveau"` (1 facile, 2 moyen — par défaut, 3 difficile) et `"indice"` (🔎 montré avant le 2e essai).
 
 Option de la réponse à taper : `"strict": true` → les accents comptent (pour la dictée, la conjugaison…). Sans elle, « cotes » = « côtés ».
 
@@ -98,6 +99,7 @@ Tous acceptent `"titre"` et `"legende"`, et leurs textes acceptent le **gras** e
 | `arrondi` | Arrondir et encadrer : le ballon ⚽ roule vers le but (nombre rond) le plus proche ; l'enfant peut taper son nombre | `{"visuel":"arrondi","exemples":["658 741","1 250"],"rangs":["dizaine","centaine","millier"]}` |
 | `droite` | Droite graduée : on touche un objet, il tombe à sa place et on explique la lecture | `{"visuel":"droite","debut":500000,"fin":800000,"grande":100000,"petites":10,"points":[{"valeur":530000,"emoji":"⚽","nom":"Le ballon"}]}` |
 | `posee` | Multiplication posée pas à pas (ordre de grandeur, retenues, 0 de décalage, addition) | `{"visuel":"posee","a":579,"b":64}` |
+| `rangs` | Rappel : rang de chaque chiffre (classe des mille / des unités), on touche un chiffre | `{"visuel":"rangs","nombre":"658 741"}` |
 
 Le code de chaque visuel est dans `visuels.js` (une fonction par visuel, bien commentée).
 
@@ -228,3 +230,11 @@ Tout est dans `style.css`, section « TABLETTE ET ORDINATEUR » :
 - **Tablette en portrait** (≥ 700 px de large et ≥ 600 px de haut) : textes plus grands (18 px de base sur écran tactile), profils en grandes cartes centrées, matières rangées sur 2 colonnes, réponses du quiz sur 2 colonnes.
 - **Tablette en paysage** (≥ 1024 px) : les 5 profils sur une ligne, matières sur 3 colonnes, et la fiche de leçon à gauche avec une **colonne d'actions toujours visible** à droite (Alex, « C'est parti », archiver).
 - Un téléphone tourné en paysage garde la mise en page téléphone (il est trop bas).
+
+## 🍀 Mode « coup de pouce » (depuis la v1.10.0)
+
+Pour un enfant qui a besoin d'enchaîner les réussites (aujourd'hui : Titouan). Dans `lecons.json`, sur l'enfant :
+`"coupDePouce": true`, `"questionsParManche": 10`, et `"conseilsAlex": "…"` (consignes envoyées à Alex à chaque appel).
+- **Manches courtes**, du plus facile au plus difficile (selon le `"niveau"` des questions, mélangées à l'intérieur d'un niveau).
+- **2e essai** après une erreur : « Presque ! Essaie encore », avec l'`"indice"` de la question ; la bonne réponse n'est pas dévoilée. Réussi au 2e essai = réussi.
+- Ses leçons commencent par un **🧰 Rappel** des bases et des questions d'échauffement (niveau 1).
