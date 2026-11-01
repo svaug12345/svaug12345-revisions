@@ -16,7 +16,7 @@
 #     Google qui a le droit de publier. Sans lui, le robot fabrique seulement
 #     le fichier .aab et le dépose dans « Releases » du dépôt.
 #
-#  (Secrets de signature ajoutés le 1er novembre 2026.)
+#  (Secrets de signature et de publication ajoutés le 1er novembre 2026.)
 #
 #  Compte rendu : le robot écrit son résultat dans le fichier statut.json de
 #  la branche « statut-play » (Claude peut le lire, alors qu'il n'a pas accès
