@@ -675,13 +675,21 @@ function afficherLecon(lecon) {
   entete(lecon.titre);
   langueLecon = lecon.langue || null;
   const nb = (lecon.activites || []).length;
-  afficher(
+  /* Mise en page (voir style.css, « TABLETTE ») :
+     - téléphone / tablette en portrait : tout en une colonne, dans l'ordre
+       titre → Alex → fiche → bouton « C'est parti » (collé en bas) → archiver ;
+     - tablette en paysage / ordinateur : la fiche à gauche, et à droite une
+       colonne <aside> qui reste visible (Alex + boutons) pendant qu'on lit.
+     Sur téléphone, l'<aside> est « transparent » (display: contents) : ses
+     éléments se rangent comme s'ils étaient directement dans la page. */
+  afficher(el('div', { class: 'page-lecon' },
     el('div', { class: 'tete-lecon' },
       el('span', { class: 'gros-emoji' }, lecon.emoji || '📘'),
       el('div', {}, el('small', {}, lecon.matiere || ''), el('h2', {}, lecon.titre),
         dateAjout(lecon) ? el('span', { class: 'date-ajout' }, dateAjout(lecon)) : null)),
-    blocAlex(lecon), // carte « Réviser avec Alex », bien visible en haut (seulement si "assistant": true)
     dessinerFiche(lecon),
+    el('aside', { class: 'cote-lecon' },
+    blocAlex(lecon), // carte « Réviser avec Alex » (seulement si "assistant": true)
     nb
       ? el('button', { class: 'btn-principal collant', onclick: () => aller(lancerQuiz, lecon) },
         `🚀 C'est parti ! (${pluriel(nb, 'question')})`)
@@ -695,7 +703,7 @@ function afficherLecon(lecon) {
         toast(archiver ? '📦 Leçon archivée' : '📤 Leçon remise dans ta liste');
       },
     }, estArchivee(etat.enfant.id, lecon) ? '📤 Ressortir cette leçon des archives' : '📦 Archiver cette leçon (je la connais !)') : null,
-  );
+  )));
 }
 
 // Petit message qui s'affiche 2 secondes en bas de l'écran

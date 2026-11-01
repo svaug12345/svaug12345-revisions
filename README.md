@@ -218,3 +218,10 @@ Sur une leçon qui a `"assistant": true`, la carte « Réviser avec Alex » perm
 ## 📅 Date d'ajout d'une leçon
 
 `"ajoutee": "2026-10-26"` (format AAAA-MM-JJ) après `"emoji"` : affichée discrètement (« ajoutée le 26 oct. ») dans la liste et sur la fiche. À modifier à la main si besoin ; sans ce champ, rien ne s'affiche.
+
+## 📱 Tablette (depuis la v1.8.0)
+
+Tout est dans `style.css`, section « TABLETTE ET ORDINATEUR » :
+- **Tablette en portrait** (≥ 700 px de large et ≥ 600 px de haut) : textes plus grands (18 px de base sur écran tactile), profils en grandes cartes centrées, matières rangées sur 2 colonnes, réponses du quiz sur 2 colonnes.
+- **Tablette en paysage** (≥ 1024 px) : les 5 profils sur une ligne, matières sur 3 colonnes, et la fiche de leçon à gauche avec une **colonne d'actions toujours visible** à droite (Alex, « C'est parti », archiver).
+- Un téléphone tourné en paysage garde la mise en page téléphone (il est trop bas).

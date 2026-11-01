@@ -350,19 +350,112 @@ button { cursor: pointer; }
   .choix:not(:disabled):hover, .tuile:not(:disabled):hover, .etiquette:hover { filter: brightness(.97); outline: 2px solid var(--principal); }
   .mot:hover { background: #99f6e4; }
 }
-@media (min-width: 900px) {
-  main { max-width: 860px; padding: 24px; }
-  header h1 { font-size: 1.5rem; }
-  .grille-enfants { grid-template-columns: repeat(3, 1fr); gap: 22px; }
-  .carte-enfant { padding: 30px 10px; }
+/* =============================================================
+   TABLETTE ET ORDINATEUR (v1.8.0)
+   -------------------------------------------------------------
+   Trois paliers, du plus petit au plus grand :
+   1. « grand écran » : 700 px de large ET 600 px de haut au moins.
+      (La hauteur évite qu'un téléphone tourné en paysage — large mais
+       très bas — reçoive la mise en page tablette.)
+      -> tablette en portrait : contenu plus large, textes plus grands,
+         leçons et réponses sur 2 colonnes.
+   2. « paysage » : 1024 px de large au moins
+      -> fiche de leçon à gauche + colonne d'actions à droite (toujours visible),
+         profils sur une seule ligne, leçons sur 3 colonnes si la place le permet.
+   3. « doigt » (pointer: coarse) = écran tactile : tout est un peu plus gros.
+      « souris » (hover + pointer: fine) = ordinateur : survol, aide clavier.
+   Les tailles en rem suivent la taille du texte de <html> : en la passant
+   de 16 à 18 px sur tablette, presque tout grandit d'un coup.
+   ============================================================= */
+
+/* Page de leçon : ordre d'affichage sur téléphone (une seule colonne).
+   L'<aside> est « transparent » : ses enfants se rangent dans la page. */
+.page-lecon { display: flex; flex-direction: column; }
+.cote-lecon { display: contents; }
+.page-lecon .tete-lecon { order: 1; }
+.page-lecon .alex { order: 2; }
+.page-lecon .fiche { order: 3; }
+.page-lecon .btn-principal, .page-lecon .vide { order: 4; }
+.page-lecon .btn-archive { order: 5; }
+
+/* --- 1. Grand écran (tablette portrait et plus) --- */
+@media (min-width: 700px) and (min-height: 600px) {
+  main { max-width: 820px; padding: 24px 28px; }
+  header { padding-left: 20px; padding-right: 20px; }
+  header h1 { font-size: 1.45rem; }
+  .btn-icone { width: 48px; height: 48px; font-size: 1.4rem; }
+  #badge-enfant .mini-avatar { width: 40px; height: 40px; }
+
+  /* Profils : grandes cartes, centrées (5 enfants -> 3 + 2) */
+  .grille-enfants { display: flex; flex-wrap: wrap; justify-content: center; gap: 22px; }
+  .carte-enfant { flex: 0 1 220px; padding: 28px 12px; }
   .carte-enfant .avatar { width: 120px; height: 120px; font-size: 4rem; }
-  /* Leçons sur 2 colonnes */
-  .groupe { display: grid; grid-template-columns: 1fr 1fr; column-gap: 14px; }
-  .groupe h2 { grid-column: 1 / -1; }
-  .fiche { font-size: 1.1rem; }
+  .carte-enfant .nom { font-size: 1.5rem; }
+  .intro { font-size: 1.15rem; margin: 8px 0 24px; }
+  /* Accueil centré verticalement : pas de grand vide en bas de la tablette */
+  main:has(.grille-enfants) { display: flex; flex-direction: column; justify-content: center; }
+
+  /* Liste des leçons : les matières se rangent en colonnes, comme un journal
+     (une matière n'est jamais coupée en deux), sans trous quand une matière a peu de leçons */
+  main:has(.groupe) { column-count: 2; column-gap: 22px; }
+  .groupe { break-inside: avoid; padding-top: 1px; }
+  .archives { column-span: all; }
+  .carte-lecon { margin-bottom: 14px; padding: 18px; }
+  .carte-lecon .emoji { font-size: 2.4rem; }
+
+  /* Fiche : texte plus grand, cartes plus aérées */
+  .fiche { font-size: 1.08rem; }
+  .bloc { padding: 18px 22px 20px; }
+  .gros-emoji { font-size: 4rem; }
+  .tete-lecon h2 { font-size: 1.9rem; }
+
+  /* Quiz : réponses sur 2 colonnes, grandes zones à toucher */
   .liste-choix:not(.deux) { grid-template-columns: 1fr 1fr; }
+  .choix, .tuile { min-height: 64px; }
+  .enonce p { font-size: 1.4rem; }
+  .carte-question { padding: 18px 24px 24px; }
+  .champ { font-size: 1.5rem; }
+  .btn-principal, .btn-secondaire { padding: 18px; }
+}
+
+/* Écran tactile + grand écran (tablette) : on grossit l'ensemble */
+@media (min-width: 700px) and (min-height: 600px) and (pointer: coarse) {
+  html { font-size: 18px; }
+}
+
+/* --- 2. Paysage (tablette couchée, ordinateur) --- */
+@media (min-width: 1024px) and (min-height: 600px) {
+  main { max-width: 900px; }
+  /* Écrans qui profitent de la largeur : accueil, liste, fiche */
+  main:has(.grille-enfants), main:has(.groupe), main:has(.page-lecon) { max-width: 1240px; }
+  .carte-enfant { flex-basis: 200px; }
+
+  /* Fiche à gauche, colonne d'actions à droite qui reste à l'écran */
+  .page-lecon {
+    display: grid; align-items: start; column-gap: 28px;
+    grid-template-columns: minmax(0, 1fr) 330px;
+    grid-template-areas: "tete tete" "fiche cote";
+  }
+  .page-lecon .tete-lecon { grid-area: tete; margin-bottom: 6px; }
+  .page-lecon .fiche { grid-area: fiche; margin-top: 8px; }
+  .cote-lecon {
+    grid-area: cote; display: flex; flex-direction: column; gap: 14px;
+    position: sticky; top: calc(88px + env(safe-area-inset-top)); margin-top: 8px;
+  }
+  .cote-lecon > * { margin: 0 !important; }
+  .cote-lecon .collant { position: static; } /* déjà toujours visible dans la colonne */
+  .cote-lecon .alex { flex-wrap: wrap; }     /* Alex en carte verticale : bouton dessous */
+  .cote-lecon .alex-bouton { width: 100%; padding: 14px; }
+  .cote-lecon .btn-archive { font-size: .95rem; }
+}
+/* Très grand écran : matières sur 3 colonnes */
+@media (min-width: 1200px) and (min-height: 600px) {
+  main:has(.groupe) { column-count: 3; }
+}
+
+/* --- 3. Ordinateur (souris) : bouton non collé, aide clavier --- */
+@media (min-width: 900px) and (hover: hover) and (pointer: fine) {
   .collant { position: static; }
-  /* aide clavier affichée seulement sur grand écran */
   .compteur::after { content: '  ·  ⌨️ 1-4 pour répondre, Entrée pour continuer'; color: var(--doux); font-weight: 600; font-size: .8rem; }
 }
 
