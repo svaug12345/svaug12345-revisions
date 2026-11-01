@@ -373,7 +373,6 @@ button { cursor: pointer; }
 .page-lecon { display: flex; flex-direction: column; }
 .cote-lecon { display: contents; }
 .page-lecon .tete-lecon { order: 1; }
-.page-lecon .alex { order: 2; }
 .page-lecon .fiche { order: 3; }
 .page-lecon .btn-principal, .page-lecon .vide { order: 4; }
 .page-lecon .btn-archive { order: 5; }
@@ -444,8 +443,6 @@ button { cursor: pointer; }
   }
   .cote-lecon > * { margin: 0 !important; }
   .cote-lecon .collant { position: static; } /* déjà toujours visible dans la colonne */
-  .cote-lecon .alex { flex-wrap: wrap; }     /* Alex en carte verticale : bouton dessous */
-  .cote-lecon .alex-bouton { width: 100%; padding: 14px; }
   .cote-lecon .btn-archive { font-size: .95rem; }
 }
 /* Très grand écran : matières sur 3 colonnes */
@@ -799,42 +796,32 @@ button { cursor: pointer; }
 .date-ajout { color: var(--doux); font-size: .72rem; opacity: .8; }
 .tete-lecon .date-ajout { display: block; margin-top: 2px; }
 
-/* ---------- Alex, le coach vocal ----------
-   La carte change selon data-mode : repos / connexion / ecoute / parle */
+/* ---------- Alex, le coach vocal : une pastille discrète à droite du titre ----------
+   data-mode (posé par app.js) : repos / connexion / parle / ecoute */
+.tete-lecon { flex-wrap: wrap; }
+.tete-lecon > div { flex: 1; min-width: 0; }
 .alex {
-  display: flex; align-items: center; gap: 12px;
-  margin: 18px 0; padding: 14px 16px; border-radius: 20px;
-  background: linear-gradient(135deg, #eef2ff, #e0f2fe);
-  border: 2px solid #c7d2fe; box-shadow: 0 5px 0 #c7d2fe;
+  flex: none; align-self: center;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 12px 7px 9px; border-radius: 999px;
+  border: 2px solid #c7d2fe; background: #eef2ff; color: #3730a3;
+  font-weight: 900; font-size: .9rem; white-space: nowrap;
+  box-shadow: 0 3px 0 #c7d2fe; transition: background .2s, color .2s;
 }
-.alex-visage {
-  flex: none; width: 52px; height: 52px; border-radius: 50%;
-  display: grid; place-items: center; font-size: 1.7rem;
-  background: #fff; box-shadow: 0 0 0 4px #c7d2fe;
+.alex:active { transform: translateY(2px); box-shadow: none; }
+.alex-icone { font-size: 1.15rem; line-height: 1; }
+.alex-raccrocher {
+  display: grid; place-items: center; width: 20px; height: 20px; margin-left: 2px;
+  border-radius: 50%; background: rgba(255, 255, 255, .3); font-size: .7rem;
 }
-.alex-textes { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-.alex-textes b { color: #3730a3; }
-.alex-etat { color: var(--doux); font-size: .85rem; }
-.alex-bouton {
-  flex: none; border: 0; border-radius: 999px; padding: 10px 14px;
-  font: inherit; font-weight: 800; color: #fff; background: #6366f1;
-  box-shadow: 0 4px 0 #4338ca; cursor: pointer;
-}
-.alex-bouton:active { transform: translateY(3px); box-shadow: 0 1px 0 #4338ca; }
-/* Pendant l'appel : bouton rouge « Raccrocher » */
-.alex[data-mode="ecoute"] .alex-bouton, .alex[data-mode="parle"] .alex-bouton { background: #ef4444; box-shadow: 0 4px 0 #b91c1c; }
-/* Ça sonne : le casque tremble */
-.alex[data-mode="connexion"] .alex-visage { animation: alex-sonne .35s infinite alternate; }
-@keyframes alex-sonne { from { transform: rotate(-10deg); } to { transform: rotate(10deg); } }
-/* Alex parle : des ondes autour du casque ; il écoute : halo vert */
-.alex[data-mode="parle"] .alex-visage { animation: alex-onde 1.1s infinite; }
-@keyframes alex-onde { 0% { box-shadow: 0 0 0 4px #a5b4fc; } 100% { box-shadow: 0 0 0 16px rgba(165, 180, 252, 0); } }
-.alex[data-mode="ecoute"] .alex-visage { box-shadow: 0 0 0 5px #86efac; }
-/* Téléphone : le bouton passe sous le texte (pleine largeur) */
-@media (max-width: 480px) {
-  .alex { flex-wrap: wrap; }
-  .alex-bouton { width: 100%; }
-}
+/* Pendant l'appel : pastille pleine (violette quand Alex parle, verte quand il écoute) */
+.alex[data-mode="connexion"] { background: #e0e7ff; }
+.alex[data-mode="connexion"] .alex-icone { animation: alex-sonne .35s infinite alternate; }
+.alex[data-mode="parle"] { background: #6366f1; border-color: #6366f1; color: #fff; box-shadow: 0 3px 0 #4338ca; }
+.alex[data-mode="parle"] .alex-icone { animation: alex-onde .9s infinite alternate; }
+.alex[data-mode="ecoute"] { background: #22c55e; border-color: #22c55e; color: #fff; box-shadow: 0 3px 0 #15803d; }
+@keyframes alex-sonne { from { transform: rotate(-12deg); } to { transform: rotate(12deg); } }
+@keyframes alex-onde { from { transform: scale(1); } to { transform: scale(1.25); } }
 @media (prefers-reduced-motion: reduce) {
-  .alex .alex-visage { animation: none !important; }
+  .alex .alex-icone { animation: none !important; }
 }

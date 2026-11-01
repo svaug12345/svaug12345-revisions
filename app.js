@@ -442,8 +442,8 @@ function secouer(element) {
 }
 
 /* ---------- 3 bis. ALEX, LE COACH VOCAL (ElevenLabs) ------------
-   Sur les leçons marquées "assistant": true, une carte « Réviser avec Alex »
-   permet de PARLER avec un coach : poser des questions, se faire interroger,
+   Sur les leçons marquées "assistant": true, une pastille discrète « 🎧 Alex »
+   (à droite du titre) permet de PARLER avec un coach : poser des questions, se faire interroger,
    demander des exemples concrets.
 
    Comment ça marche ?
@@ -459,7 +459,7 @@ function secouer(element) {
      appels acceptés seulement depuis baiji.fr, 30 appels par jour maximum.
    ------------------------------------------------------------- */
 
-let alex = null; // { conversation, carte } pendant un appel, sinon null
+let alex = null; // { conversation, carte (= la pastille) } pendant un appel, sinon null
 
 /** Transforme la fiche en texte simple pour Alex (sans ** ni {{ }}, schémas résumés en JSON). */
 function texteFiche(lecon) {
@@ -480,33 +480,46 @@ function texteQuestions(lecon) {
   return (lecon.activites || []).map((a) => '- ' + JSON.stringify(a)).join('\n') || '(pas de quiz)';
 }
 
-/** La carte « Réviser avec Alex » sous la fiche (null si la leçon n'a pas d'Alex). */
+/** La pastille « 🎧 Alex », discrète, à droite du titre de la leçon (null si la leçon n'a pas d'Alex).
+    Pendant l'appel, elle montre qui parle et sert de bouton « raccrocher ». */
 function blocAlex(lecon) {
   const agentId = etat.donnees.assistant?.agentId;
   if (!lecon.assistant || !agentId || !etat.enfant) return null;
-  const etatTexte = el('span', { class: 'alex-etat' }, 'Questions, exemples, interro : demande-lui !');
-  const bouton = el('button', { class: 'alex-bouton' }, '📞 Appeler Alex');
-  const carte = el('section', { class: 'alex' },
-    el('div', { class: 'alex-visage', 'aria-hidden': 'true' }, '🎧'),
-    el('div', { class: 'alex-textes' }, el('b', {}, 'Réviser avec Alex'), etatTexte),
-    bouton);
-  carte._etat = etatTexte; // on garde les éléments sous la main pour les mettre à jour
-  carte._bouton = bouton;
-  bouton.addEventListener('click', () => (alex ? raccrocherAlex() : appelerAlex(lecon, carte, agentId)));
-  return carte;
+  const pastille = el('button', {
+    class: 'alex', type: 'button',
+    title: 'Parler avec Alex, ton coach : questions, exemples, petite interro',
+  });
+  etatAlex(pastille, 'repos');
+  pastille.addEventListener('click', () => (alex ? raccrocherAlex() : appelerAlex(lecon, pastille, agentId)));
+  return pastille;
 }
 
-/** Change l'apparence de la carte : 'repos', 'connexion', 'ecoute' (Alex écoute) ou 'parle'. */
-function etatAlex(carte, mode, texte) {
-  carte.dataset.mode = mode;
-  if (texte) carte._etat.textContent = texte;
-  carte._bouton.textContent = mode === 'repos' ? '📞 Appeler Alex' : mode === 'connexion' ? '⏳ Ça sonne…' : '✖ Raccrocher';
+/* Ce qu'affiche la pastille dans chaque état : [icône, texte] */
+const TEXTES_ALEX = {
+  repos: ['🎧', 'Alex'],
+  connexion: ['⏳', 'Ça sonne…'],
+  parle: ['🔊', 'Alex parle'],
+  ecoute: ['👂', 'À toi'],
+};
+
+/** Change l'état de la pastille : 'repos', 'connexion', 'parle' ou 'ecoute'.
+    Un message éventuel (erreur, au revoir…) s'affiche dans un petit toast en bas. */
+function etatAlex(pastille, mode, message) {
+  const [icone, texte] = TEXTES_ALEX[mode];
+  pastille.dataset.mode = mode;
+  pastille.replaceChildren(...[ // filter(Boolean) : replaceChildren(null) écrirait « null » à l'écran
+    el('span', { class: 'alex-icone', 'aria-hidden': 'true' }, icone),
+    el('span', {}, texte),
+    mode === 'repos' ? null : el('span', { class: 'alex-raccrocher', 'aria-label': 'Raccrocher' }, '✖'),
+  ].filter(Boolean));
+  if (message) toast(message);
 }
 
 async function appelerAlex(lecon, carte, agentId) {
   if (carte.dataset.mode === 'connexion') return; // anti double-clic
   couperVoix(); fermerLecteurMot();
-  etatAlex(carte, 'connexion', 'Autorise le micro si le téléphone le demande 🎤');
+  etatAlex(carte, 'connexion');
+  let debut = 0; // heure de décroché, pour repérer un appel coupé aussitôt
   try {
     // 1) Le micro (le navigateur demande l'autorisation la première fois)
     await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -526,10 +539,14 @@ async function appelerAlex(lecon, carte, agentId) {
         fiche: texteFiche(lecon),
         questions: texteQuestions(lecon),
       },
-      onConnect: () => etatAlex(carte, 'parle', 'Alex te parle…'),
-      onModeChange: ({ mode }) => etatAlex(carte, mode === 'speaking' ? 'parle' : 'ecoute',
-        mode === 'speaking' ? 'Alex te parle…' : 'À toi ! Alex t’écoute 👂'),
-      onDisconnect: () => { alex = null; etatAlex(carte, 'repos', 'À bientôt ! Tu peux rappeler Alex quand tu veux.'); },
+      onConnect: () => { debut = Date.now(); etatAlex(carte, 'parle'); },
+      onModeChange: ({ mode }) => { if (alex) etatAlex(carte, mode === 'speaking' ? 'parle' : 'ecoute'); },
+      onDisconnect: () => {
+        if (alex !== appel) return; // c'est nous qui avons raccroché : rien à signaler
+        const tropCourt = !debut || Date.now() - debut < 3000; // coupé en moins de 3 s = souci de connexion
+        alex = null;
+        etatAlex(carte, 'repos', tropCourt ? 'Alex n’a pas pu décrocher 😕 Réessaie dans un moment.' : null);
+      },
       onError: (e) => console.warn('Alex :', e),
     });
     // Raccroché (ou écran quitté) pendant que ça sonnait : on coupe tout de suite
@@ -539,8 +556,8 @@ async function appelerAlex(lecon, carte, agentId) {
     console.warn('Alex :', e);
     alex = null;
     const micro = e && (e.name === 'NotAllowedError' || e.name === 'NotFoundError');
-    etatAlex(carte, 'repos', micro ? 'Il faut autoriser le micro pour parler à Alex 🎤'
-      : 'Alex n’est pas joignable (connexion internet ?). Réessaie plus tard.');
+    etatAlex(carte, 'repos', micro ? 'Autorise le micro pour parler à Alex 🎤'
+      : 'Alex n’est pas joignable (internet ?) 😕');
   }
 }
 
@@ -550,7 +567,7 @@ function raccrocherAlex() {
   const { conversation, carte } = alex;
   alex = null;
   conversation?.endSession().catch(() => {});
-  if (carte.isConnected) etatAlex(carte, 'repos', 'À bientôt ! Tu peux rappeler Alex quand tu veux.');
+  if (carte.isConnected) etatAlex(carte, 'repos', 'À bientôt ! 👋');
 }
 
 /* ---------- 4. NAVIGATION ------------------------------------ */
@@ -677,19 +694,19 @@ function afficherLecon(lecon) {
   const nb = (lecon.activites || []).length;
   /* Mise en page (voir style.css, « TABLETTE ») :
      - téléphone / tablette en portrait : tout en une colonne, dans l'ordre
-       titre → Alex → fiche → bouton « C'est parti » (collé en bas) → archiver ;
+       titre (+ pastille Alex) → fiche → bouton « C'est parti » (collé en bas) → archiver ;
      - tablette en paysage / ordinateur : la fiche à gauche, et à droite une
-       colonne <aside> qui reste visible (Alex + boutons) pendant qu'on lit.
+       colonne <aside> qui reste visible (les boutons) pendant qu'on lit.
      Sur téléphone, l'<aside> est « transparent » (display: contents) : ses
      éléments se rangent comme s'ils étaient directement dans la page. */
   afficher(el('div', { class: 'page-lecon' },
     el('div', { class: 'tete-lecon' },
       el('span', { class: 'gros-emoji' }, lecon.emoji || '📘'),
       el('div', {}, el('small', {}, lecon.matiere || ''), el('h2', {}, lecon.titre),
-        dateAjout(lecon) ? el('span', { class: 'date-ajout' }, dateAjout(lecon)) : null)),
+        dateAjout(lecon) ? el('span', { class: 'date-ajout' }, dateAjout(lecon)) : null),
+      blocAlex(lecon)), // pastille « 🎧 Alex » à droite du titre (seulement si "assistant": true)
     dessinerFiche(lecon),
     el('aside', { class: 'cote-lecon' },
-    blocAlex(lecon), // carte « Réviser avec Alex » (seulement si "assistant": true)
     nb
       ? el('button', { class: 'btn-principal collant', onclick: () => aller(lancerQuiz, lecon) },
         `🚀 C'est parti ! (${pluriel(nb, 'question')})`)
