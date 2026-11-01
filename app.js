@@ -318,6 +318,11 @@ function distance(a, b) { // distance de Levenshtein : nombre de lettres à chan
     d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
   return d[a.length][b.length];
 }
+/** Texte d'un bouton de réponse sans le 🔈 ajouté par la lecture audio.
+    (textContent inclurait « 🔈 » : une réponse juste serait alors comptée fausse !) */
+function texteSans(b) {
+  return [...b.childNodes].filter((n) => !n.classList?.contains('lire-choix')).map((n) => n.textContent).join('');
+}
 const procheOrtho = (attendu, tape) => distance(attendu, tape) <= (attendu.length >= 7 ? 2 : attendu.length >= 4 ? 1 : 0);
 
 
@@ -1165,7 +1170,7 @@ const ACTIVITES = {
           boutons.forEach((b) => (b.disabled = true));
           const ok = texte === bonne;
           e.currentTarget.classList.add(ok ? 'bon' : 'faux');
-          boutons.find((b) => b.textContent.replace(/🔈$/, '') === sansMots(bonne)).classList.add('bon'); // montre la bonne
+          boutons.find((b) => texteSans(b) === sansMots(bonne)).classList.add('bon'); // montre la bonne
           fin(ok, bonne);
           const motBon = motsDe(bonne)[0];
           if (motBon && !motsDe(act.explication || '').length) setTimeout(() => prononcer(motBon), 700);
@@ -1244,7 +1249,7 @@ const ACTIVITES = {
       const libre = trous.find((t) => !t.etiquette);
       if (!libre || fini) return;
       libre.etiquette = etiquette;
-      libre.textContent = etiquette.textContent;
+      libre.textContent = texteSans(etiquette);
       libre.classList.add('rempli');
       etiquette.hidden = true;
       bouton.disabled = trous.some((t) => !t.etiquette);
@@ -1306,8 +1311,8 @@ const ACTIVITES = {
           class: 'tuile droite',
           onclick: () => {
             if (!choisi) { secouer(colGauche); return; } // il faut d'abord choisir à gauche
-            if (estPaire(choisi.textContent, texte)) {
-              const aDire = motDeTuile(choisi.textContent) || motDeTuile(texte);
+            if (estPaire(texteSans(choisi), texte)) {
+              const aDire = motDeTuile(texteSans(choisi)) || motDeTuile(texte);
               if (aDire) prononcer(aDire);
               [choisi, b].forEach((x) => { x.classList.remove('choisie'); x.classList.add('bon'); x.disabled = true; });
               choisi = null;
@@ -1355,7 +1360,7 @@ const ACTIVITES = {
       bouton.disabled = true;
       let ok = true;
       [...ligne.children].forEach((b, i) => {
-        const bon = b.textContent === String(act.elements[i]);
+        const bon = texteSans(b) === String(act.elements[i]);
         b.classList.add(bon ? 'bon' : 'faux');
         b.disabled = true;
         if (!bon) ok = false;
