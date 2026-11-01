@@ -586,6 +586,9 @@ function aller(fonctionEcran, ...args) {
   scrollTo(0, 0);
 }
 
+// « ensuite » : une action à faire juste après un retour arrière (voir allerAuModuleSuivant)
+let ensuite = null;
+
 addEventListener('popstate', () => {
   if (pile.length > 1) {
     pile.pop();
@@ -593,7 +596,15 @@ addEventListener('popstate', () => {
     fonctionEcran(...args);
     scrollTo(0, 0);
   }
+  if (ensuite) { const f = ensuite; ensuite = null; f(); }
 });
+
+/** Remplace l'écran du haut de la pile (sans ajouter d'étape dans l'historique). */
+function remplacerEcran(fonctionEcran, ...args) {
+  pile[pile.length - 1] = [fonctionEcran, args];
+  fonctionEcran(...args);
+  scrollTo(0, 0);
+}
 
 // Met à jour la barre du haut pour l'écran affiché
 function entete(titre) {
@@ -665,8 +676,67 @@ function afficherLecons() {
   afficher(...parMatiere(lecons).map(([matiere, liste]) =>
     el('section', { class: 'groupe' },
       el('h2', {}, matiere),
-      liste.map((l) => carteLecon(l)),
+      cartesDe(liste),
     )), blocArchives);
+}
+
+/* ---- PARCOURS : une grosse leçon découpée en petits modules ----
+   Dans lecons.json, chaque module est une leçon normale avec en plus
+     "parcours": "Arrondir et encadrer", "etape": 2
+   La liste les affiche comme un chemin d'étapes (⚽ 1 → 2 → 3 → 🏆), et la fin
+   du quiz propose directement l'étape suivante. */
+
+// Les cartes d'une matière : une carte par leçon simple, un « chemin » par parcours
+function cartesDe(liste) {
+  const deja = new Set();
+  return liste.map((l) => {
+    if (!l.parcours) return carteLecon(l);
+    if (deja.has(l.parcours)) return null;
+    deja.add(l.parcours);
+    return carteParcours(l.parcours, liste.filter((x) => x.parcours === l.parcours));
+  });
+}
+
+// Tous les modules d'un parcours (non archivés), dans l'ordre des étapes
+function modulesDu(parcours) {
+  return leconsDe(etat.enfant.id)
+    .filter((l) => l.parcours === parcours && !estArchivee(etat.enfant.id, l))
+    .sort((a, b) => (a.etape || 0) - (b.etape || 0));
+}
+
+function carteParcours(parcours, modules) {
+  modules = [...modules].sort((a, b) => (a.etape || 0) - (b.etape || 0));
+  const faits = modules.filter((m) => etoilesDe(etat.enfant.id, m.id) > 0).length;
+  const prochain = modules.find((m) => etoilesDe(etat.enfant.id, m.id) === 0);
+  return el('div', { class: 'parcours' },
+    el('div', { class: 'parcours-tete' },
+      el('b', {}, parcours),
+      el('small', {}, faits === modules.length ? '🏆 Parcours terminé !' : `${faits} / ${modules.length} étapes`)),
+    el('div', { class: 'parcours-chemin' },
+      modules.map((m, i) => {
+        const etoiles = etoilesDe(etat.enfant.id, m.id);
+        return el('button', {
+          class: 'parcours-etape' + (etoiles ? ' faite' : '') + (m === prochain ? ' prochaine' : ''),
+          onclick: () => aller(afficherLecon, m),
+        },
+          el('span', { class: 'parcours-rond' }, etoiles ? '✔' : (m.emoji || String(i + 1))),
+          el('span', { class: 'parcours-nom' }, m.titre),
+          el('span', { class: 'parcours-etoiles' }, dessinEtoiles(etoiles)));
+      }),
+      el('span', { class: 'parcours-trophee' + (faits === modules.length ? ' gagne' : '') }, '🏆')));
+}
+
+// Le module qui suit (ou null)
+function moduleSuivant(lecon) {
+  if (!lecon.parcours) return null;
+  const modules = modulesDu(lecon.parcours);
+  return modules[modules.indexOf(modules.find((m) => m.id === lecon.id)) + 1] || null;
+}
+
+// Depuis l'écran de fin du quiz : on revient à la fiche, puis on la remplace par celle du module suivant
+function allerAuModuleSuivant(suivant) {
+  ensuite = () => remplacerEcran(afficherLecon, suivant);
+  history.back();
 }
 
 // Regroupe des leçons par matière, en gardant l'ordre du fichier : [["Maths", [...]], ...]
@@ -704,7 +774,9 @@ function afficherLecon(lecon) {
   afficher(el('div', { class: 'page-lecon' },
     el('div', { class: 'tete-lecon' },
       el('span', { class: 'gros-emoji' }, lecon.emoji || '📘'),
-      el('div', {}, el('small', {}, lecon.matiere || ''), el('h2', {}, lecon.titre),
+      el('div', {}, el('small', {}, lecon.parcours
+        ? `${lecon.matiere || ''} · ${lecon.parcours} · étape ${lecon.etape || 1}/${modulesDu(lecon.parcours).length}`
+        : lecon.matiere || ''), el('h2', {}, lecon.titre),
         dateAjout(lecon) ? el('span', { class: 'date-ajout' }, dateAjout(lecon)) : null),
       blocAlex(lecon)), // pastille « 🎧 Alex » à droite du titre (seulement si "assistant": true)
     dessinerFiche(lecon),
@@ -962,6 +1034,7 @@ function ecranFinal(lecon, premier, rattrapage, erreursNonRevues = []) {
   const restantes = rattrapage ? rattrapage.restantes : erreursNonRevues;
   const messages = ['On recommence ? Tu vas y arriver 💪', 'Pas mal ! Encore un petit effort 🙂', 'Très bien ! 👏', 'Magnifique ! 🏆'];
   const qRelance = { lecon, erreurs: restantes, premier };
+  const suivant = moduleSuivant(lecon); // module suivant du parcours (s'il y en a un)
 
   afficher(el('div', { class: 'resultat' },
     dessinGrossesEtoiles(premier.etoiles),
@@ -973,7 +1046,9 @@ function ecranFinal(lecon, premier, rattrapage, erreursNonRevues = []) {
         : '🎯 Rattrapage réussi : toutes tes erreurs sont corrigées !') : null,
     restantes.length ? el('button', { class: 'btn-principal', onclick: () => revoirErreurs(qRelance) },
       `🔁 Revoir ${restantes.length > 1 ? `les ${restantes.length} questions` : 'la question'} encore une fois`) : null,
-    el('button', { class: restantes.length ? 'btn-secondaire' : 'btn-principal', onclick: () => lancerQuiz(lecon) }, '🔄 Rejouer toute la leçon'),
+    suivant ? el('button', { class: restantes.length ? 'btn-secondaire' : 'btn-principal', onclick: () => allerAuModuleSuivant(suivant) },
+      `⚽ Étape suivante : ${suivant.titre} ➜`) : null,
+    el('button', { class: restantes.length || suivant ? 'btn-secondaire' : 'btn-principal', onclick: () => lancerQuiz(lecon) }, '🔄 Rejouer toute la leçon'),
     el('button', { class: 'btn-secondaire', onclick: () => history.back() }, '📖 Revenir à la fiche'),
   ));
 

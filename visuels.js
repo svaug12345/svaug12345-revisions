@@ -711,4 +711,63 @@ const VISUELS = {
         el('div', { class: 'rangs-classe' }, el('span', {}, 'classe des unités'), el('div', {}, unites))),
       texte);
   },
+
+  /* TIRS AU BUT (mini-jeu) : { tirs: [{ texte: "4 682 arrondi à la centaine ?", choix: ["4 700", "4 600"] }] }
+     Comme dans le quiz, la 1re proposition est la bonne (l'ordre est mélangé à l'affichage).
+     Bonne réponse = BUT ⚽ (le ballon file dans le filet) ; mauvaise = le gardien arrête 🧤.
+     Le score s'affiche comme au stade, puis on peut rejouer (les tirs sont remélangés). */
+  tirs(v) {
+    const scene = el('div', { class: 'tirs-scene' });
+    const tableau = el('div', { class: 'tirs-score' });
+    const zone = el('div', { class: 'tirs-zone' });
+    let liste = [], k = 0, buts = 0;
+    const majScore = () => tableau.replaceChildren(
+      el('span', {}, '⚽ Toi ', el('b', {}, String(buts))), el('span', {}, ' – '),
+      el('span', {}, el('b', {}, String(k - buts)), ' Gardien 🧤'));
+
+    function commencer() {
+      liste = melanger(v.tirs); k = 0; buts = 0;
+      majScore(); tirer();
+    }
+    function tirer() {
+      if (k >= liste.length) return fin();
+      const t = liste[k];
+      // Le terrain : le but, le gardien au milieu, le ballon au point de penalty
+      scene.replaceChildren(
+        el('div', { class: 'tirs-but' }, el('span', { class: 'tirs-gardien' }, '🧤')),
+        el('span', { class: 'tirs-ballon' }, '⚽'));
+      zone.replaceChildren(
+        el('p', { class: 'tirs-question' }, el('small', {}, `Tir ${k + 1} / ${liste.length}`), enrichir(t.texte)),
+        el('div', { class: 'tirs-choix' }, melanger(t.choix).map((c) => el('button', {
+          class: 'tirs-bouton',
+          onclick: (e) => frapper(c === t.choix[0], e.currentTarget, t),
+        }, enrichir(c)))));
+    }
+    function frapper(juste, bouton, t) {
+      zone.querySelectorAll('button').forEach((b) => (b.disabled = true));
+      bouton.classList.add(juste ? 'bon' : 'faux');
+      // le ballon part vers le filet ; s'il est raté, le gardien plonge dessus
+      scene.classList.remove('but', 'arret'); void scene.offsetWidth;
+      scene.classList.add(juste ? 'but' : 'arret');
+      if (juste) { buts++; son('bon'); eclats(scene, ['⚽', '🎉', '⭐']); } else son('faux');
+      k++; majScore();
+      zone.append(el('p', { class: 'tirs-annonce ' + (juste ? 'ok' : 'ko') },
+        juste ? auHasard(['BUUUT ! ⚽', 'Quel tir ! 🔥', 'Lucarne ! 🎯', 'Imparable ! 💥'])
+          : ['Arrêté par le gardien 🧤 La bonne réponse : ', el('b', {}, enrichir(t.choix[0]))]));
+      setTimeout(tirer, juste ? 1300 : 2300);
+    }
+    function fin() {
+      const n = liste.length;
+      const titre = buts === n ? '🏆 Sans faute, champion !' : buts >= n / 2 ? '💪 Victoire !' : '🙂 Bien joué, on retente ?';
+      scene.replaceChildren(el('div', { class: 'tirs-fin' }, titre));
+      zone.replaceChildren(
+        el('p', { class: 'tirs-question' }, `Tu as marqué ${buts} but${buts > 1 ? 's' : ''} sur ${n} tirs.`),
+        el('button', { class: 'btn-visuel', onclick: commencer }, '🔁 Rejouer'));
+      if (buts === n) eclats(scene, ['🏆', '⚽', '🎉', '⭐']);
+    }
+    // Écran d'accueil du jeu : on ne commence que quand l'enfant le décide
+    scene.append(el('div', { class: 'tirs-but' }, el('span', { class: 'tirs-gardien' }, '🧤')), el('span', { class: 'tirs-ballon' }, '⚽'));
+    zone.append(el('button', { class: 'btn-visuel', onclick: commencer }, `⚽ Jouer : ${v.tirs.length} tirs au but`));
+    return el('div', { class: 'tirs' }, tableau, scene, zone);
+  },
 };

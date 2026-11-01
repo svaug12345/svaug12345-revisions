@@ -100,6 +100,7 @@ Tous acceptent `"titre"` et `"legende"`, et leurs textes acceptent le **gras** e
 | `droite` | Droite graduée : on touche un objet, il tombe à sa place et on explique la lecture | `{"visuel":"droite","debut":500000,"fin":800000,"grande":100000,"petites":10,"points":[{"valeur":530000,"emoji":"⚽","nom":"Le ballon"}]}` |
 | `posee` | Multiplication posée pas à pas (ordre de grandeur, retenues, 0 de décalage, addition) | `{"visuel":"posee","a":579,"b":64}` |
 | `rangs` | Rappel : rang de chaque chiffre (classe des mille / des unités), on touche un chiffre | `{"visuel":"rangs","nombre":"658 741"}` |
+| `tirs` | Mini-jeu « Tirs au but » : bonne réponse = BUT ⚽, mauvaise = arrêt du gardien 🧤, score comme au stade (1re proposition = la bonne) | `{"visuel":"tirs","tirs":[{"texte":"4 682 à la centaine ?","choix":["4 700","4 600"]}]}` |
 
 Le code de chaque visuel est dans `visuels.js` (une fonction par visuel, bien commentée).
 
@@ -238,3 +239,10 @@ Pour un enfant qui a besoin d'enchaîner les réussites (aujourd'hui : Titouan).
 - **Manches courtes**, du plus facile au plus difficile (selon le `"niveau"` des questions, mélangées à l'intérieur d'un niveau).
 - **2e essai** après une erreur : « Presque ! Essaie encore », avec l'`"indice"` de la question ; la bonne réponse n'est pas dévoilée. Réussi au 2e essai = réussi.
 - Ses leçons commencent par un **🧰 Rappel** des bases et des questions d'échauffement (niveau 1).
+
+## 🧩 Parcours : une leçon en petits modules (depuis la v1.11.0)
+
+Une grosse leçon peut être découpée en **modules** courts (5 à 8 questions) : ce sont des leçons normales avec en plus
+`"parcours": "Arrondir et encadrer"` et `"etape": 1, 2, 3…`. La liste les montre comme un **chemin d'étapes** (⚽ 1 → 2 → 3 → 🏆) :
+étape réussie en vert ✔, prochaine étape qui clignote, trophée allumé quand tout est fini. En fin de quiz, un bouton
+**« Étape suivante »** enchaîne directement sur le module suivant. Chaque module de Titouan finit par un mini-jeu « Tirs au but ».
