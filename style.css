@@ -946,6 +946,131 @@ button { cursor: pointer; }
 /* Sur tablette, un parcours prend toute la largeur de sa colonne */
 @media (min-width: 700px) and (min-height: 600px) { .parcours-nom { font-size: .8rem; } .parcours-rond { width: 58px; height: 58px; } .parcours-chemin::before { top: 29px; } }
 
+/* =============================================================
+   LIRE À VOIX HAUTE, CONFORT DE LECTURE, VISUELS DU CP (v1.12.0)
+   ============================================================= */
+/* Écriture attachée (cursive scolaire française) : police Playwrite FR Trad de Google Fonts */
+.attache { font-family: 'Playwrite FR Trad', cursive; font-weight: 400; letter-spacing: 0; }
+
+/* Boutons 🔊 */
+.btn-lire { border: 0; background: var(--clair); border-radius: 50%; width: 38px; height: 38px; font-size: 1.1rem; flex: none; }
+.btn-lire.petit { width: 32px; height: 32px; font-size: .95rem; margin-left: 6px; }
+.bloc { position: relative; }
+.bloc .bloc-lire { position: absolute; top: 10px; right: 10px; } /* 🔊 en haut à droite de la carte */
+.bloc:has(.bloc-lire) h3 { padding-right: 44px; }
+.lire-choix { margin-left: auto; padding: 2px 4px 2px 10px; font-size: .95rem; opacity: .75; }
+.choix .lire-choix, .tuile .lire-choix { float: right; }
+
+/* Confort de lecture : police Lexend, lettres et lignes plus espacées, rien en italique */
+body.lecture-facile { font-family: 'Lexend', 'Nunito', system-ui, sans-serif; }
+body.lecture-facile main { letter-spacing: .03em; word-spacing: .14em; }
+body.lecture-facile .fiche, body.lecture-facile .enonce p, body.lecture-facile .choix, body.lecture-facile .bandeau p { line-height: 1.75; }
+body.lecture-facile .fiche { font-size: 1.08em; }
+body.lecture-facile i, body.lecture-facile em { font-style: normal; }
+body.lecture-facile .fiche b { background: #fef9c3; border-radius: 4px; padding: 0 2px; }
+/* lettres plus espacées = mots plus larges : cartes un peu plus grandes pour que rien ne déborde */
+body.lecture-facile .grille-cartes { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+body.lecture-facile .carte-info b { letter-spacing: 0; overflow-wrap: anywhere; background: none; }
+
+/* Thème « chat » du mini-jeu : un panier au lieu d'un but */
+.tirs-scene.theme-chat { background: repeating-linear-gradient(90deg, #fbcfe8 0 30px, #f9a8d4 30px 60px); }
+.tirs-scene.theme-chat .tirs-but { border-color: #a16207; border-radius: 0 0 30px 30px; border-bottom: 5px solid #a16207; border-top: 0; top: 18px; height: 56px;
+  background: repeating-linear-gradient(45deg, rgba(161,98,7,.35) 0 4px, transparent 4px 10px), repeating-linear-gradient(-45deg, rgba(161,98,7,.35) 0 4px, transparent 4px 10px); }
+.tirs-bouton.attache, .tirs-annonce .attache { font-size: 1.6rem; }
+
+/* OÙ EST LE CHAT ? */
+.pos-scene { position: relative; height: 200px; max-width: 300px; margin: 0 auto; border-radius: 16px; background: linear-gradient(#e0f2fe 70%, #bbf7d0 70%); overflow: hidden; }
+.pos-table { position: absolute; left: 90px; bottom: 26px; width: 120px; height: 66px; z-index: 2; }
+.pos-table::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 12px; background: #92400e; border-radius: 4px; }
+.pos-table i { position: absolute; top: 10px; width: 10px; bottom: 0; background: #b45309; border-radius: 2px; }
+.pos-table i:first-child { left: 8px; } .pos-table i:last-child { right: 8px; }
+.pos-boite { position: absolute; left: 100px; bottom: 26px; width: 100px; height: 60px; z-index: 2; background: #d97706; border-radius: 4px; border-top: 6px solid #92400e; }
+.pos-sapin { position: absolute; bottom: 22px; font-size: 3.6rem; }
+.pos-sapin.gauche { left: 36px; } .pos-sapin.droite { right: 36px; }
+.pos-objet { position: absolute; font-size: 2.6rem; line-height: 1; transform: translateX(-50%); animation: pos-saut .45s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes pos-saut { from { transform: translate(-50%, -30px); opacity: 0; } }
+.pos-objet.sur { left: 150px; bottom: 90px; }
+.pos-objet.sous { left: 150px; bottom: 26px; font-size: 2.2rem; }
+.pos-objet.devant { left: 150px; bottom: 6px; z-index: 3; font-size: 3.4rem; }
+.pos-objet.derriere { left: 150px; bottom: 74px; z-index: 1; font-size: 2rem; opacity: .9; }
+.pos-objet.a-cote { left: 248px; bottom: 26px; }
+.pos-objet.au-dessus { left: 150px; bottom: 150px; }
+.pos-objet.dans { left: 150px; bottom: 54px; z-index: 1; }
+.pos-objet.entre { left: 150px; bottom: 26px; }
+.pos-phrase { text-align: center; font-size: 1.2rem; margin: 10px 0 4px; }
+.pos-consigne { text-align: center; color: var(--doux); font-weight: 800; margin: 8px 0; }
+.pos-boutons { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.pos-boutons button { font: inherit; font-weight: 900; font-size: 1.1rem; padding: 10px 16px; border-radius: 999px; border: 3px solid var(--clair); background: #fff; color: var(--fonce); }
+.pos-boutons button.actif { background: var(--fonce); border-color: var(--fonce); color: #fff; }
+
+/* GAUCHE / DROITE */
+.gd-scene { position: relative; height: 110px; border-radius: 16px; background: linear-gradient(90deg, #dbeafe 50%, #fee2e2 50%); }
+.gd-mot { position: absolute; top: 10px; font-weight: 900; font-size: 1.1rem; }
+.gd-mot.gauche { left: 12px; color: #1d4ed8; } .gd-mot.droite { right: 12px; color: #b91c1c; }
+.gd-objet { position: absolute; left: 50%; bottom: 14px; font-size: 3rem; transform: translateX(-50%); transition: left .8s cubic-bezier(.4, 1.4, .5, 1); }
+.gd-objet.gauche { left: 18%; } .gd-objet.droite { left: 82%; }
+.gd-objet.droite { transform: translateX(-50%) scaleX(-1); } /* le chat regarde dans le sens de sa course */
+.gd-boutons .gauche { border-color: #93c5fd; } .gd-boutons .droite { border-color: #fca5a5; }
+
+/* LA DIZAINE : boîte de 10 cases (2 rangées de 5) */
+.diz-compteur { text-align: center; font-size: 1.6rem; }
+.diz-compteur b { font-size: 2.6rem; color: var(--fonce); }
+.diz-boite { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; max-width: 330px; margin: 6px auto; padding: 8px; border-radius: 14px; background: #fde68a; }
+.diz-case { aspect-ratio: 1; border: 3px dashed #d97706; border-radius: 10px; background: #fffbeb; font-size: 1.8rem; display: grid; place-items: center; }
+.diz-case.pleine { border-style: solid; background: #fff; animation: pop .3s; }
+.diz-bravo { text-align: center; font-size: 1.3rem; font-weight: 900; color: #15803d; }
+
+/* LES NOMBRES DE 11 À 19 */
+.nb-boutons { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.nb-boutons button { font: inherit; font-weight: 900; font-size: 1.2rem; width: 50px; height: 50px; border-radius: 12px; border: 3px solid var(--clair); background: #fff; color: var(--fonce); }
+.nb-boutons button.actif { background: var(--fonce); border-color: var(--fonce); color: #fff; }
+.nb-vue { text-align: center; margin-top: 10px; }
+.nb-grand { font-size: 3.4rem; font-weight: 900; line-height: 1; color: var(--fonce); }
+.nb-mot { font-size: 1.5rem; font-weight: 800; margin: 4px 0 8px; }
+.nb-mot b { color: #be185d; }
+.nb-cubes { display: flex; align-items: flex-end; justify-content: center; gap: 4px; flex-wrap: wrap; }
+.nb-barre { display: inline-flex; flex-direction: column-reverse; gap: 1px; padding: 2px; background: #1e3a8a; border-radius: 4px; }
+.nb-barre i { width: 16px; height: 16px; background: #3b82f6; border-radius: 2px; }
+.nb-cube { width: 18px; height: 18px; background: #f59e0b; border: 2px solid #b45309; border-radius: 3px; animation: pop .3s backwards; animation-delay: calc(var(--i, 0) * .08s); }
+.nb-phrase { font-weight: 800; color: var(--doux); }
+
+/* PLUS ET MOINS */
+.calc-histoire { font-weight: 700; }
+.calc-objets { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; min-height: 60px; padding: 10px; border-radius: 14px; background: #fff; }
+.calc-objet { position: relative; font-size: 2.2rem; line-height: 1; }
+.calc-objet.nouveau { animation: arrive .5s backwards; animation-delay: calc(var(--i, 0) * .12s); }
+@keyframes arrive { from { transform: translateY(-30px) scale(.5); opacity: 0; } }
+.calc-objet.barre { opacity: .45; }
+.calc-objet.barre::after { content: ''; position: absolute; left: -4px; right: -4px; top: 50%; border-top: 4px solid #dc2626; transform: rotate(-35deg); }
+.calc-texte { text-align: center; font-size: 1.6rem; margin: 10px 0 0; }
+
+/* UN SON, UNE LETTRE */
+.son-tete { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.son-carte { display: flex; flex-direction: column; align-items: center; min-width: 110px; padding: 8px 14px; border: 0; border-radius: 18px; background: #fff; box-shadow: 0 4px 0 var(--clair); }
+.son-script { font-size: 2.6rem; font-weight: 900; color: var(--fonce); line-height: 1.1; }
+.son-attache { font-size: 1.9rem; color: #be185d; line-height: 1.6; }
+.son-ecoute { font-size: .9rem; }
+.son-geste { flex: 1; min-width: 150px; font-weight: 800; margin: 0; }
+.son-mots { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; margin-top: 12px; }
+.son-mot { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px; border: 3px solid var(--clair); border-radius: 14px; background: #fff; font: inherit; color: var(--texte); animation: apparait .4s backwards; animation-delay: calc(var(--i, 0) * .06s); }
+.son-emoji { font-size: 2.2rem; line-height: 1.1; }
+.son-texte { font-size: 1.15rem; font-weight: 800; }
+.fiche .son-lettre, .son-lettre { color: #dc2626; font-size: 1.15em; }
+
+/* SYLLABES */
+.syl-grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; margin-top: 10px; }
+.syl-case { display: flex; flex-direction: column; align-items: center; padding: 6px; border: 3px solid var(--clair); border-radius: 14px; background: #fff; font: inherit; color: var(--fonce); animation: pop .3s backwards; animation-delay: calc(var(--i, 0) * .05s); }
+.syl-case small { color: var(--doux); font-weight: 800; }
+.syl-case b { font-size: 1.8rem; line-height: 1.2; }
+.syl-case b.attache { font-size: 1.4rem; color: #be185d; }
+
+/* ALPHABET script -> attaché */
+.alpha-grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 6px; }
+.alpha-case { display: flex; align-items: center; justify-content: center; gap: 4px; padding: 6px 4px; border: 2px solid var(--clair); border-radius: 12px; background: #fff; font: inherit; color: var(--fonce); animation: apparait .3s backwards; animation-delay: calc(var(--i, 0) * .04s); }
+.alpha-case span:first-child { font-size: 1.5rem; font-weight: 900; }
+.alpha-case i { font-style: normal; color: var(--doux); }
+.alpha-case .attache { font-size: 1.4rem; color: #be185d; }
+
 /* ---------- Date d'ajout d'une leçon (discrète) ---------- */
 .date-ajout { color: var(--doux); font-size: .72rem; opacity: .8; }
 .tete-lecon .date-ajout { display: block; margin-top: 2px; }

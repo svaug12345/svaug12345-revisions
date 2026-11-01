@@ -717,13 +717,17 @@ const VISUELS = {
      Bonne réponse = BUT ⚽ (le ballon file dans le filet) ; mauvaise = le gardien arrête 🧤.
      Le score s'affiche comme au stade, puis on peut rejouer (les tirs sont remélangés). */
   tirs(v) {
-    const scene = el('div', { class: 'tirs-scene' });
+    // Thèmes : "foot" (par défaut) ou "chat" (la pelote 🧶 à lancer dans le panier, la souris 🐭 essaie de la voler)
+    const T = v.theme === 'chat'
+      ? { balle: '🧶', gardien: '🐭', toi: '🐱 Toi', autre: 'Souris 🐭', jouer: 'pelotes à lancer', bravo: ['Dans le panier ! 🧶', 'Miaou, bravo ! 🐱', 'Super lancer ! ⭐'], rate: 'La souris a pris la pelote 🐭 La bonne réponse : ' }
+      : { balle: '⚽', gardien: '🧤', toi: '⚽ Toi', autre: 'Gardien 🧤', jouer: 'tirs au but', bravo: ['BUUUT ! ⚽', 'Quel tir ! 🔥', 'Lucarne ! 🎯', 'Imparable ! 💥'], rate: 'Arrêté par le gardien 🧤 La bonne réponse : ' };
+    const scene = el('div', { class: 'tirs-scene' + (v.theme === 'chat' ? ' theme-chat' : '') });
     const tableau = el('div', { class: 'tirs-score' });
     const zone = el('div', { class: 'tirs-zone' });
     let liste = [], k = 0, buts = 0;
     const majScore = () => tableau.replaceChildren(
-      el('span', {}, '⚽ Toi ', el('b', {}, String(buts))), el('span', {}, ' – '),
-      el('span', {}, el('b', {}, String(k - buts)), ' Gardien 🧤'));
+      el('span', {}, T.toi + ' ', el('b', {}, String(buts))), el('span', {}, ' – '),
+      el('span', {}, el('b', {}, String(k - buts)), ' ' + T.autre));
 
     function commencer() {
       liste = melanger(v.tirs); k = 0; buts = 0;
@@ -734,12 +738,14 @@ const VISUELS = {
       const t = liste[k];
       // Le terrain : le but, le gardien au milieu, le ballon au point de penalty
       scene.replaceChildren(
-        el('div', { class: 'tirs-but' }, el('span', { class: 'tirs-gardien' }, '🧤')),
-        el('span', { class: 'tirs-ballon' }, '⚽'));
+        el('div', { class: 'tirs-but' }, el('span', { class: 'tirs-gardien' }, T.gardien)),
+        el('span', { class: 'tirs-ballon' }, T.balle));
+      // CP : la question est lue à voix haute (profil "lectureAuto")
+      if (etat.enfant?.lectureAuto) setTimeout(() => lireAVoixHaute(t.dire || t.texte), 300);
       zone.replaceChildren(
         el('p', { class: 'tirs-question' }, el('small', {}, `Tir ${k + 1} / ${liste.length}`), enrichir(t.texte)),
         el('div', { class: 'tirs-choix' }, melanger(t.choix).map((c) => el('button', {
-          class: 'tirs-bouton',
+          class: 'tirs-bouton' + (t.attache ? ' attache' : ''), // "attache": true -> lettres en écriture attachée
           onclick: (e) => frapper(c === t.choix[0], e.currentTarget, t),
         }, enrichir(c)))));
     }
@@ -752,8 +758,8 @@ const VISUELS = {
       if (juste) { buts++; son('bon'); eclats(scene, ['⚽', '🎉', '⭐']); } else son('faux');
       k++; majScore();
       zone.append(el('p', { class: 'tirs-annonce ' + (juste ? 'ok' : 'ko') },
-        juste ? auHasard(['BUUUT ! ⚽', 'Quel tir ! 🔥', 'Lucarne ! 🎯', 'Imparable ! 💥'])
-          : ['Arrêté par le gardien 🧤 La bonne réponse : ', el('b', {}, enrichir(t.choix[0]))]));
+        juste ? auHasard(T.bravo)
+          : [T.rate, el('b', { class: t.attache ? 'attache' : '' }, enrichir(t.choix[0]))]));
       setTimeout(tirer, juste ? 1300 : 2300);
     }
     function fin() {
@@ -766,8 +772,203 @@ const VISUELS = {
       if (buts === n) eclats(scene, ['🏆', '⚽', '🎉', '⭐']);
     }
     // Écran d'accueil du jeu : on ne commence que quand l'enfant le décide
-    scene.append(el('div', { class: 'tirs-but' }, el('span', { class: 'tirs-gardien' }, '🧤')), el('span', { class: 'tirs-ballon' }, '⚽'));
-    zone.append(el('button', { class: 'btn-visuel', onclick: commencer }, `⚽ Jouer : ${v.tirs.length} tirs au but`));
+    scene.append(el('div', { class: 'tirs-but' }, el('span', { class: 'tirs-gardien' }, T.gardien)), el('span', { class: 'tirs-ballon' }, T.balle));
+    zone.append(el('button', { class: 'btn-visuel', onclick: commencer }, `${T.balle} Jouer : ${v.tirs.length} ${T.jouer}`));
     return el('div', { class: 'tirs' }, tableau, scene, zone);
+  },
+
+  /* ===================== VISUELS DU CP (Ava) =====================
+     Peu de texte, beaucoup d'images, et la voix du téléphone qui lit (lireAVoixHaute). */
+
+  /* OÙ EST LE CHAT ? (vocabulaire de position) : { objet: "🐱", nom: "le chat" }
+     On touche un mot (sur, sous, devant…) : le chat se place et la phrase est lue. */
+  position(v) {
+    const objet = v.objet || '🐱', nom = v.nom || 'Le chat';
+    const MOTS = [
+      ['sur', 'sur la table'], ['sous', 'sous la table'], ['devant', 'devant la table'], ['derriere', 'derrière la table'],
+      ['a-cote', 'à côté de la table'], ['au-dessus', 'au-dessus de la table'], ['dans', 'dans la boîte'], ['entre', 'entre les deux sapins'],
+    ];
+    const scene = el('div', { class: 'pos-scene' });
+    const phrase = el('p', { class: 'pos-phrase' });
+    const boutons = el('div', { class: 'pos-boutons' });
+    function placer(cle, texte) {
+      // Le décor change selon le mot : une table, une boîte (dans) ou deux sapins (entre)
+      const decor = cle === 'dans' ? [el('div', { class: 'pos-boite' })]
+        : cle === 'entre' ? [el('span', { class: 'pos-sapin gauche' }, '🌲'), el('span', { class: 'pos-sapin droite' }, '🌲')]
+        : [el('div', { class: 'pos-table' }, el('i'), el('i'))];
+      scene.replaceChildren(...decor, el('span', { class: 'pos-objet ' + cle }, objet));
+      const p = `${nom} est ${texte}.`;
+      phrase.replaceChildren(el('b', {}, p));
+      phrase.classList.remove('pop'); void phrase.offsetWidth; phrase.classList.add('pop');
+      [...boutons.children].forEach((b) => b.classList.toggle('actif', b.dataset.cle === cle));
+      lireAVoixHaute(p);
+    }
+    MOTS.forEach(([cle, texte]) => boutons.append(el('button', { 'data-cle': cle, onclick: () => placer(cle, texte) },
+      texte.split(' ')[0] === 'à' ? 'à côté' : texte.split(' ')[0] === 'au-dessus' ? 'au-dessus' : texte.split(' ')[0])));
+    // premier affichage, sans voix (la page vient de s'ouvrir)
+    scene.append(el('div', { class: 'pos-table' }, el('i'), el('i')), el('span', { class: 'pos-objet sur' }, objet));
+    phrase.append(el('b', {}, `${nom} est sur la table.`));
+    return el('div', {}, scene, phrase, el('p', { class: 'pos-consigne' }, '👆 Touche un mot :'), boutons);
+  },
+
+  /* GAUCHE / DROITE : le chat court à gauche ou à droite quand on touche un bouton */
+  gauchedroite(v) {
+    const objet = v.objet || '🐈';
+    const bete = el('span', { class: 'gd-objet' }, objet);
+    const phrase = el('p', { class: 'pos-phrase' }, el('b', {}, 'Touche GAUCHE ou DROITE 👇'));
+    const aller = (cote) => {
+      bete.className = 'gd-objet ' + cote;
+      const p = cote === 'gauche' ? 'Le chat court vers la gauche !' : 'Le chat court vers la droite !';
+      phrase.replaceChildren(el('b', {}, p)); lireAVoixHaute(p);
+    };
+    return el('div', {},
+      el('div', { class: 'gd-scene' }, el('span', { class: 'gd-mot gauche' }, '⬅️ GAUCHE'), el('span', { class: 'gd-mot droite' }, 'DROITE ➡️'), bete),
+      phrase,
+      el('div', { class: 'pos-boutons gd-boutons' },
+        el('button', { class: 'gauche', onclick: () => aller('gauche') }, '⬅️ à gauche'),
+        el('button', { class: 'droite', onclick: () => aller('droite') }, 'à droite ➡️')));
+  },
+
+  /* LA DIZAINE : une boîte de 10 cases à remplir de chats. À 10 : « 10 = dix = 1 dizaine ! » */
+  dizaine(v) {
+    const objet = v.objet || '🐱';
+    let n = 0;
+    const NOMBRES = ['zéro', 'un', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf', 'dix'];
+    const boite = el('div', { class: 'diz-boite' });
+    const compteur = el('div', { class: 'diz-compteur' });
+    const bilan = el('div', { class: 'diz-bilan' });
+    function dessiner() {
+      boite.replaceChildren(...Array.from({ length: 10 }, (_, i) => el('button', {
+        class: 'diz-case' + (i < n ? ' pleine' : ''), 'aria-label': `case ${i + 1}`,
+        onclick: () => { if (i === n) { n++; lireAVoixHaute(NOMBRES[n]); dessiner(); } },
+      }, i < n ? objet : '')));
+      compteur.replaceChildren(el('b', {}, String(n)), ` ${objet}`);
+      bilan.replaceChildren();
+      if (n === 10) {
+        lireAVoixHaute('Dix ! Une dizaine !');
+        bilan.append(el('p', { class: 'diz-bravo pop' }, '🎉 10 = dix = 1 dizaine !'),
+          el('div', { class: 'grille-cartes' }, [['✋✋', '2 mains'], ['⚄ ⚄', '5 et 5'], ['🔟', '1 dizaine'], ['10', 'dix']]
+            .map(([e, t], i) => el('div', { class: 'carte-info', style: cascade(i) }, el('div', { class: 'carte-emoji' }, e), el('b', {}, t)))));
+        eclats(boite, [objet, '⭐', '🎉']);
+      }
+    }
+    dessiner();
+    return el('div', {}, el('p', { class: 'pos-consigne' }, '👆 Touche les cases une par une et compte avec moi !'), compteur, boite, bilan,
+      el('button', { class: 'btn-visuel secondaire', onclick: () => { n = 0; couperVoix(); dessiner(); } }, '↺ Vider la boîte'));
+  },
+
+  /* LES NOMBRES DE 11 À 19 : { de: 11, a: 19 } — une barre de 10 + des cubes, le nom du nombre lu */
+  nombres(v) {
+    const NOMS = { 11: 'onze', 12: 'douze', 13: 'treize', 14: 'quatorze', 15: 'quinze', 16: 'seize', 17: 'dix-sept', 18: 'dix-huit', 19: 'dix-neuf', 20: 'vingt' };
+    const vue = el('div', { class: 'nb-vue' });
+    const boutons = el('div', { class: 'nb-boutons' });
+    function montrer(x, parler = true) {
+      const u = x - 10;
+      vue.replaceChildren(
+        el('div', { class: 'nb-grand' }, String(x)),
+        el('div', { class: 'nb-mot' }, NOMS[x].startsWith('dix-') ? [el('b', {}, 'dix'), NOMS[x].slice(3)] : NOMS[x]),
+        el('div', { class: 'nb-cubes' }, el('span', { class: 'nb-barre', title: '1 dizaine' }, Array.from({ length: 10 }, () => el('i'))),
+          Array.from({ length: u }, (_, i) => el('span', { class: 'nb-cube', style: cascade(i) }))),
+        el('p', { class: 'nb-phrase' }, `1 dizaine et ${u} unité${u > 1 ? 's' : ''}`));
+      [...boutons.children].forEach((b) => b.classList.toggle('actif', Number(b.textContent) === x));
+      if (parler) lireAVoixHaute(`${NOMS[x]} : une dizaine et ${u}`);
+    }
+    for (let x = v.de || 11; x <= (v.a || 19); x++) boutons.append(el('button', { onclick: () => montrer(x) }, String(x)));
+    montrer(v.de || 11, false);
+    return el('div', {}, boutons, vue);
+  },
+
+  /* PLUS ET MOINS EN IMAGES : { exemples: [{ calcul: "2 + 1 + 2", emoji: "🧒", histoire: "…" }] }
+     Étape par étape : les objets arrivent (+) ou sont barrés (−), puis le résultat. */
+  calcul(v) {
+    const vue = el('div', { class: 'calc-vue' });
+    const texte = el('p', { class: 'calc-texte' });
+    const histoire = el('p', { class: 'calc-histoire' });
+    const choix = el('div', { class: 'conversion-choix' });
+    let ex, etapes, k;
+    // "8 - 2" -> [["+", 8], ["-", 2]] : le 1er nombre est toujours « ajouté » (c'est le départ)
+    const decouper = (calcul) => calcul.replace(/−/g, '-').match(/[+-]?\s*\d+/g)
+      .map((m, j) => [j === 0 || m.trim().startsWith('+') ? '+' : '-', Number(m.replace(/[^\d]/g, ''))]);
+    function preparer(i, parler = true) {
+      ex = v.exemples[i]; etapes = decouper(ex.calcul); k = 0;
+      [...choix.children].forEach((b, j) => b.classList.toggle('actif', j === i));
+      histoire.replaceChildren(ex.histoire ? '📖 ' + ex.histoire : '');
+      dessiner();
+      if (parler) lireAVoixHaute(ex.histoire || ex.calcul);
+    }
+    function dessiner() {
+      const objets = [];
+      let total = 0;
+      const ecrit = [];
+      etapes.slice(0, k + 1).forEach(([signe, nb], j) => {
+        ecrit.push(j === 0 ? String(nb) : `${signe === '+' ? '+' : '−'} ${nb}`);
+        if (signe === '+') { for (let z = 0; z < nb; z++) objets.push({ barre: false, nouveau: j === k && j > 0 }); total += nb; }
+        else { // on barre les derniers objets encore là
+          let reste = nb;
+          for (let z = objets.length - 1; z >= 0 && reste; z--) if (!objets[z].barre) { objets[z].barre = true; objets[z].nouveau = j === k; reste--; }
+          total -= nb;
+        }
+      });
+      const fini = k === etapes.length - 1;
+      vue.replaceChildren(el('div', { class: 'calc-objets' }, objets.map((o, i) => el('span', {
+        class: 'calc-objet' + (o.barre ? ' barre' : '') + (o.nouveau ? ' nouveau' : ''), style: cascade(o.nouveau ? i % 5 : 0),
+      }, ex.emoji || '🐱'))));
+      texte.replaceChildren(el('b', {}, ecrit.join(' ') + (fini ? ` = ${total}` : '')), fini && etapes.length > 1 ? ' 🎉' : '');
+      suivant.disabled = fini;
+      if (fini && k > 0) lireAVoixHaute(`${ecrit.join(' ')} égale ${total}`);
+    }
+    const suivant = el('button', { class: 'btn-visuel', onclick: () => { k++; dessiner(); } }, '▶ Et après ?');
+    v.exemples.forEach((e, i) => choix.append(el('button', { onclick: () => preparer(i) }, `${e.emoji || ''} ${e.calcul}`)));
+    preparer(0, false); // premier exemple affiché sans voix (la page vient de s'ouvrir)
+    return el('div', {}, choix, histoire, vue, texte, suivant);
+  },
+
+  /* UN SON, UNE LETTRE : { lettres: "a A", geste: "J'ouvre ma main…", son: "a", graphies: ["a", "â"],
+                            mots: [{ emoji: "🐱", mot: "chat" }] }
+     Grande lettre (script + attaché), le geste, et des mots-images : on touche, on entend,
+     la lettre du son est colorée dans le mot. */
+  son(v) {
+    const graphies = v.graphies || [v.son];
+    // colore la lettre du son dans le mot (on cherche d'abord les graphies les plus longues)
+    const colorer = (mot) => {
+      const motif = new RegExp(`(${[...graphies].sort((a, b) => b.length - a.length).join('|')})`, 'g');
+      return mot.split(motif).map((m, i) => (i % 2 ? el('b', { class: 'son-lettre' }, m) : m));
+    };
+    const carte = el('button', { class: 'son-carte', onclick: () => lireAVoixHaute(v.direSon || v.son) },
+      el('span', { class: 'son-script' }, v.lettres),
+      el('span', { class: 'son-attache attache' }, v.attache || v.lettres.split(' ').filter((x) => x === x.toLowerCase()).join(' ')),
+      el('span', { class: 'son-ecoute' }, '🔊'));
+    return el('div', {},
+      el('div', { class: 'son-tete' }, carte, el('p', { class: 'son-geste' }, '🖐️ ', v.geste)),
+      el('div', { class: 'son-mots' }, v.mots.map((m, i) => el('button', {
+        class: 'son-mot', style: cascade(i), onclick: (e) => { lireAVoixHaute(m.mot); e.currentTarget.classList.remove('pop'); void e.currentTarget.offsetWidth; e.currentTarget.classList.add('pop'); },
+      }, el('span', { class: 'son-emoji' }, m.emoji), el('span', { class: 'son-texte' }, colorer(m.mot))))));
+  },
+
+  /* SYLLABES : { consonnes: ["f", "n"], voyelles: ["a", "i", "o", "u", "é", "e"] }
+     On choisit une consonne : « f + a = fa ». On touche une syllabe pour l'entendre. */
+  syllabes(v) {
+    // Ce que la voix doit dire pour bien prononcer chaque syllabe (« fe » se dit « feu »)
+    const DIRE_V = { a: 'a', i: 'i', o: 'o', u: 'u', é: 'é', è: 'è', e: 'eu', y: 'i' };
+    const grille = el('div', { class: 'syl-grille' });
+    const boutons = el('div', { class: 'arrondi-rangs' });
+    function montrer(c) {
+      grille.replaceChildren(...v.voyelles.map((voy, i) => el('button', {
+        class: 'syl-case', style: cascade(i),
+        onclick: () => lireAVoixHaute(c + DIRE_V[voy]),
+      }, el('small', {}, `${c} + ${voy}`), el('b', {}, c + voy), el('b', { class: 'attache' }, c + voy))));
+      [...boutons.children].forEach((b) => b.classList.toggle('actif', b.textContent === c));
+    }
+    v.consonnes.forEach((c) => boutons.append(el('button', { onclick: () => montrer(c) }, c)));
+    montrer(v.consonnes[0]);
+    return el('div', {}, el('p', { class: 'pos-consigne' }, 'Choisis une lettre, puis touche une syllabe pour l’entendre 👂'), boutons, grille);
+  },
+
+  /* ALPHABET : lettres en script -> en attaché ; on touche une lettre pour entendre son nom */
+  alphabet(v) {
+    const lettres = (v.lettres || 'abcdefghijklmnopqrstuvwxyz').split('');
+    return el('div', { class: 'alpha-grille' }, lettres.map((l, i) => el('button', {
+      class: 'alpha-case', style: cascade(i % 8), onclick: () => lireAVoixHaute(l),
+    }, el('span', {}, l), el('i', {}, '→'), el('span', { class: 'attache' }, l))));
   },
 };

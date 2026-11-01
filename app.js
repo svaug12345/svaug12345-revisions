@@ -259,6 +259,67 @@ function voixDuTelephone(texte, langue = 'fr-FR', vitesse = 0.95) {
   speechSynthesis.speak(phrase);
 }
 
+/* ---- LIRE À VOIX HAUTE (profils avec "lectureAudio": true) ----
+   Pour un enfant qui lit encore difficilement : un bouton 🔊 lit la question, les fiches
+   et les réponses avec la voix du téléphone. "lectureAuto": true -> la question est lue
+   toute seule dès qu'elle s'affiche (utile en CP). */
+
+/** Prépare un texte pour la voix : sans emojis ni **, et les signes dits en mots (« 8 − 2 » -> « 8 moins 2 »). */
+function pourLaVoix(texte) {
+  return String(texte)
+    .replace(/[\p{Extended_Pictographic}\u{FE0F}\u{200D}\u{20E3}]/gu, ' ')
+    .replace(/\*\*/g, '').replace(/[«»"]/g, '')
+    .replace(/\s[−-]\s/g, ' moins ').replace(/\s\+\s/g, ' plus ').replace(/\s=\s/g, ' égale ')
+    .replace(/\s×\s/g, ' fois ').replace(/…/g, '...')
+    .replace(/\s+/g, ' ').trim();
+}
+
+/** Lit un texte en français (coupe d'abord ce qui était en train d'être lu). */
+function lireAVoixHaute(texte) {
+  if (!('speechSynthesis' in window)) return;
+  couperVoix();
+  voixDuTelephone(pourLaVoix(texte), 'fr-FR', etat.enfant?.lectureAuto ? 0.85 : 0.95);
+}
+
+/** Petit bouton 🔊 qui lit un texte (calculé au moment du clic). */
+function boutonLire(texteOuFonction, classe = 'btn-lire') {
+  return el('button', {
+    class: classe, type: 'button', 'aria-label': 'Lire à voix haute',
+    onclick: (e) => { e.stopPropagation(); lireAVoixHaute(typeof texteOuFonction === 'function' ? texteOuFonction.call(e.currentTarget) : texteOuFonction); }, // this = le bouton
+  }, '🔊');
+}
+
+/** Ajoute la lecture audio à une question qui vient d'être dessinée. */
+function lectureQuestion(act, carte, zone) {
+  if (!etat.enfant?.lectureAudio) return;
+  const enonceTexte = act.dire || [act.question, act.affirmation, act.consigne,
+    act.texte && act.texte.replace(/\[[^\]]*\]/g, '…'), act.recto].filter(Boolean).join('. ');
+  const lireChoix = act.lireChoix !== false;
+  // Les réponses proposées, dans l'ordre où elles sont affichées
+  const choix = act.type === 'qcm' && lireChoix && !act.dire
+    ? [...zone.querySelectorAll('.choix')].map((b) => b.textContent) : [];
+  const phrase = () => enonceTexte + (choix.length ? ' ... ' + choix.join(' ... ') + ' ?' : '');
+  carte.querySelector('.type-question')?.append(boutonLire(phrase, 'btn-lire petit'));
+  // Un 🔈 dans chaque réponse pour l'entendre seule (sauf si la question teste justement la lecture)
+  if (lireChoix) zone.querySelectorAll('.choix, .tuile, .etiquette').forEach((b) => {
+    const texte = b.textContent;
+    b.append(el('span', { class: 'lire-choix', onclick: (e) => { e.stopPropagation(); e.preventDefault(); lireAVoixHaute(texte); } }, '🔈'));
+  });
+  if (etat.enfant.lectureAuto) setTimeout(() => lireAVoixHaute(phrase()), 400);
+}
+
+/* ---- ORTHOGRAPHE SOUPLE ("orthographeSouple": true) ----
+   Une réponse tapée avec une petite faute (une lettre de trop, en moins ou échangée) est acceptée :
+   on vérifie ce que l'enfant a COMPRIS, pas son orthographe. */
+function distance(a, b) { // distance de Levenshtein : nombre de lettres à changer pour passer de a à b
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++)
+    d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return d[a.length][b.length];
+}
+const procheOrtho = (attendu, tape) => distance(attendu, tape) <= (attendu.length >= 7 ? 2 : attendu.length >= 4 ? 1 : 0);
+
 
 /* ---------- MOTS ÉTRANGERS : écouter et répéter -------------
    Dans lecons.json, une leçon de langue a "langue": "en" ou "de",
@@ -614,6 +675,18 @@ function entete(titre) {
   couperVoix(); // on coupe la voix en changeant d'écran
   fermerLecteurMot(); // et on range le lecteur de mots étrangers
   raccrocherAlex();   // et on termine un éventuel appel avec Alex
+  appliquerConfort();
+}
+
+/* Confort de lecture du profil choisi ("lectureFacile": true) : police Lexend, plus d'espace
+   entre les lettres et les lignes, texte un peu plus grand (voir style.css, body.lecture-facile). */
+function appliquerConfort() {
+  const facile = !!etat.enfant?.lectureFacile;
+  document.body.classList.toggle('lecture-facile', facile);
+  if (facile && !document.getElementById('police-lexend')) {
+    document.head.append(el('link', { id: 'police-lexend', rel: 'stylesheet',
+      href: 'https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;800&display=swap' }));
+  }
 }
 
 /* ---------- 5. LES ÉCRANS ------------------------------------ */
@@ -830,6 +903,10 @@ function dessinerFiche(lecon) {
     style: `--teinte:${couleurs[i % couleurs.length]}`,
   },
     b.titre ? el('h3', { html: miseEnForme('# ' + b.titre).replace(/^<h3>|<\/h3>$/g, '') }) : null,
+    // 🔊 lit le bloc (titre, textes, encadrés, cartes) pour les profils "lectureAudio"
+    b.titre && etat.enfant?.lectureAudio ? boutonLire(function () {
+      return [...this.closest('.bloc').querySelectorAll('h3, .texte, .encadre p, .carte-info')].map((x) => x.textContent).join('. ');
+    }, 'btn-lire bloc-lire') : null,
     contenuBloc(b.contenu))));
 }
 
@@ -945,6 +1022,7 @@ function questionSuivante(q) {
     retour,
   );
 
+  requestAnimationFrame(() => lectureQuestion(activite, carte, zone)); // 🔊 si le profil le demande
   dessiner(activite, zone, (reussi, bonneReponse) => {
     // Coup de pouce : 1re erreur -> pas de note, un indice et on réessaie la même question
     if (!reussi && etat.enfant?.coupDePouce && !q.essai2 && !q.entrainement) {
@@ -1087,7 +1165,7 @@ const ACTIVITES = {
           boutons.forEach((b) => (b.disabled = true));
           const ok = texte === bonne;
           e.currentTarget.classList.add(ok ? 'bon' : 'faux');
-          boutons.find((b) => b.textContent === sansMots(bonne)).classList.add('bon'); // montre la bonne
+          boutons.find((b) => b.textContent.replace(/🔈$/, '') === sansMots(bonne)).classList.add('bon'); // montre la bonne
           fin(ok, bonne);
           const motBon = motsDe(bonne)[0];
           if (motBon && !motsDe(act.explication || '').length) setTimeout(() => prononcer(motBon), 700);
@@ -1129,7 +1207,9 @@ const ACTIVITES = {
       if (!champ.value.trim()) { champ.focus(); return; }
       champ.disabled = true;
       bouton.disabled = true;
-      const ok = acceptees.some((r) => normaliser(r, act.strict) === normaliser(champ.value, act.strict));
+      const ok = acceptees.some((r) => normaliser(r, act.strict) === normaliser(champ.value, act.strict))
+        || (etat.enfant?.orthographeSouple && !queDesChiffres
+          && acceptees.some((r) => procheOrtho(normaliser(r), normaliser(champ.value))));
       champ.classList.add(ok ? 'bon' : 'faux');
       fin(ok, acceptees[0]);
     };

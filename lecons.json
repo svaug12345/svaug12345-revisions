@@ -1,15 +1,17 @@
 {
   "maj": "01/11/2026",
-  "versionApp": "1.11.0",
+  "versionApp": "1.12.0",
 
   "enfants": [
     {"id": "tom", "nom": "Tom", "avatar": "avatars/tom.svg", "couleur": "#22c55e", "age": 6},
     {"id": "gaby", "nom": "Gaby", "avatar": "avatars/gaby.svg", "couleur": "#ec4899", "age": 12},
     {"id": "nanon", "nom": "Nanon", "avatar": "avatars/nanon.svg", "couleur": "#f59e0b", "age": 14},
     {"id": "titouan", "nom": "Titouan", "avatar": "avatars/titouan.svg", "couleur": "#3b82f6", "age": 9, "classe": "CM2",
-     "coupDePouce": true, "questionsParManche": 10,
-     "conseilsAlex": "Titouan est en CM2. Il a besoin d'enchaîner les réussites pour prendre confiance : commence toujours par une question facile, avance par toutes petites étapes, félicite chaque bonne réponse et chaque effort, et rappelle les bases utiles (rang des chiffres, tables, verbe et sujet…) avant une notion plus difficile. S'il se trompe, donne un indice et laisse-le réessayer avant de corriger. Il adore le foot : prends tes exemples dans le foot."},
-    {"id": "ava", "nom": "Ava", "avatar": "avatars/ava.svg", "couleur": "#a855f7", "age": 6}
+     "coupDePouce": true, "questionsParManche": 10, "lectureAudio": true, "lectureFacile": true, "orthographeSouple": true,
+     "conseilsAlex": "Titouan est en CM2. Il a besoin d'enchaîner les réussites pour prendre confiance : commence toujours par une question facile, avance par toutes petites étapes, félicite chaque bonne réponse et chaque effort. Passe par l'oral : relis-lui les consignes, ne lui demande jamais d'épeler ni d'écrire, et ne corrige pas son orthographe. Pour les nombres, fais-le manipuler en pensée avec du concret (doigts, joueurs, buts, ballons), découpe les calculs en petits morceaux et laisse-lui le temps. Rappelle les bases utiles avant une notion difficile. S'il se trompe, donne un indice et laisse-le réessayer avant de corriger. Il adore le foot : prends tes exemples dans le foot. Sa petite sœur s'appelle Ava ; ses cousins sont Nanon, Gaby et Tom."},
+    {"id": "ava", "nom": "Ava", "avatar": "avatars/ava.svg", "couleur": "#a855f7", "age": 6, "classe": "CP",
+     "coupDePouce": true, "questionsParManche": 6, "lectureAudio": true, "lectureAuto": true,
+     "conseilsAlex": "Ava est en CP : elle commence tout juste à lire. Parle très simplement, avec des phrases très courtes et un ton doux et joyeux. Ne lui demande pas de lire de longs mots : fais-la écouter, répéter, compter sur ses doigts. Joue avec les sons (« Est-ce que tu entends a dans chat ? »). Une seule question à la fois, et félicite chaque réussite. Elle adore les chats : prends tes exemples avec des chats. Son grand frère s'appelle Titouan ; ses cousins sont Nanon, Gaby et Tom."}
   ],
 
   "assistant": {
@@ -756,6 +758,300 @@
         {"type": "qcm", "question": "« Ne cours pas si vite ! » sert à…", "choix": ["interdire", "poser une question", "raconter un fait", "exprimer la joie"], "niveau": 2},
         {"type": "vraifaux", "affirmation": "« Comme il est rapide ! » est une phrase exclamative.", "reponse": true, "niveau": 2, "indice": "« Comme… ! » : quel signe à la fin ?"},
         {"type": "carte", "recto": "Où trouve-t-on des phrases injonctives ?", "verso": "Dans les recettes, les modes d'emploi, les notices, les consignes… et les conseils du coach !", "niveau": 2}
+      ]
+    },
+
+    {
+      "id": "ava-reperer-1-position",
+      "pour": ["ava"],
+      "matiere": "Maths",
+      "parcours": "Se repérer",
+      "etape": 1,
+      "titre": "Sur, sous, dans…",
+      "emoji": "📦",
+      "ajoutee": "2026-11-01",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Où est le chat ? 🐱",
+        {"visuel": "position", "objet": "🐱", "nom": "Le chat"},
+        {"visuel": "encadre", "style": "astuce", "texte": ["**sur** ↔ **sous** · **devant** ↔ **derrière** : ce sont des contraires !"]},
+        "# 🧶 À toi de jouer !",
+        {"visuel": "tirs", "theme": "chat", "titre": "Lance la pelote dans le panier !", "tirs": [{"texte": "Le contraire de **sur** ?", "choix": ["sous", "dans"]}, {"texte": "Le contraire de **devant** ?", "choix": ["derrière", "à côté"]}, {"texte": "Le chat est caché dans le carton. Il est…", "choix": ["dans", "sur"]}, {"texte": "L'oiseau vole plus haut que la maison. Il est…", "choix": ["au-dessus", "sous"]}, {"texte": "Tom est au milieu, entre Ava et Titouan. Tom est…", "choix": ["entre", "derrière"]}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Le contraire de « sur », c'est…", "choix": ["sous", "dans", "devant"], "niveau": 1, "indice": "Sur la table… ou sous la table ?"},
+        {"type": "qcm", "question": "Le chat est caché dans le carton. Où est-il ?", "choix": ["dans le carton", "sur le carton", "à côté du carton"], "niveau": 1},
+        {"type": "qcm", "question": "Le contraire de « devant », c'est…", "choix": ["derrière", "sous", "entre"], "niveau": 2, "indice": "Devant moi… et dans mon dos ?"},
+        {"type": "vraifaux", "affirmation": "Un oiseau qui vole au-dessus de la maison est plus haut que la maison.", "reponse": true, "niveau": 1},
+        {"type": "qcm", "question": "Tom est assis entre Ava et Titouan. Qui est au milieu ?", "choix": ["Tom", "Ava", "Titouan"], "niveau": 2, "indice": "Entre, c'est au milieu."},
+        {"type": "qcm", "question": "Ava tient un parapluie au-dessus de sa tête. Ava est…", "choix": ["sous le parapluie", "sur le parapluie", "dans le parapluie"], "niveau": 2},
+        {"type": "paires", "consigne": "Relie les contraires", "paires": [["sur", "sous"], ["devant", "derrière"], ["dedans", "dehors"]], "niveau": 3}
+      ]
+    },
+
+    {
+      "id": "ava-reperer-2-gauche-droite",
+      "pour": ["ava"],
+      "matiere": "Maths",
+      "parcours": "Se repérer",
+      "etape": 2,
+      "titre": "Gauche et droite",
+      "emoji": "↔️",
+      "ajoutee": "2026-11-01",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Ma gauche, ma droite",
+        {"visuel": "gauchedroite", "objet": "🐈"},
+        {"visuel": "encadre", "style": "astuce", "texte": ["Quand je regarde l'écran, le mot **DROITE** est du côté de ma **main droite**.", "Pour ne pas te tromper : mets une gommette ou un petit bracelet sur ta main droite !"]},
+        {"visuel": "cartes", "elements": [{"emoji": "✋", "titre": "main gauche · main droite", "texte": "J'ai deux mains."}, {"emoji": "🦶", "titre": "pied gauche · pied droit", "texte": "J'ai deux pieds."}, {"emoji": "📖", "titre": "On lit de gauche à droite", "texte": "Mon doigt suit la ligne ➡️"}]},
+        "# 🧶 À toi de jouer !",
+        {"visuel": "tirs", "theme": "chat", "titre": "Lance la pelote dans le panier !", "tirs": [{"texte": "➡️ Cette flèche va vers…", "choix": ["la droite", "la gauche"], "dire": "Vers où va cette flèche ?"}, {"texte": "⬅️ Cette flèche va vers…", "choix": ["la gauche", "la droite"], "dire": "Vers où va cette flèche ?"}, {"texte": "👉 Ce doigt montre…", "choix": ["la droite", "la gauche"], "dire": "Ce doigt montre quel côté ?"}, {"texte": "👈 Ce doigt montre…", "choix": ["la gauche", "la droite"], "dire": "Ce doigt montre quel côté ?"}, {"texte": "On lit une ligne…", "choix": ["de gauche à droite", "de droite à gauche"]}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "➡️ Vers où va cette flèche ?", "choix": ["vers la droite", "vers la gauche"], "niveau": 1, "indice": "Regarde le mot DROITE sur l'écran.", "dire": "Vers où va cette flèche ? Vers la droite, ou vers la gauche ?", "lireChoix": true},
+        {"type": "qcm", "question": "⬅️ Vers où va cette flèche ?", "choix": ["vers la gauche", "vers la droite"], "niveau": 1, "dire": "Vers où va cette flèche ? Vers la gauche, ou vers la droite ?"},
+        {"type": "qcm", "question": "J'ai deux mains : la main droite et…", "choix": ["la main gauche", "le pied droit"], "niveau": 1},
+        {"type": "vraifaux", "affirmation": "Quand je regarde l'écran, le mot DROITE est du côté de ma main droite.", "reponse": true, "niveau": 2},
+        {"type": "qcm", "question": "Pour lire une ligne, mes yeux vont…", "choix": ["de gauche à droite", "de droite à gauche"], "niveau": 2, "indice": "Comme les flèches : ➡️"},
+        {"type": "qcm", "question": "👈 Ce doigt montre…", "choix": ["la gauche", "la droite"], "niveau": 2, "dire": "Ce doigt montre la gauche, ou la droite ?"}
+      ]
+    },
+
+    {
+      "id": "ava-nombres-1-dizaine",
+      "pour": ["ava"],
+      "matiere": "Maths",
+      "parcours": "Les nombres",
+      "etape": 1,
+      "titre": "La dizaine",
+      "emoji": "🔟",
+      "ajoutee": "2026-11-01",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# 10, c'est une dizaine !",
+        {"visuel": "dizaine", "objet": "🐱"},
+        {"visuel": "encadre", "style": "retenir", "texte": ["**10** = **dix** = **1 dizaine** = mes 2 mains ✋✋"]},
+        "# 🧶 À toi de jouer !",
+        {"visuel": "tirs", "theme": "chat", "titre": "Lance la pelote dans le panier !", "tirs": [{"texte": "Combien de doigts sur 2 mains ? ✋✋", "choix": ["10", "5"]}, {"texte": "5 + 5 = ?", "choix": ["10", "55"]}, {"texte": "Une dizaine, c'est…", "choix": ["10", "2"]}, {"texte": "🐱🐱🐱🐱🐱🐱🐱🐱 : combien en manque-t-il pour faire 10 ?", "choix": ["2", "3"], "dire": "Il y a huit chats. Combien en manque-t-il pour faire dix ?"}, {"texte": "Combien de 🐱 ? 🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱", "choix": ["10", "9"], "dire": "Compte les chats. Combien y en a-t-il ?"}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Combien de doigts sur mes 2 mains ? ✋✋", "choix": ["10", "5", "2"], "niveau": 1, "indice": "Compte tes doigts !"},
+        {"type": "vraifaux", "affirmation": "5 + 5 = 10", "reponse": true, "niveau": 1},
+        {"type": "qcm", "question": "Une dizaine, c'est…", "choix": ["10", "100", "1"], "niveau": 2},
+        {"type": "qcm", "question": "Combien de chats ? 🐱🐱🐱🐱🐱🐱🐱🐱🐱🐱", "choix": ["10", "9", "8"], "niveau": 2, "indice": "Touche-les un par un avec ton doigt en comptant.", "dire": "Compte les chats. Combien y en a-t-il ?"},
+        {"type": "qcm", "question": "Comment s'écrit dix ?", "choix": ["dix", "six", "deux"], "niveau": 2, "indice": "On entend « d » au début.", "lireChoix": false, "dire": "Trouve le mot dix."},
+        {"type": "qcm", "question": "🐱🐱🐱🐱🐱🐱🐱 Il y a 7 chats. Combien en manque-t-il pour faire 10 ?", "choix": ["3", "2", "4"], "niveau": 3, "indice": "Compte sur tes doigts : 8, 9, 10…", "dire": "Il y a sept chats. Combien en manque-t-il pour faire dix ?"}
+      ]
+    },
+
+    {
+      "id": "ava-nombres-2-11-19",
+      "pour": ["ava"],
+      "matiere": "Maths",
+      "parcours": "Les nombres",
+      "etape": 2,
+      "titre": "De 11 à 19",
+      "emoji": "🧮",
+      "ajoutee": "2026-11-01",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Une dizaine et encore un peu…",
+        {"visuel": "nombres", "de": 11, "a": 19},
+        {"visuel": "encadre", "style": "astuce", "texte": ["Après seize : **dix**-sept, **dix**-huit, **dix**-neuf. On entend « dix » !"]},
+        "# 🧶 À toi de jouer !",
+        {"visuel": "tirs", "theme": "chat", "titre": "Lance la pelote dans le panier !", "tirs": [{"texte": "1 dizaine et 2 unités, c'est…", "choix": ["12", "21"]}, {"texte": "Le nombre après 16 ?", "choix": ["17", "15"]}, {"texte": "Quel nombre est le plus grand ?", "choix": ["19", "11"]}, {"texte": "1 dizaine et 5 unités, c'est…", "choix": ["15", "51"]}, {"texte": "Le nombre avant 14 ?", "choix": ["13", "15"]}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Une dizaine et 2 unités, ça fait…", "choix": ["12", "21", "3"], "niveau": 1, "indice": "10 et encore 2."},
+        {"type": "vraifaux", "affirmation": "Dans dix-huit, on entend « dix ».", "reponse": true, "niveau": 1},
+        {"type": "qcm", "question": "🟦 Une barre de 10 et 3 cubes, c'est…", "choix": ["13", "30", "4"], "niveau": 2, "indice": "10 et encore 3.", "dire": "Une barre de dix et trois cubes, ça fait combien ?"},
+        {"type": "qcm", "question": "Quel nombre vient juste après 16 ?", "choix": ["17", "15", "18"], "niveau": 2, "indice": "Compte : 15, 16, …"},
+        {"type": "ordre", "consigne": "Range du plus petit au plus grand", "elements": ["11", "14", "16", "19"], "niveau": 2},
+        {"type": "qcm", "question": "Trouve le nombre treize.", "choix": ["13", "3", "30"], "niveau": 3, "indice": "Treize, c'est 10 et encore 3.", "lireChoix": false}
+      ]
+    },
+
+    {
+      "id": "ava-nombres-3-plus-moins",
+      "pour": ["ava"],
+      "matiere": "Maths",
+      "parcours": "Les nombres",
+      "etape": 3,
+      "titre": "Plus et moins",
+      "emoji": "➕",
+      "ajoutee": "2026-11-01",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Le signe + : j'ajoute",
+        {"visuel": "calcul", "exemples": [{"calcul": "2 + 1 + 2", "emoji": "🧒", "histoire": "Il y a 2 enfants sur le tourniquet. 1 enfant monte, puis encore 2 enfants montent."}, {"calcul": "3 + 2", "emoji": "🐱", "histoire": "3 chats dorment. 2 chats arrivent."}]},
+        "# Le signe − : j'enlève",
+        {"visuel": "calcul", "exemples": [{"calcul": "8 - 2", "emoji": "🧶", "histoire": "Il y a 8 pelotes. Le chat en emporte 2."}, {"calcul": "5 - 1", "emoji": "🐟", "histoire": "Il y a 5 poissons. Le chat en mange 1."}]},
+        {"visuel": "encadre", "style": "retenir", "texte": ["**+** : j'ajoute, c'est une **addition**.", "**−** : j'enlève, c'est une **soustraction**."]},
+        "# 🧶 À toi de jouer !",
+        {"visuel": "tirs", "theme": "chat", "titre": "Lance la pelote dans le panier !", "tirs": [{"texte": "2 + 1 = ?", "choix": ["3", "1"]}, {"texte": "4 − 1 = ?", "choix": ["3", "5"]}, {"texte": "🐱🐱 + 🐱 = ?", "choix": ["3", "2"], "dire": "Deux chats plus un chat ?"}, {"texte": "5 + 0 = ?", "choix": ["5", "0"]}, {"texte": "6 − 2 = ?", "choix": ["4", "8"]}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "2 + 1 = ?", "choix": ["3", "1", "4"], "niveau": 1, "indice": "2 doigts, et j'en lève encore 1."},
+        {"type": "qcm", "question": "Le signe + veut dire…", "choix": ["j'ajoute", "j'enlève"], "niveau": 1},
+        {"type": "qcm", "question": "🐱🐱🐱 + 🐱🐱 = ?", "choix": ["5", "6", "3"], "niveau": 2, "indice": "Compte tous les chats.", "dire": "Trois chats plus deux chats, ça fait combien ?"},
+        {"type": "qcm", "question": "8 − 2 = ?", "choix": ["6", "10", "5"], "niveau": 2, "indice": "8 doigts, j'en baisse 2."},
+        {"type": "vraifaux", "affirmation": "Quand j'enlève, je fais une soustraction.", "reponse": true, "niveau": 2},
+        {"type": "qcm", "question": "Il y a 5 chats. 1 chat s'en va. Combien en reste-t-il ?", "choix": ["4", "6", "5"], "niveau": 3, "indice": "5 doigts, j'en baisse 1."}
+      ]
+    },
+
+    {
+      "id": "ava-sons-1-a-i",
+      "pour": ["ava"],
+      "matiere": "Lecture",
+      "parcours": "Les sons",
+      "etape": 1,
+      "titre": "a et i",
+      "emoji": "🅰️",
+      "ajoutee": "2026-11-01",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Le son a",
+        {"visuel": "son", "lettres": "a A", "son": "a", "graphies": ["a", "â"], "geste": "J'ouvre ma main et je dis « a ».", "mots": [{"emoji": "🐱", "mot": "chat"}, {"emoji": "✈️", "mot": "avion"}, {"emoji": "🫏", "mot": "âne"}, {"emoji": "🛋️", "mot": "canapé"}, {"emoji": "🍫", "mot": "chocolat"}, {"emoji": "🍍", "mot": "ananas"}]},
+        "# Le son i",
+        {"visuel": "son", "lettres": "i I y Y", "attache": "i y", "son": "i", "graphies": ["i", "y", "î"], "geste": "Je lève mon doigt et je dis « i ».", "mots": [{"emoji": "🦉", "mot": "hibou"}, {"emoji": "📕", "mot": "livre"}, {"emoji": "🖊️", "mot": "stylo"}, {"emoji": "🔺", "mot": "pyramide"}, {"emoji": "🐁", "mot": "souris"}, {"emoji": "🌙", "mot": "nuit"}]},
+        {"visuel": "encadre", "style": "attention", "texte": ["Le **y** fait souvent le son **i** : st**y**lo, p**y**ramide."]},
+        "# 🧶 À toi de jouer !",
+        {"visuel": "tirs", "theme": "chat", "titre": "Écoute et lance la pelote !", "tirs": [{"texte": "Où entends-tu « a » ?", "choix": ["🐱 chat", "🦉 hibou"]}, {"texte": "Où entends-tu « i » ?", "choix": ["🖊️ stylo", "🍫 chocolat"]}, {"texte": "Où entends-tu « a » ?", "choix": ["🫏 âne", "📕 livre"]}, {"texte": "Où entends-tu « i » ?", "choix": ["🐁 souris", "🐱 chat"]}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Dans quel mot entends-tu « a » ?", "choix": ["🐱 chat", "🦉 hibou", "📕 livre"], "niveau": 1, "indice": "Ouvre ta main : aaa…"},
+        {"type": "qcm", "question": "Dans quel mot entends-tu « i » ?", "choix": ["🖊️ stylo", "🍫 chocolat", "🐱 chat"], "niveau": 1, "indice": "Lève ton doigt : iii…"},
+        {"type": "vraifaux", "affirmation": "Dans « âne », on entend « a ».", "reponse": true, "niveau": 1},
+        {"type": "qcm", "question": "Quel geste pour le son « a » ?", "choix": ["J'ouvre ma main", "Je lève mon doigt"], "niveau": 2},
+        {"type": "qcm", "question": "Trouve la lettre a.", "choix": ["a", "o", "e"], "niveau": 2, "indice": "Elle est ronde avec une petite queue.", "lireChoix": false},
+        {"type": "qcm", "question": "Quelle lettre peut aussi faire le son « i », comme dans stylo ?", "choix": ["y", "a", "o"], "niveau": 3, "lireChoix": false}
+      ]
+    },
+
+    {
+      "id": "ava-sons-2-o-u",
+      "pour": ["ava"],
+      "matiere": "Lecture",
+      "parcours": "Les sons",
+      "etape": 2,
+      "titre": "o et u",
+      "emoji": "⭕",
+      "ajoutee": "2026-11-01",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Le son o",
+        {"visuel": "son", "lettres": "o O", "son": "o", "graphies": ["o", "ô"], "geste": "Je forme un rond avec mes doigts et je dis « o ».", "mots": [{"emoji": "🤖", "mot": "robot"}, {"emoji": "🌹", "mot": "rose"}, {"emoji": "🥣", "mot": "bol"}, {"emoji": "🐢", "mot": "tortue"}, {"emoji": "🥕", "mot": "carotte"}, {"emoji": "🦭", "mot": "otarie"}]},
+        "# Le son u",
+        {"visuel": "son", "lettres": "u U", "son": "u", "graphies": ["u"], "geste": "Je lève mes deux doigts et je dis « u ».", "mots": [{"emoji": "🌙", "mot": "lune"}, {"emoji": "🚀", "mot": "fusée"}, {"emoji": "🏘️", "mot": "rue"}, {"emoji": "🧃", "mot": "jus"}, {"emoji": "🐢", "mot": "tortue"}, {"emoji": "🎵", "mot": "musique"}]},
+        {"visuel": "encadre", "style": "exemple", "texte": ["Dans **tortue**, on entend **o** et **u** ! 🐢"]},
+        "# 🧶 À toi de jouer !",
+        {"visuel": "tirs", "theme": "chat", "titre": "Écoute et lance la pelote !", "tirs": [{"texte": "Où entends-tu « o » ?", "choix": ["🤖 robot", "🌙 lune"]}, {"texte": "Où entends-tu « u » ?", "choix": ["🚀 fusée", "🌹 rose"]}, {"texte": "Où entends-tu « o » ?", "choix": ["🥣 bol", "🧃 jus"]}, {"texte": "Où entends-tu « u » ?", "choix": ["🌙 lune", "🥕 carotte"]}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Dans quel mot entends-tu « o » ?", "choix": ["🤖 robot", "🌙 lune", "🐱 chat"], "niveau": 1, "indice": "Fais un rond avec tes doigts : ooo…"},
+        {"type": "qcm", "question": "Dans quel mot entends-tu « u » ?", "choix": ["🌙 lune", "🌹 rose", "🫏 âne"], "niveau": 1, "indice": "Lève deux doigts : uuu…"},
+        {"type": "vraifaux", "affirmation": "Dans « tortue », on entend « o » et « u ».", "reponse": true, "niveau": 2},
+        {"type": "qcm", "question": "Quel geste pour le son « o » ?", "choix": ["Je forme un rond avec mes doigts", "J'ouvre ma main"], "niveau": 2},
+        {"type": "qcm", "question": "Trouve la lettre u.", "choix": ["u", "n", "o"], "niveau": 2, "indice": "Elle ressemble à un petit pot ouvert en haut.", "lireChoix": false},
+        {"type": "qcm", "question": "Trouve la lettre o.", "choix": ["o", "a", "e"], "niveau": 3, "indice": "Un rond tout simple.", "lireChoix": false}
+      ]
+    },
+
+    {
+      "id": "ava-sons-3-e",
+      "pour": ["ava"],
+      "matiere": "Lecture",
+      "parcours": "Les sons",
+      "etape": 3,
+      "titre": "é, è et e",
+      "emoji": "⭐",
+      "ajoutee": "2026-11-01",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Le son é",
+        {"visuel": "son", "lettres": "é", "son": "é", "graphies": ["é"], "geste": "Je pose ma main sur mon front et je dis « é ».", "mots": [{"emoji": "⭐", "mot": "étoile"}, {"emoji": "🪗", "mot": "accordéon"}, {"emoji": "🪆", "mot": "poupée"}, {"emoji": "🚀", "mot": "fusée"}, {"emoji": "🧚", "mot": "fée"}]},
+        "# Le son è",
+        {"visuel": "son", "lettres": "è ê", "son": "è", "graphies": ["è", "ê"], "geste": "Je pose ma main sur ma tête et je dis « è ».", "mots": [{"emoji": "🏹", "mot": "flèche"}, {"emoji": "🎉", "mot": "fête"}, {"emoji": "🌲", "mot": "forêt"}, {"emoji": "🍦", "mot": "crème"}]},
+        "# Le son e",
+        {"visuel": "son", "lettres": "e E", "son": "e", "direSon": "eu", "graphies": ["e"], "geste": "Je forme un creux avec ma main et je dis « e ».", "mots": [{"emoji": "🦊", "mot": "renard"}, {"emoji": "🐴", "mot": "cheval"}, {"emoji": "🍈", "mot": "melon"}, {"emoji": "🪟", "mot": "fenêtre"}]},
+        {"visuel": "encadre", "style": "astuce", "texte": ["L'accent change le son : **é** (aigu, il monte ↗) · **è** (grave, il descend ↘) · **e** sans accent."]},
+        "# 🧶 À toi de jouer !",
+        {"visuel": "tirs", "theme": "chat", "titre": "Écoute et lance la pelote !", "tirs": [{"texte": "Où entends-tu « é » ?", "choix": ["⭐ étoile", "🏹 flèche"]}, {"texte": "Où entends-tu « è » ?", "choix": ["🎉 fête", "🪆 poupée"]}, {"texte": "Où entends-tu « é » ?", "choix": ["🧚 fée", "🦊 renard"]}, {"texte": "Trouve le é", "choix": ["é", "è"], "dire": "Trouve la lettre é, avec l'accent qui monte."}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Dans quel mot entends-tu « é » ?", "choix": ["⭐ étoile", "🏹 flèche", "🐴 cheval"], "niveau": 1, "indice": "Main sur le front : éééé…"},
+        {"type": "qcm", "question": "Dans quel mot entends-tu « è » ?", "choix": ["🎉 fête", "🚀 fusée", "🌙 lune"], "niveau": 2, "indice": "Main sur la tête : èèè…"},
+        {"type": "vraifaux", "affirmation": "Dans « fusée », on entend « é ».", "reponse": true, "niveau": 1},
+        {"type": "qcm", "question": "Quel geste pour le son « é » ?", "choix": ["Je pose ma main sur mon front", "Je lève mon doigt"], "niveau": 2},
+        {"type": "qcm", "question": "Trouve le é (l'accent monte ↗).", "choix": ["é", "è", "e"], "niveau": 3, "indice": "Son accent monte, comme une fusée !", "lireChoix": false, "dire": "Trouve la lettre é. Son accent monte, comme une fusée."}
+      ]
+    },
+
+    {
+      "id": "ava-sons-4-f-n",
+      "pour": ["ava"],
+      "matiere": "Lecture",
+      "parcours": "Les sons",
+      "etape": 4,
+      "titre": "f et n",
+      "emoji": "🧚",
+      "ajoutee": "2026-11-01",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Le son f",
+        {"visuel": "son", "lettres": "f F", "son": "f", "direSon": "fffff, comme dans fée", "graphies": ["f"], "geste": "Je fais comme si je frottais et je dis « fff ».", "mots": [{"emoji": "🧚", "mot": "fée"}, {"emoji": "🌲", "mot": "forêt"}, {"emoji": "💨", "mot": "fumée"}, {"emoji": "🎬", "mot": "film"}, {"emoji": "🌾", "mot": "farine"}]},
+        "# Le son n",
+        {"visuel": "son", "lettres": "n N", "son": "n", "direSon": "nnnn, comme dans Noël", "graphies": ["n"], "geste": "Je mets mes doigts sur mon nez et je dis « nnn ».", "mots": [{"emoji": "🍍", "mot": "ananas"}, {"emoji": "🔢", "mot": "numéro"}, {"emoji": "🎄", "mot": "Noël"}, {"emoji": "🐶", "mot": "niche"}, {"emoji": "👃", "mot": "narines"}]},
+        "# Je lis des syllabes",
+        {"visuel": "syllabes", "consonnes": ["f", "n"], "voyelles": ["a", "i", "o", "u", "é", "e"]},
+        {"visuel": "encadre", "style": "exemple", "texte": ["C'est Mimi le chat ! 🐱", "Nino est né dans une niche. 🐶"], "nom": "Je lis des phrases"},
+        "# 🧶 À toi de jouer !",
+        {"visuel": "tirs", "theme": "chat", "titre": "Écoute et lance la pelote !", "tirs": [{"texte": "f + a = ?", "choix": ["fa", "af"], "dire": "f plus a, ça fait ?"}, {"texte": "n + o = ?", "choix": ["no", "on"], "dire": "n plus o, ça fait ?"}, {"texte": "f + i = ?", "choix": ["fi", "if"], "dire": "f plus i, ça fait ?"}, {"texte": "n + u = ?", "choix": ["nu", "un"], "dire": "n plus u, ça fait ?"}, {"texte": "Où entends-tu « fff » ?", "choix": ["🧚 fée", "🍍 ananas"], "dire": "Dans quel mot entends-tu ffff, comme dans forêt ?"}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "f + a, ça fait…", "choix": ["fa", "af", "fo"], "niveau": 1, "indice": "Dis « fff », puis « a », tout collé.", "lireChoix": false, "dire": "f plus a, ça fait quelle syllabe ?"},
+        {"type": "qcm", "question": "n + o, ça fait…", "choix": ["no", "on", "nu"], "niveau": 1, "indice": "Dis « nnn », puis « o ».", "lireChoix": false, "dire": "n plus o, ça fait quelle syllabe ?"},
+        {"type": "qcm", "question": "Dans quel mot entends-tu « fff » ?", "choix": ["🧚 fée", "🍍 ananas", "🌙 lune"], "niveau": 2, "indice": "Frotte comme une gomme : fff…", "dire": "Dans quel mot entends-tu fffff, comme dans forêt ?"},
+        {"type": "qcm", "question": "Dans quel mot entends-tu « nnn » ?", "choix": ["🍍 ananas", "🧚 fée", "🚀 fusée"], "niveau": 2, "indice": "Doigts sur le nez : nnn…", "dire": "Dans quel mot entends-tu nnnn, comme dans Noël ?"},
+        {"type": "qcm", "question": "🔊 Écoute et trouve la syllabe.", "choix": ["nu", "un", "na"], "niveau": 3, "indice": "Écoute encore avec le bouton 🔊.", "lireChoix": false, "dire": "Trouve la syllabe nu."},
+        {"type": "qcm", "question": "🔊 Écoute et trouve la syllabe.", "choix": ["fé", "fa", "é"], "niveau": 3, "indice": "Écoute encore avec le bouton 🔊.", "lireChoix": false, "dire": "Trouve la syllabe fé."}
+      ]
+    },
+
+    {
+      "id": "ava-sons-5-attache",
+      "pour": ["ava"],
+      "matiere": "Lecture",
+      "parcours": "Les sons",
+      "etape": 5,
+      "titre": "Les lettres attachées",
+      "emoji": "✍️",
+      "ajoutee": "2026-11-01",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Chaque lettre a deux habits",
+        "- En **script** pour lire les livres, en **attaché** pour écrire dans le cahier.",
+        {"visuel": "alphabet"},
+        "# 🧶 À toi de jouer !",
+        {"visuel": "tirs", "theme": "chat", "titre": "Trouve la lettre attachée !", "tirs": [{"texte": "Trouve le a attaché", "choix": ["a", "o"], "attache": true, "dire": "Trouve la lettre a."}, {"texte": "Trouve le l attaché", "choix": ["l", "e"], "attache": true, "dire": "Trouve la lettre l."}, {"texte": "Trouve le m attaché", "choix": ["m", "n"], "attache": true, "dire": "Trouve la lettre m."}, {"texte": "Trouve le b attaché", "choix": ["b", "d"], "attache": true, "dire": "Trouve la lettre b."}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Quelle est la première lettre de l'alphabet ?", "choix": ["a", "z", "o"], "niveau": 1},
+        {"type": "qcm", "question": "Quelle lettre vient après a ?", "choix": ["b", "c", "d"], "niveau": 1, "indice": "a, b, c…"},
+        {"type": "vraifaux", "affirmation": "Une lettre peut s'écrire en script et en attaché.", "reponse": true, "niveau": 1},
+        {"type": "qcm", "question": "Quelle lettre vient après m ?", "choix": ["n", "l", "o"], "niveau": 2, "indice": "… l, m, …"},
+        {"type": "ordre", "consigne": "Range les lettres dans l'ordre de l'alphabet", "elements": ["a", "b", "c", "d", "e"], "niveau": 2}
       ]
     }
   ]

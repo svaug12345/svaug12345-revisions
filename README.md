@@ -100,7 +100,15 @@ Tous acceptent `"titre"` et `"legende"`, et leurs textes acceptent le **gras** e
 | `droite` | Droite graduée : on touche un objet, il tombe à sa place et on explique la lecture | `{"visuel":"droite","debut":500000,"fin":800000,"grande":100000,"petites":10,"points":[{"valeur":530000,"emoji":"⚽","nom":"Le ballon"}]}` |
 | `posee` | Multiplication posée pas à pas (ordre de grandeur, retenues, 0 de décalage, addition) | `{"visuel":"posee","a":579,"b":64}` |
 | `rangs` | Rappel : rang de chaque chiffre (classe des mille / des unités), on touche un chiffre | `{"visuel":"rangs","nombre":"658 741"}` |
-| `tirs` | Mini-jeu « Tirs au but » : bonne réponse = BUT ⚽, mauvaise = arrêt du gardien 🧤, score comme au stade (1re proposition = la bonne) | `{"visuel":"tirs","tirs":[{"texte":"4 682 à la centaine ?","choix":["4 700","4 600"]}]}` |
+| `tirs` | Mini-jeu « Tirs au but » (`"theme":"chat"` : pelote 🧶 et souris 🐭 ; `"attache":true` sur un tir : réponses en écriture attachée ; `"dire"` : ce que la voix lit) : bonne réponse = BUT ⚽, mauvaise = arrêt du gardien 🧤, score comme au stade (1re proposition = la bonne) | `{"visuel":"tirs","tirs":[{"texte":"4 682 à la centaine ?","choix":["4 700","4 600"]}]}` |
+| `position` | CP : « Où est le chat ? » sur / sous / devant / derrière / à côté / au-dessus / dans / entre | `{"visuel":"position","objet":"🐱","nom":"Le chat"}` |
+| `gauchedroite` | CP : le chat court à gauche ou à droite | `{"visuel":"gauchedroite"}` |
+| `dizaine` | CP : boîte de 10 cases à remplir, « 10 = dix = 1 dizaine » | `{"visuel":"dizaine","objet":"🐱"}` |
+| `nombres` | CP : 11 à 19 = 1 barre de 10 + des cubes, nom du nombre lu | `{"visuel":"nombres","de":11,"a":19}` |
+| `calcul` | CP : + et − en images, étape par étape (objets qui arrivent / barrés) | `{"visuel":"calcul","exemples":[{"calcul":"8 - 2","emoji":"🧶","histoire":"…"}]}` |
+| `son` | CP : un son (lettre script + attachée, geste, mots-images à écouter) | `{"visuel":"son","lettres":"a A","son":"a","geste":"…","mots":[{"emoji":"🐱","mot":"chat"}]}` |
+| `syllabes` | CP : f + a = fa, on touche pour entendre | `{"visuel":"syllabes","consonnes":["f","n"],"voyelles":["a","i","o"]}` |
+| `alphabet` | CP : lettres script → attachées | `{"visuel":"alphabet"}` |
 
 Le code de chaque visuel est dans `visuels.js` (une fonction par visuel, bien commentée).
 
@@ -246,3 +254,13 @@ Une grosse leçon peut être découpée en **modules** courts (5 à 8 questions)
 `"parcours": "Arrondir et encadrer"` et `"etape": 1, 2, 3…`. La liste les montre comme un **chemin d'étapes** (⚽ 1 → 2 → 3 → 🏆) :
 étape réussie en vert ✔, prochaine étape qui clignote, trophée allumé quand tout est fini. En fin de quiz, un bouton
 **« Étape suivante »** enchaîne directement sur le module suivant. Chaque module de Titouan finit par un mini-jeu « Tirs au but ».
+
+## 🔊 Lecture à voix haute et confort de lecture (depuis la v1.12.0)
+
+Options d'un enfant dans `lecons.json` :
+- `"lectureAudio": true` : un 🔊 lit chaque bloc de fiche et chaque question, un 🔈 dans chaque réponse (voix du téléphone).
+- `"lectureAuto": true` : la question est lue toute seule (CP). Sur une question : `"dire"` = ce qui est lu à la place du texte, `"lireChoix": false` = ne pas lire les réponses (quand la question teste justement la lecture).
+- `"lectureFacile": true` : police Lexend, lettres et lignes plus espacées, mots importants surlignés.
+- `"orthographeSouple": true` : une réponse tapée avec une petite faute est acceptée (on vérifie la compréhension, pas l'orthographe).
+
+⚠️ Ce fichier est public : on y décrit des **aménagements**, jamais un diagnostic.
