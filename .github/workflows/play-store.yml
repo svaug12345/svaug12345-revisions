@@ -114,12 +114,21 @@ jobs:
             --title "Android ${{ steps.version.outputs.nom }} (code ${{ steps.version.outputs.code }})" \
             --notes "Fichier à téléverser sur le Play Store (seulement la toute première fois : ensuite le robot l'envoie lui-même)."
 
+      # Ruby (le langage de fastlane), installé dans le dossier du robot : pas besoin de « sudo »
+      - name: Installer Ruby (pour fastlane)
+        if: env.CLE_FICHIER != ''
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+
       - name: Envoyer sur le Play Store (fastlane supply)
         id: play
         if: env.CLE_FICHIER != ''
         env:
           CLE_PLAY: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
         run: |
+          # Toute la sortie de cette étape va aussi dans fastlane.log (pour le compte rendu)
+          exec > >(tee -a "$RUNNER_TEMP/fastlane.log") 2>&1
           if [ -z "$CLE_PLAY" ]; then
             echo "Pas de secret PLAY_SERVICE_ACCOUNT_JSON : envoi sur le Play Store sauté."
             echo "envoye=non" >> "$GITHUB_OUTPUT"; exit 0
@@ -130,7 +139,6 @@ jobs:
           cp fastlane/metadata/android/fr-FR/changelogs/default.txt \
              "fastlane/metadata/android/fr-FR/changelogs/${{ steps.version.outputs.code }}.txt"
           # supply envoie : le .aab + la fiche (titre, descriptions, icône, captures)
-          set -o pipefail
           fastlane supply \
             --package_name io.github.svaug12345.revisions \
             --json_key "$RUNNER_TEMP/play.json" \
@@ -138,7 +146,7 @@ jobs:
             --track "$PISTE" \
             --release_status "$STATUT" \
             --metadata_path fastlane/metadata/android \
-            --skip_upload_apk true 2>&1 | tee "$RUNNER_TEMP/fastlane.log"
+            --skip_upload_apk true
           echo "envoye=oui" >> "$GITHUB_OUTPUT"
 
       # Toujours exécutée, même en cas d'échec : écrit le compte rendu sur la branche statut-play
