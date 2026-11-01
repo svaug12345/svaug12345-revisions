@@ -42,7 +42,8 @@ function enrichir(texte) {
 }
 
 // Nombre -> texte à la française : 0.056 -> "0,056" ; 1000 -> "1 000"
-const nombreFr = (n) => Number(n).toLocaleString('fr-FR', { maximumFractionDigits: 6 });
+// useGrouping: 'always' -> espace aussi à 4 chiffres (« 1 250 » et pas « 1250 »), comme à l'école
+const nombreFr = (n) => Number(n).toLocaleString('fr-FR', { maximumFractionDigits: 6, useGrouping: 'always' });
 // Texte -> nombre ("2,5" -> 2.5)
 const lireNombre = (t) => Number(String(t).replace(/\s/g, '').replace(',', '.'));
 
@@ -110,7 +111,7 @@ const VISUELS = {
         el('ul', {}, c.formes.map((f, i) => el('li', { style: cascade(i) }, enrichir(f)))))));
   },
 
-  /* TABLE DE MULTIPLICATION en points : { table: 7, max: 10 }
+  /* TABLE DE MULTIPLICATION en points : { table: 7, max: 10, emoji: "🧍" (facultatif) }
      L'enfant choisit le multiplicateur : on voit les rangées de points et le résultat. */
   multiplication(v) {
     const t = v.table, max = v.max || 10;
@@ -124,7 +125,8 @@ const VISUELS = {
       // k rangées de t points (une couleur par rangée)
       points.replaceChildren(...Array.from({ length: k }, (_, r) =>
         el('div', { class: 'rangee', style: `${cascade(r)};--h:${(r * 37) % 360}` },
-          Array.from({ length: t }, () => el('span', { class: 'point' })),
+          // "emoji" (facultatif) : un emoji à la place de chaque point (ex. 🧍 pour des joueurs)
+          Array.from({ length: t }, () => (v.emoji ? el('span', { class: 'point-emoji' }, v.emoji) : el('span', { class: 'point' }))),
           el('small', {}, String(t * (r + 1))))));
       [...boutons.children].forEach((b, i) => b.classList.toggle('actif', i + 1 === k));
     }
@@ -475,5 +477,209 @@ const VISUELS = {
           el('span', { class: 'lien-fleche' }, el('small', {}, enrichir(l.texte || t.label)), el('i', {})),
           el('span', { class: 'lien-bout' }, enrichir(l.vers)));
       }));
+  },
+
+  /* ARRONDIR ET ENCADRER : { exemples: ["658 741", "47 862"], rangs: ["dizaine", "centaine", "millier"] }
+     Le nombre est un ballon ⚽ posé entre deux « buts » : les deux nombres ronds qui l'encadrent.
+     Le ballon roule vers le but le plus proche : c'est l'arrondi. L'enfant peut taper son nombre. */
+  arrondi(v) {
+    const PAS = { unite: 1, dizaine: 10, centaine: 100, millier: 1000, 'dizaine de mille': 10000, 'centaine de mille': 100000 };
+    const NOMS = { dizaine: 'à la dizaine', centaine: 'à la centaine', millier: 'au millier', 'dizaine de mille': 'à la dizaine de mille', 'centaine de mille': 'à la centaine de mille' };
+    const rangs = v.rangs || ['dizaine', 'centaine', 'millier'];
+    let nombre = lireNombre(v.exemples?.[0] ?? 658741);
+    let rang = rangs[0];
+    const terrain = el('div', { class: 'arrondi-terrain' });
+    const phrase = el('div', { class: 'arrondi-phrase' });
+    const boutonsRang = el('div', { class: 'arrondi-rangs' });
+    const champ = el('input', { class: 'machine-champ', type: 'text', inputmode: 'numeric', value: nombreFr(nombre) });
+
+    function montrer() {
+      const pas = PAS[rang];
+      const bas = Math.floor(nombre / pas) * pas;   // le but de gauche (nombre rond juste en dessous)
+      const haut = bas + pas;                        // le but de droite (nombre rond juste au-dessus)
+      const exact = nombre % pas === 0;
+      // Au milieu pile (…5, …50, …500), on arrondit au-dessus : c'est la règle
+      const arrondi = exact ? nombre : (nombre - bas < haut - nombre ? bas : haut);
+      const part = exact ? 0 : (nombre - bas) / pas; // position du ballon entre 0 et 1
+      const ballon = el('span', { class: 'arrondi-ballon', style: `--depart:${part * 100}%;--arrivee:${(arrondi === bas ? 0 : 100)}%` }, '⚽');
+      terrain.replaceChildren(
+        el('div', { class: 'arrondi-ligne' },
+          el('span', { class: 'arrondi-milieu' }),
+          el('span', { class: 'arrondi-but gauche' + (arrondi === bas ? ' gagne' : '') }, '🥅', el('b', {}, nombreFr(bas))),
+          el('span', { class: 'arrondi-but droite' + (arrondi === haut ? ' gagne' : '') }, '🥅', el('b', {}, nombreFr(haut))),
+          exact ? null : ballon),
+        // Le nombre est écrit sous la ligne, mais jamais collé aux étiquettes des buts (entre 32 % et 68 %) ;
+        // un petit repère orange montre sa vraie place.
+        exact ? null : el('div', { class: 'arrondi-nombre', style: `--depart:${Math.min(68, Math.max(32, part * 100))}%` }, nombreFr(nombre)));
+      if (!exact) terrain.firstChild.append(el('span', { class: 'arrondi-repere', style: `left:${part * 100}%` }));
+      // Relance l'animation à chaque changement
+      if (!exact) { ballon.style.animation = 'none'; void ballon.offsetWidth; ballon.style.animation = ''; }
+      phrase.replaceChildren(
+        exact
+          ? el('p', {}, el('b', {}, nombreFr(nombre)), ` est déjà un nombre rond ${NOMS[rang]} près !`)
+          : el('p', {}, '📏 Encadrement : ', el('b', {}, `${nombreFr(bas)} < ${nombreFr(nombre)} < ${nombreFr(haut)}`)),
+        exact ? null : el('p', {}, '🎯 Arrondi ', NOMS[rang], ' la plus proche : ', el('b', { class: 'arrondi-resultat' }, nombreFr(arrondi)),
+          nombre - bas === haut - nombre ? ' (pile au milieu : on arrondit au-dessus)' : ''));
+      [...boutonsRang.children].forEach((b) => b.classList.toggle('actif', b.dataset.rang === rang));
+    }
+    rangs.forEach((r) => boutonsRang.append(el('button', { 'data-rang': r, onclick: () => { rang = r; montrer(); } }, NOMS[r].replace(/^(à la|au) /, ''))));
+    const exemples = el('div', { class: 'conversion-choix' },
+      (v.exemples || []).map((x) => el('button', { onclick: () => { nombre = lireNombre(x); champ.value = nombreFr(nombre); montrer(); } }, x)));
+    const essayer = () => { const n = Math.round(lireNombre(champ.value)); if (!Number.isNaN(n)) { nombre = Math.abs(n); montrer(); } };
+    champ.addEventListener('keydown', (e) => { if (e.key === 'Enter') essayer(); });
+    montrer();
+    return el('div', {}, exemples,
+      el('p', { class: 'arrondi-consigne' }, 'Arrondir à la… '), boutonsRang,
+      terrain, phrase,
+      el('div', { class: 'machine-essai' }, el('label', {}, 'Ton nombre : ', champ), el('button', { class: 'btn-visuel', onclick: essayer }, '⚽ Tirer')));
+  },
+
+  /* DROITE GRADUÉE : { debut: 500000, fin: 800000, grande: 100000, petites: 10,
+                        points: [{ valeur: 630000, emoji: "⚽", nom: "le ballon" }] }
+     On touche un point : il tombe sur la droite et on explique comment lire sa valeur. */
+  droite(v) {
+    const W = 380, G = 34, D = W - 34, Y = 46;            // largeur, marges gauche/droite, hauteur de la droite
+    const x = (val) => G + ((val - v.debut) / (v.fin - v.debut)) * (D - G);
+    const petit = v.grande / (v.petites || 10);          // valeur d'une petite graduation
+    const NS = 'http://www.w3.org/2000/svg';
+    const svg = (tag, attrs = {}, texte) => {
+      const e = document.createElementNS(NS, tag);
+      for (const [k, val] of Object.entries(attrs)) e.setAttribute(k, val);
+      if (texte !== undefined) e.textContent = texte;
+      return e;
+    };
+    const dessin = svg('svg', { viewBox: `0 0 ${W} 92`, class: 'droite-svg', role: 'img', 'aria-label': 'Droite graduée' });
+    dessin.append(svg('line', { x1: 6, y1: Y, x2: W - 6, y2: Y, class: 'droite-axe' }));
+    dessin.append(svg('path', { d: `M${W - 6} ${Y}l-9 -5v10z`, class: 'droite-fleche' }));
+    // graduations : grandes (avec le nombre) et petites
+    for (let val = v.debut; val <= v.fin + 1e-9; val += petit) {
+      const grande = Math.abs(((val - v.debut) / v.grande) - Math.round((val - v.debut) / v.grande)) < 1e-9;
+      dessin.append(svg('line', { x1: x(val), x2: x(val), y1: Y - (grande ? 9 : 5), y2: Y + (grande ? 9 : 5), class: grande ? 'droite-grande' : 'droite-petite' }));
+      if (grande) dessin.append(svg('text', { x: x(val), y: Y + 30, class: 'droite-nombre' }, nombreFr(val)));
+    }
+    // accolade « 1 petite graduation = … » sur la 1re case
+    dessin.append(svg('path', { d: `M${x(v.debut)} ${Y - 12}q0 -6 ${(x(v.debut + petit) - x(v.debut)) / 2} -6t${(x(v.debut + petit) - x(v.debut)) / 2} 6`, class: 'droite-accolade' }));
+    dessin.append(svg('text', { x: x(v.debut + petit / 2), y: Y - 24, class: 'droite-petit-texte' }, nombreFr(petit)));
+    const calque = svg('g');
+    dessin.append(calque);
+
+    const explication = el('div', { class: 'droite-explication' },
+      el('p', {}, '📏 Une grande graduation = ', el('b', {}, nombreFr(v.grande)), ` · il y a ${v.petites || 10} petites cases dedans, donc une petite graduation = `, el('b', {}, nombreFr(petit))));
+    const boutons = el('div', { class: 'conversion-choix' });
+    function placer(k) {
+      const p = v.points[k];
+      calque.replaceChildren(
+        svg('text', { x: x(p.valeur), y: Y - 8, class: 'droite-point' }, p.emoji || '⚽'),
+        svg('line', { x1: x(p.valeur), x2: x(p.valeur), y1: Y - 4, y2: Y + 12, class: 'droite-repere' }));
+      // explication : la grande graduation juste avant + combien de petites
+      const avant = v.debut + Math.floor((p.valeur - v.debut) / v.grande) * v.grande;
+      const n = Math.round((p.valeur - avant) / petit);
+      explication.replaceChildren(
+        el('p', {}, '📏 Une petite graduation = ', el('b', {}, nombreFr(petit))),
+        el('p', { class: 'pop' }, `${p.emoji || '⚽'} ${p.nom || 'Le point'} : je pars de `, el('b', {}, nombreFr(avant)),
+          n ? ` et j'avance de ${n} petite${n > 1 ? 's' : ''} graduation${n > 1 ? 's' : ''} → ` : ' → ',
+          el('b', { class: 'arrondi-resultat' }, nombreFr(p.valeur))));
+      [...boutons.children].forEach((b, i) => b.classList.toggle('actif', i === k));
+    }
+    (v.points || []).forEach((p, k) => boutons.append(el('button', { onclick: () => placer(k) }, `${p.emoji || '⚽'} ${p.nom || nombreFr(p.valeur)}`)));
+    return el('div', {}, boutons, el('div', { class: 'defile' }, dessin), explication);
+  },
+
+  /* MULTIPLICATION POSÉE, pas à pas : { a: 579, b: 64 }
+     Chaque appui sur « Étape suivante » fait un calcul : chiffre par chiffre, avec les retenues
+     (petits nombres en couleur au-dessus), le 0 de décalage, puis l'addition finale. */
+  posee(v) {
+    const a = Number(v.a), b = Number(v.b);
+    const chA = String(a).split('').map(Number), chB = String(b).split('').map(Number);
+    const total = a * b;
+    const W = Math.max(String(total).length, chA.length, chB.length) + 1; // + 1 colonne pour × / +
+    const plusieurs = chB.length > 1;
+    // --- 1. On prépare toutes les étapes : { ecrit: [[ligne, colonne, texte]], texte, voir: [[ligne, col]] }
+    const etapes = [];
+    const col = (rangDepuisDroite) => W - 1 - rangDepuisDroite;   // colonne d'un rang (0 = unités)
+    const arrondir1 = (n) => { const p = 10 ** (String(n).length - 1); return Math.round(n / p) * p; };
+    etapes.push({ ecrit: [], voir: [], texte: `🔮 Ordre de grandeur : ${nombreFr(arrondir1(a))} × ${nombreFr(arrondir1(b))} = ${nombreFr(arrondir1(a) * arrondir1(b))}. Le résultat doit être proche !` });
+    const lignesProduits = [];
+    [...chB].reverse().forEach((d, j) => {
+      const ligne = 'p' + j, ret = 'r' + j;
+      lignesProduits.push(ligne);
+      if (j > 0) etapes.push({
+        ecrit: Array.from({ length: j }, (_, z) => [ligne, col(z), '0']), voir: [['b', col(j)]],
+        texte: `Je multiplie maintenant par le chiffre des ${j === 1 ? 'dizaines' : 'centaines'} (${d}) : il vaut ${nombreFr(d * 10 ** j)}, donc je pose d'abord ${j === 1 ? 'un 0' : `${j} zéros`} à droite.`,
+      });
+      let retenue = 0;
+      [...chA].reverse().forEach((c, i) => {
+        const p = d * c + retenue;
+        const dernier = i === chA.length - 1;
+        const ecrit = [[ligne, col(i + j), String(dernier ? p : p % 10).slice(-1)]];
+        if (dernier && p >= 10) ecrit.push([ligne, col(i + j + 1), String(Math.floor(p / 10))]);
+        const nouvelle = Math.floor(p / 10);
+        if (!dernier && nouvelle) ecrit.push([ret, col(i + 1), '+' + nouvelle]);
+        etapes.push({
+          ecrit, voir: [['a', col(i)], ['b', col(j)]],
+          texte: `${d} × ${c} = ${d * c}` + (retenue ? ` + ${retenue} de retenue = ${p}` : '') +
+            (dernier ? ` : c'est le dernier chiffre, j'écris ${p}.` : (nouvelle ? ` : j'écris ${p % 10} et je retiens ${nouvelle}.` : ` : j'écris ${p}.`)),
+        });
+        retenue = dernier ? 0 : nouvelle;
+      });
+    });
+    if (plusieurs) {
+      // Addition des lignes, colonne par colonne
+      const produits = [...chB].reverse().map((d, j) => a * d * 10 ** j);
+      let retenue = 0;
+      const n = String(total).length;
+      for (let r = 0; r < n; r++) {
+        const chiffres = produits.map((p) => Math.floor(p / 10 ** r) % 10).filter((_, k) => produits[k] >= 10 ** r || r === 0);
+        const somme = chiffres.reduce((s, c) => s + c, 0) + retenue;
+        const ecrit = [['t', col(r), String(r === n - 1 ? somme : somme % 10)]];
+        const nouvelle = Math.floor(somme / 10);
+        if (r < n - 1 && nouvelle) ecrit.push(['ra', col(r + 1), '+' + nouvelle]);
+        etapes.push({ ecrit, voir: lignesProduits.map((l) => [l, col(r)]),
+          texte: `J'additionne : ${chiffres.join(' + ')}${retenue ? ` + ${retenue} de retenue` : ''} = ${somme}` + (r < n - 1 && nouvelle ? ` : j'écris ${somme % 10} et je retiens ${nouvelle}.` : '.') });
+        retenue = r < n - 1 ? nouvelle : 0;
+      }
+    }
+    etapes.push({ ecrit: [], voir: [[plusieurs ? 't' : 'p0', -1]], texte: `✅ ${nombreFr(a)} × ${nombreFr(b)} = ${nombreFr(total)}. Proche de l'ordre de grandeur ? Oui, bravo !` });
+
+    // --- 2. La grille (lignes du haut vers le bas)
+    const ordre = [...lignesProduits.map((_, j) => 'r' + j).reverse(), 'a', 'b', 'trait', ...(plusieurs ? ['ra', ...lignesProduits, 'trait2', 't'] : lignesProduits)];
+    const cases = {};
+    const corps = el('tbody', {}, ordre.map((nom) => {
+      if (nom.startsWith('trait')) return el('tr', { class: 'posee-trait' }, Array.from({ length: W }, () => el('td')));
+      const classe = nom.startsWith('r') ? 'posee-retenues' + (nom === 'ra' ? ' addition' : ' r' + nom.slice(1)) : nom === 't' ? 'posee-total' : '';
+      return el('tr', { class: classe }, Array.from({ length: W }, (_, c) => (cases[nom + ':' + c] = el('td'))));
+    }));
+    // a et b sont écrits dès le départ, avec le signe ×
+    const ecrireNombre = (ligne, n) => String(n).split('').reverse().forEach((c, i) => { cases[ligne + ':' + col(i)].textContent = c; });
+    ecrireNombre('a', a); ecrireNombre('b', b);
+    cases['b:0'].textContent = '×';
+    if (plusieurs) cases[lignesProduits.at(-1) + ':0'].textContent = '+';
+    const ligneTotal = plusieurs ? 't' : 'p0';
+    const texte = el('p', { class: 'posee-texte' });
+    let k = 0;
+    function afficherEtape() {
+      // on efface tout ce qui est écrit après a et b, puis on rejoue les étapes 0..k
+      Object.entries(cases).forEach(([cle, td]) => {
+        td.classList.remove('vise', 'nouveau');
+        if (!/^(a|b):/.test(cle) && !(td.textContent === '+' && cle.endsWith(':0'))) td.textContent = '';
+      });
+      for (let e = 0; e <= k; e++) etapes[e].ecrit.forEach(([l, c, t]) => {
+        const td = cases[l + ':' + c];
+        td.textContent = t;
+        if (e === k) td.classList.add('nouveau');
+      });
+      etapes[k].voir.forEach(([l, c]) => (c >= 0 ? cases[l + ':' + c]?.classList.add('vise')
+        : Object.keys(cases).filter((x) => x.startsWith(ligneTotal + ':')).forEach((x) => cases[x].classList.add('vise'))));
+      texte.replaceChildren(el('span', { class: 'posee-num' }, `${k + 1}/${etapes.length}`), ' ', enrichir(etapes[k].texte));
+      texte.classList.remove('pop'); void texte.offsetWidth; texte.classList.add('pop');
+      suivant.disabled = k === etapes.length - 1;
+    }
+    const suivant = el('button', { class: 'btn-visuel', onclick: () => { if (k < etapes.length - 1) { k++; afficherEtape(); } } }, '▶ Étape suivante');
+    const reprendre = el('button', { class: 'btn-visuel secondaire', onclick: () => { k = 0; afficherEtape(); } }, '↺ Recommencer');
+    const toutVoir = el('button', { class: 'btn-visuel secondaire', onclick: () => { k = etapes.length - 1; afficherEtape(); } }, '⏩ Résultat');
+    afficherEtape();
+    return el('div', { class: 'posee' },
+      el('div', { class: 'defile' }, el('table', { class: 'table-posee' }, corps)),
+      texte, el('div', { class: 'posee-boutons' }, suivant, reprendre, toutVoir));
   },
 };

@@ -792,6 +792,79 @@ button { cursor: pointer; }
 @keyframes sv-trace { to { stroke-dashoffset: 0; } }
 @media (prefers-reduced-motion: reduce) { .sv-pinceau { animation: none; stroke-dashoffset: 0; } }
 
+/* ---------- Visuels des leçons de Titouan (v1.9.0) ---------- */
+/* Table en emojis (ex. 11 joueurs par équipe) */
+.point-emoji { font-size: 1.05rem; line-height: 1; }
+
+/* ARRONDI : un ballon entre deux buts, qui roule vers le plus proche */
+.arrondi-consigne { margin: 10px 0 4px; font-weight: 900; color: var(--fonce); }
+.arrondi-rangs { display: flex; flex-wrap: wrap; gap: 6px; }
+.arrondi-rangs button {
+  font: inherit; font-weight: 800; border: 2px solid var(--clair); border-radius: 999px;
+  padding: 6px 12px; background: #fff; color: var(--fonce);
+}
+.arrondi-rangs button.actif { background: var(--fonce); border-color: var(--fonce); color: #fff; }
+.arrondi-terrain {
+  margin: 14px 0 6px; padding: 30px 46px 8px; border-radius: 14px;
+  /* une pelouse rayée, comme un vrai terrain */
+  background: repeating-linear-gradient(90deg, #4ade80 0 28px, #22c55e 28px 56px);
+}
+.arrondi-ligne { position: relative; height: 4px; background: #fff; border-radius: 4px; }
+.arrondi-milieu { position: absolute; left: 50%; top: -10px; width: 2px; height: 24px; background: rgba(255, 255, 255, .8); }
+.arrondi-but { position: absolute; top: -32px; display: flex; flex-direction: column; align-items: center; transform: translateX(-50%); font-size: 1.5rem; }
+.arrondi-but b { font-size: .8rem; background: #fff; color: var(--fonce); border-radius: 8px; padding: 1px 6px; margin-top: 24px; white-space: nowrap; }
+.arrondi-but.gauche { left: 0; }
+.arrondi-but.droite { right: 0; transform: translateX(50%) scaleX(1); }
+.arrondi-but.gagne b { background: #facc15; color: #713f12; animation: pop .4s 1.3s backwards; }
+.arrondi-ballon {
+  position: absolute; top: -13px; font-size: 1.4rem; transform: translateX(-50%);
+  left: var(--arrivee); animation: roule 1.2s .3s cubic-bezier(.3, .1, .3, 1) backwards;
+}
+@keyframes roule { from { left: var(--depart); transform: translateX(-50%) rotate(0); } to { left: var(--arrivee); transform: translateX(-50%) rotate(720deg); } }
+.arrondi-nombre {
+  position: relative; left: var(--depart); width: max-content; transform: translateX(-50%);
+  margin-top: 30px; font-weight: 900; color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, .35); font-size: .95rem;
+}
+.arrondi-phrase p { margin: 6px 0; }
+.arrondi-repere { position: absolute; top: -6px; width: 4px; height: 16px; margin-left: -2px; border-radius: 2px; background: #f97316; }
+.arrondi-resultat { background: #fef08a; color: #713f12; padding: 1px 8px; border-radius: 8px; }
+
+/* DROITE GRADUÉE (dessin SVG) */
+.droite-svg { width: 100%; display: block; margin: 8px 0; }
+.droite-axe { stroke: var(--fonce); stroke-width: 2.5; }
+.droite-fleche { fill: var(--fonce); }
+.droite-grande { stroke: var(--fonce); stroke-width: 2.5; }
+.droite-petite { stroke: var(--fonce); stroke-width: 1.2; }
+.droite-nombre { font: 800 15px Nunito, system-ui, sans-serif; fill: var(--fonce); text-anchor: middle; }
+.droite-accolade { fill: none; stroke: #6366f1; stroke-width: 1.8; }
+.droite-petit-texte { font: 800 13px Nunito, system-ui, sans-serif; fill: #6366f1; text-anchor: middle; }
+.droite-point { font-size: 20px; text-anchor: middle; animation: tombe .6s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes tombe { from { transform: translateY(-30px); opacity: 0; } }
+.droite-repere { stroke: #f97316; stroke-width: 3; }
+.droite-explication p { margin: 6px 0; }
+.pop { animation: pop .35s; }
+
+/* MULTIPLICATION POSÉE pas à pas : un vrai cahier à carreaux */
+.table-posee {
+  border-collapse: collapse; margin: 6px auto; font: 900 1.45rem/1 Nunito, system-ui, sans-serif;
+  background: #fff; background-image: linear-gradient(#e0f2fe 1px, transparent 1px), linear-gradient(90deg, #e0f2fe 1px, transparent 1px);
+  background-size: 36px 36px; border-radius: 10px; padding: 6px;
+}
+.table-posee td { width: 36px; height: 38px; text-align: center; color: var(--fonce); transition: background .2s; border-radius: 8px; }
+.table-posee .posee-retenues td { height: 20px; font-size: .75rem; color: #ea580c; vertical-align: bottom; }
+.table-posee .posee-retenues.r1 td { color: #7c3aed; }
+.table-posee .posee-retenues.addition td { color: #0284c7; }
+.table-posee .posee-trait td { height: 4px; padding: 0; border-top: 3px solid var(--fonce); }
+.table-posee .posee-total td { color: #be185d; }
+.table-posee td.vise { background: #fef9c3; }
+.table-posee td.nouveau { color: #16a34a; animation: pop .4s; }
+.posee-texte { min-height: 3em; margin: 10px 0 4px; font-weight: 700; }
+.posee-num { display: inline-block; font-size: .75rem; font-weight: 900; color: #fff; background: var(--fonce); border-radius: 99px; padding: 1px 8px; }
+.posee-boutons { display: flex; flex-wrap: wrap; gap: 8px; }
+.posee-boutons .btn-visuel { margin-top: 0; }
+.posee-boutons .btn-visuel:disabled { opacity: .45; }
+.btn-visuel.secondaire { background: #fff; color: var(--fonce); border: 2px solid var(--clair); box-shadow: none; }
+
 /* ---------- Date d'ajout d'une leçon (discrète) ---------- */
 .date-ajout { color: var(--doux); font-size: .72rem; opacity: .8; }
 .tete-lecon .date-ajout { display: block; margin-top: 2px; }

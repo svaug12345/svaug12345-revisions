@@ -80,7 +80,7 @@ Tous acceptent `"titre"` et `"legende"`, et leurs textes acceptent le **gras** e
 | `cartes` | Grille de cartes avec emoji | `{"visuel":"cartes","elements":[{"emoji":"🌡️","titre":"…","texte":"…"}]}` |
 | `tuiles` | Petites tuiles (résultats, mots pièges) | `{"visuel":"tuiles","elements":["7 × 1 = **7**"]}` |
 | `conjugaison` | Colonnes de conjugaison, terminaisons en **gras** qui s'allument | `{"visuel":"conjugaison","colonnes":[{"titre":"…","formes":["je chant**ai**"]}]}` |
-| `multiplication` | Table en rangées de points, à manipuler | `{"visuel":"multiplication","table":7}` |
+| `multiplication` | Table en rangées de points (ou d'emojis avec `"emoji"`), à manipuler | `{"visuel":"multiplication","table":11,"emoji":"🧍"}` |
 | `frise` | Frise chronologique | `{"visuel":"frise","elements":[{"date":"1939","emoji":"⚔️","titre":"…","texte":"…"}]}` |
 | `plans` | Imparfait (bande) / passé simple (éclairs ⚡) | `{"visuel":"plans","exemples":[{"phrase":"…","bande":"…","evenements":["…"]}]}` |
 | `decision` | « Dans quel cas ? » : on touche un cas, la règle s'affiche | `{"visuel":"decision","question":"…","choix":[{"si":"…","alors":"…","exemple":"…"}]}` |
@@ -95,6 +95,9 @@ Tous acceptent `"titre"` et `"legende"`, et leurs textes acceptent le **gras** e
 | `flottaison` | Objets qui flottent ou coulent selon leur densité | `{"visuel":"flottaison","objets":[{"nom":"Chêne","emoji":"🪵","densite":0.7}]}` |
 | `comparaison` | Deux milieux côte à côte avec des jauges | `{"visuel":"comparaison","cotes":[{"titre":"…","mesures":[{"label":"…","valeur":20,"max":35,"unite":"°C"}]}]}` |
 | `liens` | Relations (alimentation, support…) avec flèches | `{"visuel":"liens","types":{…},"liens":[{"de":"…","vers":"…","type":"…","texte":"…"}]}` |
+| `arrondi` | Arrondir et encadrer : le ballon ⚽ roule vers le but (nombre rond) le plus proche ; l'enfant peut taper son nombre | `{"visuel":"arrondi","exemples":["658 741","1 250"],"rangs":["dizaine","centaine","millier"]}` |
+| `droite` | Droite graduée : on touche un objet, il tombe à sa place et on explique la lecture | `{"visuel":"droite","debut":500000,"fin":800000,"grande":100000,"petites":10,"points":[{"valeur":530000,"emoji":"⚽","nom":"Le ballon"}]}` |
+| `posee` | Multiplication posée pas à pas (ordre de grandeur, retenues, 0 de décalage, addition) | `{"visuel":"posee","a":579,"b":64}` |
 
 Le code de chaque visuel est dans `visuels.js` (une fonction par visuel, bien commentée).
 
