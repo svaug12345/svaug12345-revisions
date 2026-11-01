@@ -54,8 +54,8 @@ jobs:
   android:
     runs-on: ubuntu-latest
     env:
-      # Par défaut (push) : piste « internal », publiée directement
-      PISTE: ${{ inputs.piste || 'internal' }}
+      # Lancement à la main : la piste choisie ; sinon (push) celle de fastlane/publication.json
+      PISTE_CHOISIE: ${{ inputs.piste }}
       STATUT: ${{ inputs.statut || 'completed' }}
     steps:
       - name: Récupérer le code
@@ -70,9 +70,12 @@ jobs:
       - name: Préparer Gradle (avec cache, pour aller plus vite la prochaine fois)
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Calculer les numéros de version
+      - name: Calculer les numéros de version (et la piste)
         id: version
         run: |
+          # Piste : celle choisie à la main, sinon celle du fichier de réglages, sinon « internal »
+          PISTE="${PISTE_CHOISIE:-$(jq -r '.piste // "internal"' fastlane/publication.json 2>/dev/null || echo internal)}"
+          echo "PISTE=$PISTE" >> "$GITHUB_ENV"
           # versionName = le numéro de version.js (ex. 1.6.1)
           NOM=$(grep -oP "VERSION = '\K[^']+" version.js)
           # versionCode = un entier qui augmente toujours : 100 + numéro d'exécution du robot
@@ -148,6 +151,9 @@ jobs:
             --metadata_path fastlane/metadata/android \
             --skip_upload_apk true
           echo "envoye=oui" >> "$GITHUB_OUTPUT"
+          # Inscrire les groupes de testeurs (fastlane/publication.json) — script commenté dans outils/
+          pip install --quiet google-api-python-client google-auth
+          python3 outils/testeurs_play.py "$RUNNER_TEMP/play.json" fastlane/publication.json
 
       # Toujours exécutée, même en cas d'échec : écrit le compte rendu sur la branche statut-play
       - name: Écrire le compte rendu (branche statut-play)

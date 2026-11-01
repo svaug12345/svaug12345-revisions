@@ -1,0 +1,10 @@
+{
+  "_explication": "Réglages de publication lus par le robot (.github/workflows/play-store.yml). piste = où va chaque nouvelle version envoyée par un push : internal (test interne), alpha (test fermé), production. testeurs = pour chaque piste, les groupes Google (ou adresses Gmail) autorisés à installer l'appli.",
+  "piste": "alpha",
+  "testeurs": {
+    "alpha": [
+      "testers-community@googlegroups.com",
+      "seb-test-app@googlegroups.com"
+    ]
+  }
+}

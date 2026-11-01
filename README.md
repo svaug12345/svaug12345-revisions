@@ -204,3 +204,5 @@ L'appli du Play Store est une **TWA** (Trusted Web Activity) : une fenêtre Chro
 
 - Identifiant : `io.github.svaug12345.revisions`
 - Confidentialité : `https://baiji.fr/svaug12345-revisions/confidentialite.html`
+
+**Piste et testeurs** : `fastlane/publication.json` dit où va chaque nouvelle version (`internal`, `alpha` = test fermé, `production`) et quels groupes Google peuvent tester. Le robot inscrit ces groupes lui-même (`outils/testeurs_play.py`).
