@@ -1,0 +1,26 @@
+/*
+ * Projet Android « Mes Révisions » — fichier de construction global.
+ * Basé sur le modèle officiel Bubblewrap (Google, licence Apache 2.0) : c'est le même outil
+ * que PWABuilder utilise. Seule différence : jcenter (fermé) est remplacé par mavenCentral.
+ */
+buildscript {
+    repositories {
+        google()        // les bibliothèques Android de Google
+        mavenCentral()  // les autres bibliothèques
+    }
+    dependencies {
+        // Le « plugin Android » de Gradle : il sait transformer ce projet en fichier .aab
+        classpath 'com.android.tools.build:gradle:8.9.1'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

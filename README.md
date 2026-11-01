@@ -183,3 +183,24 @@ la ligne médiane de chaque trait (`#lancement` dans `index.html`, `.sv-pinceau`
 ## Étoiles
 
 ⭐⭐⭐ ≥ 90 % · ⭐⭐ ≥ 70 % · ⭐ ≥ 40 %. Le meilleur score est gardé dans le téléphone (chaque téléphone a ses propres scores).
+
+## 🤖 Appli Android (Play Store)
+
+L'appli du Play Store est une **TWA** (Trusted Web Activity) : une fenêtre Chrome plein écran, sans barre d'adresse, qui ouvre `https://baiji.fr/svaug12345-revisions/`. Elle ne contient ni les leçons ni le code du jeu.
+
+| Je veux…                                   | Ce qu'il faut faire                                     | Passage par Google ? |
+|--------------------------------------------|---------------------------------------------------------|----------------------|
+| ajouter / corriger une leçon, un son, le code | `git push` comme d'habitude                            | ❌ non, visible tout de suite |
+| changer le texte ou les captures de la fiche Play | modifier `fastlane/metadata/android/fr-FR/` puis push | ✅ par le robot      |
+| changer le nom, l'icône, les couleurs de l'appli | modifier `android/` puis push                       | ✅ par le robot      |
+
+**Le robot** (`.github/workflows/play-store.yml`) construit le `.aab` signé, le dépose dans « Releases » et, si le secret `PLAY_SERVICE_ACCOUNT_JSON` existe, l'envoie sur le Play Store (piste `internal` par défaut, ou au choix depuis Actions > Play Store > Run workflow). Son compte rendu est écrit dans `statut.json` sur la branche `statut-play`.
+
+**Secrets du dépôt** (Settings > Secrets and variables > Actions) :
+- `ANDROID_KEYSTORE_BASE64` / `ANDROID_KEYSTORE_PASSWORD` : la clé d'envoi (alias `revisions`). **À garder précieusement hors du dépôt.**
+- `PLAY_SERVICE_ACCOUNT_JSON` : la clé du compte de service Google autorisé à publier.
+
+**Lien appli ↔ site** : `https://baiji.fr/.well-known/assetlinks.json` (dépôt `svaug12345.github.io`) doit contenir les empreintes SHA-256 de la clé d'envoi ET de la clé de signature Google Play (Play Console > Intégrité de l'appli). Sinon l'appli affiche une barre d'adresse.
+
+- Identifiant : `io.github.svaug12345.revisions`
+- Confidentialité : `https://baiji.fr/svaug12345-revisions/confidentialite.html`

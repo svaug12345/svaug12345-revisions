@@ -1,0 +1,10 @@
+# Fichiers fabriqués par Gradle (recréés à chaque construction)
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+# ⚠️ Jamais de clé de signature ni de clé Google dans ce dépôt PUBLIC
+*.jks
+*.keystore
+*.jks.base64
+play*.json

@@ -1,0 +1,126 @@
+/*
+ * =============================================================
+ *  « MES RÉVISIONS » POUR ANDROID — la coquille de l'appli
+ * -------------------------------------------------------------
+ *  L'appli Android ne contient PAS les leçons ni le code du jeu :
+ *  c'est une « Trusted Web Activity » (TWA), une fenêtre Chrome en
+ *  plein écran, sans barre d'adresse, qui ouvre le site
+ *  https://baiji.fr/svaug12345-revisions/
+ *
+ *  Conséquence pratique :
+ *   - une nouvelle leçon ou une correction du site = un simple
+ *     « git push », visible tout de suite dans l'appli du Play Store,
+ *     SANS nouvelle version Android ni examen de Google ;
+ *   - on ne reconstruit cette coquille que pour changer le nom,
+ *     l'icône, les couleurs… (le robot GitHub s'en charge, voir
+ *     .github/workflows/play-store.yml).
+ *
+ *  Pour que Chrome accepte d'enlever la barre d'adresse, le site doit
+ *  « reconnaître » l'appli : c'est le fichier
+ *  https://baiji.fr/.well-known/assetlinks.json (dépôt svaug12345.github.io)
+ *  qui contient l'empreinte de la clé de signature.
+ *
+ *  Modèle de départ : Bubblewrap (Google, licence Apache 2.0).
+ * =============================================================
+ */
+
+plugins {
+    id 'com.android.application'
+}
+
+// Tous les réglages de l'appli au même endroit
+def twaManifest = [
+    applicationId: 'io.github.svaug12345.revisions', // identifiant unique sur le Play Store (ne JAMAIS le changer)
+    hostName: 'baiji.fr',                    // le domaine ouvert dans l'appli
+    launchUrl: '/svaug12345-revisions/',     // la page de départ, sur ce domaine
+    name: 'Mes Révisions',                   // le nom de l'appli
+    launcherName: 'Révisions',               // le nom (court) sous l'icône du téléphone
+    themeColor: '#0F766E',                   // couleur de la barre d'état (en haut)
+    themeColorDark: '#0F766E',
+    navigationColor: '#ECFEFF',              // couleur de la barre de navigation (en bas)
+    navigationColorDark: '#0F766E',
+    navigationDividerColor: '#00000000',
+    navigationDividerColorDark: '#00000000',
+    backgroundColor: '#ECFEFF',              // fond de l'écran de démarrage
+    enableNotifications: false,              // l'appli n'envoie pas de notifications
+    splashScreenFadeOutDuration: 300,        // fondu de l'écran de démarrage (millisecondes)
+    generatorApp: 'bubblewrap-cli',
+    fallbackType: 'customtabs',              // si le téléphone n'a pas Chrome à jour : onglet Chrome classique
+    enableSiteSettingsShortcut: 'true',
+    orientation: 'default',                  // portrait ou paysage, comme le site
+]
+
+/* Numéro de version : fourni par le robot GitHub.
+   - versionCode : un nombre entier qui DOIT augmenter à chaque envoi sur le Play Store
+     (le robot utilise son numéro d'exécution, donc ça augmente tout seul) ;
+   - versionName : le texte affiché aux utilisateurs (le numéro de version.js). */
+def numeroVersion = (System.getenv('VERSION_CODE') ?: '1') as Integer
+def nomVersion = System.getenv('VERSION_NAME') ?: '1.0'
+
+android {
+    compileSdkVersion 36
+    namespace twaManifest.applicationId
+    defaultConfig {
+        applicationId twaManifest.applicationId
+        minSdkVersion 21              // Android 5.0 et plus
+        targetSdkVersion 36           // exigence du Play Store : viser une version récente d'Android
+        versionCode numeroVersion
+        versionName nomVersion
+
+        // Les « resValue » créent des textes / couleurs utilisables dans AndroidManifest.xml
+        resValue "string", "appName", twaManifest.name
+        resValue "string", "launcherName", twaManifest.launcherName
+        def launchUrl = "https://" + twaManifest.hostName + twaManifest.launchUrl
+        resValue "string", "launchUrl", launchUrl
+        resValue "string", "hostName", twaManifest.hostName
+        resValue "color", "colorPrimary", twaManifest.themeColor
+        resValue "color", "colorPrimaryDark", twaManifest.themeColorDark
+        resValue "color", "navigationColor", twaManifest.navigationColor
+        resValue "color", "navigationColorDark", twaManifest.navigationColorDark
+        resValue "color", "navigationDividerColor", twaManifest.navigationDividerColor
+        resValue "color", "navigationDividerColorDark", twaManifest.navigationDividerColorDark
+        resValue "color", "backgroundColor", twaManifest.backgroundColor
+        resValue "string", "providerAuthority", twaManifest.applicationId + '.fileprovider'
+        resValue "bool", "enableNotification", twaManifest.enableNotifications.toString()
+        resValue "integer", "splashScreenFadeOutDuration", twaManifest.splashScreenFadeOutDuration.toString()
+        resValue "string", "generatorApp", twaManifest.generatorApp
+        resValue "string", "fallbackType", twaManifest.fallbackType
+        resValue "bool", "enableSiteSettingsShortcut", twaManifest.enableSiteSettingsShortcut
+        resValue "string", "orientation", twaManifest.orientation
+    }
+
+    /* Signature : le Play Store refuse une appli non signée.
+       La clé (fichier .jks) n'est PAS dans le dépôt (il est public) : le robot GitHub
+       la reconstitue à partir des « secrets » du dépôt et donne son chemin et son mot de passe
+       par des variables d'environnement. */
+    signingConfigs {
+        release {
+            if (System.getenv('CLE_FICHIER')) {
+                storeFile file(System.getenv('CLE_FICHIER'))
+                storePassword System.getenv('CLE_MOT_DE_PASSE')
+                keyAlias 'revisions'
+                keyPassword System.getenv('CLE_MOT_DE_PASSE')
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true   // R8 allège l'appli en retirant le code inutilisé
+            if (System.getenv('CLE_FICHIER')) signingConfig signingConfigs.release
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    lint {
+        checkReleaseBuilds false
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    // La bibliothèque de Google qui fait tout le travail de la TWA
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.7.4'
+}

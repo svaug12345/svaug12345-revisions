@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Lien appli ↔ site : l'appli déclare faire confiance à https://baiji.fr.
+         Dans l'autre sens, le site déclare faire confiance à l'appli dans
+         https://baiji.fr/.well-known/assetlinks.json. Les deux sont nécessaires
+         pour que Chrome cache la barre d'adresse. -->
+    <string name="assetStatements">
+        [{
+            \"relation\": [\"delegate_permission/common.handle_all_urls\"],
+            \"target\": {
+                \"namespace\": \"web\",
+                \"site\": \"https://baiji.fr\"
+            }
+        }]
+    </string>
+</resources>
