@@ -5,8 +5,8 @@
     Aucune permission demandée : le micro (bouton 🎤 des leçons de langues) est géré par Chrome,
     qui demande lui-même l'autorisation la première fois.
 -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.github.svaug12345.revisions">
+<!-- L'identifiant (io.github.svaug12345.revisions) est donné par « namespace » dans app/build.gradle -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:name="Application"

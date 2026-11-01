@@ -62,7 +62,7 @@ android {
     namespace twaManifest.applicationId
     defaultConfig {
         applicationId twaManifest.applicationId
-        minSdkVersion 21              // Android 5.0 et plus
+        minSdkVersion 24              // Android 7.0 et plus (minimum exigé par androidbrowserhelper 2.7)
         targetSdkVersion 36           // exigence du Play Store : viser une version récente d'Android
         versionCode numeroVersion
         versionName nomVersion
