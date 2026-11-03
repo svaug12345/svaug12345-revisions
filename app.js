@@ -747,7 +747,7 @@ function afficherLecons() {
     afficher(el('div', { class: 'vide' },
       el('div', { class: 'gros-emoji' }, '📭'),
       el('p', {}, archivees.length ? 'Toutes tes leçons sont archivées 📦' : 'Pas encore de leçon ici. Demande à Papa d’en ajouter 😉')),
-      blocArchives);
+      boutonEnvoi(), blocArchives);
     return;
   }
 
@@ -755,7 +755,154 @@ function afficherLecons() {
     el('section', { class: 'groupe' },
       el('h2', {}, matiere),
       cartesDe(liste),
-    )), blocArchives);
+    )), boutonEnvoi(), blocArchives);
+}
+
+/* ---- ENVOYER UNE NOUVELLE LEÇON (photos) ----
+   Le bouton « 📸 Envoyer une leçon » ouvre un écran où l'on prend la leçon en photo
+   (une photo par page), puis on l'envoie à la « boîte aux lettres » : un petit service
+   en ligne (Cloudflare Worker, dossier worker/) qui range les photos dans un dépôt GitHub
+   PRIVÉ. Claude en fait ensuite une leçon animée, que Papa valide avant sa mise en ligne.
+   - L'adresse du service est dans lecons.json : "envoi": { "url": "https://…workers.dev" }.
+     Sans adresse, le bouton n'apparaît pas.
+   - Un « code famille » est demandé au premier envoi, puis gardé dans le téléphone. */
+
+const CLE_CODE_FAMILLE = 'revisions-code-famille';
+const MATIERES_ENVOI = ['Maths', 'Français', 'Anglais', 'Histoire-Géo', 'Sciences', 'Autre'];
+
+// Le bouton en bas de la liste des leçons (null si l'envoi n'est pas configuré)
+function boutonEnvoi() {
+  if (!etat.donnees.envoi?.url) return null;
+  return el('button', { class: 'btn-envoi', onclick: () => aller(afficherEnvoi) },
+    el('span', { class: 'emoji' }, '📸'),
+    el('span', {}, el('b', {}, 'Envoyer une nouvelle leçon'), el('small', {}, 'Prends-la en photo, on en fait une leçon animée ✨')));
+}
+
+/**
+ * Réduit une photo avant l'envoi : 12 Mpx (4 Mo) -> environ 1800 px de large (≈ 300 Ko),
+ * largement assez pour lire un cahier, et beaucoup plus rapide à envoyer en 4G.
+ * createImageBitmap(…, { imageOrientation: 'from-image' }) remet la photo à l'endroit
+ * (les téléphones notent la rotation à part, dans les informations « EXIF » du fichier).
+ * Renvoie une « data URL » : le texte data:image/jpeg;base64,… de l'image.
+ */
+async function reduirePhoto(fichier, cote = 1800, qualite = 0.82) {
+  const image = await createImageBitmap(fichier, { imageOrientation: 'from-image' });
+  const echelle = Math.min(1, cote / Math.max(image.width, image.height));
+  const toile = el('canvas');
+  toile.width = Math.round(image.width * echelle);
+  toile.height = Math.round(image.height * echelle);
+  toile.getContext('2d').drawImage(image, 0, 0, toile.width, toile.height);
+  image.close();
+  const url = toile.toDataURL('image/jpeg', qualite);
+  // Encore trop lourde (photo très détaillée) ? On recommence un cran plus petit.
+  return url.length > 2_500_000 && cote > 1200 ? reduirePhoto(fichier, cote - 400, 0.75) : url;
+}
+
+// --- L'écran « Nouvelle leçon » ---
+function afficherEnvoi() {
+  const enfant = etat.enfant;
+  entete('Nouvelle leçon');
+  // L'état de l'écran (perdu si on quitte l'écran : c'est voulu)
+  const choix = { matiere: null, photos: [] };   // photos = data URLs déjà réduites
+
+  // Deux champs « fichier » cachés : l'un ouvre directement l'appareil photo (capture),
+  // l'autre la galerie (plusieurs photos à la fois). Les boutons visibles les déclenchent.
+  const champCamera = el('input', { type: 'file', accept: 'image/*', capture: 'environment', hidden: '' });
+  const champGalerie = el('input', { type: 'file', accept: 'image/*', multiple: '', hidden: '' });
+  const vignettes = el('div', { class: 'vignettes' });
+  const note = el('textarea', { class: 'note-envoi', rows: '2', maxlength: '500',
+    placeholder: 'Un petit mot ? (pour quand, ce qui est difficile…)' });
+  const codeSauve = (() => { try { return localStorage.getItem(CLE_CODE_FAMILLE) || ''; } catch { return ''; } })();
+  const champCode = el('input', { class: 'code-envoi', type: 'password', autocomplete: 'off', placeholder: 'Code famille' });
+  const blocCode = el('div', { class: 'bloc-code' },
+    el('label', {}, '🔑 Code famille (demandé une seule fois)'), champCode);
+  blocCode.hidden = !!codeSauve;
+  const message = el('p', { class: 'message-envoi' });
+  const btnEnvoyer = el('button', { class: 'btn-principal', onclick: envoyer }, '📤 Envoyer');
+
+  // Puces de matière : une seule choisie à la fois
+  const puces = el('div', { class: 'puces-matiere' }, MATIERES_ENVOI.map((m) =>
+    el('button', { class: 'puce', onclick: (e) => {
+      choix.matiere = m;
+      puces.querySelectorAll('.puce').forEach((p) => p.classList.toggle('choisie', p === e.currentTarget));
+    } }, m)));
+
+  function majEcran() {
+    vignettes.replaceChildren(...choix.photos.map((url, i) => el('div', { class: 'vignette' },
+      el('img', { src: url, alt: `Page ${i + 1}` }),
+      el('span', { class: 'num' }, i + 1),
+      el('button', { class: 'retirer', 'aria-label': 'Retirer cette photo',
+        onclick: () => { choix.photos.splice(i, 1); majEcran(); } }, '✖'))));
+    btnEnvoyer.disabled = !choix.photos.length;
+    btnEnvoyer.textContent = choix.photos.length
+      ? `📤 Envoyer (${pluriel(choix.photos.length, 'photo')})` : '📤 Envoyer';
+  }
+
+  async function ajouter(e) {
+    const fichiers = [...e.target.files].slice(0, 8 - choix.photos.length);
+    e.target.value = '';                        // pour pouvoir reprendre la même photo
+    if (!fichiers.length) return;
+    message.textContent = '⏳ Préparation des photos…';
+    for (const f of fichiers) {
+      try { choix.photos.push(await reduirePhoto(f)); } catch { toast('Cette image n’a pas pu être lue'); }
+    }
+    message.textContent = choix.photos.length >= 8 ? 'C’est le maximum : 8 photos par envoi.' : '';
+    majEcran();
+  }
+  champCamera.addEventListener('change', ajouter);
+  champGalerie.addEventListener('change', ajouter);
+
+  async function envoyer() {
+    const code = champCode.value.trim() || codeSauve;
+    if (!code) { blocCode.hidden = false; champCode.focus(); message.textContent = 'Tape le code famille 🔑'; return; }
+    if (!navigator.onLine) { message.textContent = '📶 Pas d’internet : réessaie quand tu seras connecté.'; return; }
+    btnEnvoyer.disabled = true;
+    btnEnvoyer.textContent = '⏳ Envoi en cours…';
+    message.textContent = '';
+    try {
+      const rep = await fetch(etat.donnees.envoi.url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, enfant: enfant.id, matiere: choix.matiere || 'Autre',
+          note: note.value.trim(), photos: choix.photos, version: VERSION }),
+      });
+      const r = await rep.json().catch(() => ({}));
+      if (r.erreur === 'code') {               // mauvais code : on l'oublie et on le redemande
+        try { localStorage.removeItem(CLE_CODE_FAMILLE); } catch { /* rien */ }
+        blocCode.hidden = false; champCode.value = ''; champCode.focus();
+        throw new Error('Ce code famille n’est pas le bon 🔑');
+      }
+      if (!rep.ok || !r.ok) throw new Error(r.message || `Envoi refusé (erreur ${rep.status})`);
+      try { localStorage.setItem(CLE_CODE_FAMILLE, code); } catch { /* navigation privée : tant pis */ }
+      son('fin'); confettis();
+      remplacerEcran(afficherEnvoiReussi, choix.photos.length);
+    } catch (err) {
+      message.textContent = err.message.includes('Failed to fetch') ? '📶 Envoi impossible : vérifie internet et réessaie.' : err.message;
+      majEcran();
+    }
+  }
+
+  afficher(el('div', { class: 'page-envoi' },
+    el('p', { class: 'intro' }, `Prends la leçon de ${enfant.nom} en photo : une photo par page, bien à plat et lisible. On en fera une leçon animée ✨`),
+    el('h3', {}, '1. La matière'), puces,
+    el('h3', {}, '2. Les photos'),
+    el('div', { class: 'boutons-photo' },
+      el('button', { class: 'btn-secondaire', onclick: () => champCamera.click() }, '📷 Prendre une photo'),
+      el('button', { class: 'btn-secondaire', onclick: () => champGalerie.click() }, '🖼️ Galerie')),
+    vignettes, champCamera, champGalerie,
+    el('h3', {}, '3. Un petit mot (facultatif)'), note,
+    blocCode, message, btnEnvoyer));
+  majEcran();
+}
+
+// --- Écran de confirmation ---
+function afficherEnvoiReussi(nb) {
+  entete('C’est envoyé !');
+  afficher(el('div', { class: 'vide envoi-reussi' },
+    el('div', { class: 'gros-emoji' }, '📬'),
+    el('h2', {}, 'Leçon bien reçue !'),
+    el('p', {}, `${pluriel(nb, 'photo')} envoyée${nb > 1 ? 's' : ''}. La leçon animée arrivera bientôt dans l’appli ✨`),
+    el('button', { class: 'btn-principal', onclick: () => history.back() }, '← Retour à mes leçons')));
 }
 
 /* ---- PARCOURS : une grosse leçon découpée en petits modules ----

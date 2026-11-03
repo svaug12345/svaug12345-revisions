@@ -1,0 +1,16 @@
+# Réglages du Cloudflare Worker « boîte aux lettres » (voir envoi.js).
+# Déployé automatiquement par .github/workflows/worker.yml (pas besoin d'installer quoi que ce soit).
+name = "mes-revisions-envoi"          # -> https://mes-revisions-envoi.<ton-sous-domaine>.workers.dev
+main = "envoi.js"
+compatibility_date = "2025-06-01"
+workers_dev = true                    # adresse gratuite en *.workers.dev
+
+[vars]
+# Dépôt PRIVÉ où arrivent les photos (le dépôt de l'appli est public : jamais de photos dedans)
+DEPOT = "svaug12345/revisions-demandes"
+BRANCHE = "main"
+# Sites autorisés à appeler la boîte aux lettres (l'appli Android affiche baiji.fr)
+ORIGINES = "https://baiji.fr,http://localhost:8765"
+
+# Les secrets DEMANDES_TOKEN et CODE_FAMILLE ne sont PAS ici : le robot les pose
+# à partir des secrets du dépôt GitHub (Settings > Secrets and variables > Actions).

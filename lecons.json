@@ -1,6 +1,6 @@
 {
-  "maj": "01/11/2026",
-  "versionApp": "1.12.3",
+  "maj": "03/11/2026",
+  "versionApp": "1.13.0",
 
   "enfants": [
     {"id": "tom", "nom": "Tom", "avatar": "avatars/tom.svg", "couleur": "#22c55e", "age": 6},
@@ -13,6 +13,11 @@
      "coupDePouce": true, "questionsParManche": 6, "lectureAudio": true, "lectureAuto": true,
      "conseilsAlex": "Ava est en CP : elle commence tout juste à lire. Parle très simplement, avec des phrases très courtes et un ton doux et joyeux. Ne lui demande pas de lire de longs mots : fais-la écouter, répéter, compter sur ses doigts. Joue avec les sons (« Est-ce que tu entends a dans chat ? »). Une seule question à la fois, et félicite chaque réussite. Elle adore les chats : prends tes exemples avec des chats. Son grand frère s'appelle Titouan ; ses cousins sont Nanon, Gaby et Tom."}
   ],
+
+  "envoi": {
+    "_explication": "Bouton « 📸 Envoyer une nouvelle leçon » : les photos partent vers la boîte aux lettres (Cloudflare Worker, dossier worker/), qui les range dans le dépôt PRIVÉ svaug12345/revisions-demandes. Tant que \"url\" est vide, le bouton n'apparaît pas.",
+    "url": ""
+  },
 
   "assistant": {
     "_explication": "Alex, le coach vocal (agent ElevenLabs). Il reçoit la fiche et le quiz de la leçon ouverte. Il n'apparaît que sur les leçons qui ont \"assistant\": true.",

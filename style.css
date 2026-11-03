@@ -1104,3 +1104,42 @@ body.lecture-facile .carte-info b { letter-spacing: 0; overflow-wrap: anywhere; 
 @media (prefers-reduced-motion: reduce) {
   .alex .alex-icone { animation: none !important; }
 }
+
+/* ---------- Envoyer une nouvelle leçon (photos) ---------- */
+/* Bouton en bas de la liste des leçons : pointillés = « ajoute quelque chose ici » */
+.btn-envoi {
+  display: flex; align-items: center; gap: 12px; width: 100%; margin-top: 22px; padding: 14px;
+  border: 2px dashed var(--principal); border-radius: var(--rayon); background: color-mix(in srgb, var(--clair) 45%, transparent);
+  color: var(--fonce); text-align: left; font: inherit;
+}
+.btn-envoi:active { transform: translateY(2px); }
+.btn-envoi .emoji { font-size: 2rem; }
+.btn-envoi span:last-child { display: flex; flex-direction: column; }
+.btn-envoi small { color: var(--doux); }
+.page-envoi { max-width: 640px; margin: 0 auto; }
+.page-envoi h3 { margin: 20px 4px 8px; font-size: 1rem; color: var(--fonce); }
+.puces-matiere { display: flex; flex-wrap: wrap; gap: 8px; }
+.puces-matiere .puce {
+  font: inherit; font-weight: 800; padding: 8px 14px; border-radius: 99px; cursor: pointer;
+  border: 2px solid var(--clair); background: var(--carte); color: var(--texte);
+}
+.puces-matiere .puce.choisie { background: var(--fonce); border-color: var(--fonce); color: #fff; }
+.boutons-photo { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }
+.boutons-photo .btn-secondaire { margin-top: 0; font-size: 1rem; }
+/* Vignettes des photos prises, numérotées dans l'ordre des pages */
+.vignettes { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; margin-top: 12px; }
+.vignette { position: relative; aspect-ratio: 3 / 4; border-radius: 12px; overflow: hidden; box-shadow: var(--ombre); background: #000; }
+.vignette img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.vignette .num { position: absolute; left: 6px; top: 6px; background: var(--fonce); color: #fff; font-weight: 900;
+  font-size: .8rem; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; }
+.vignette .retirer { position: absolute; right: 4px; top: 4px; border: 0; border-radius: 50%; width: 28px; height: 28px;
+  background: rgba(0, 0, 0, .55); color: #fff; font-size: .85rem; cursor: pointer; }
+.note-envoi, .code-envoi {
+  width: 100%; box-sizing: border-box; font: inherit; padding: 12px; border-radius: 14px;
+  border: 2px solid var(--clair); background: var(--carte); color: var(--texte); resize: vertical;
+}
+.note-envoi:focus, .code-envoi:focus { outline: none; border-color: var(--principal); }
+.bloc-code { margin-top: 16px; }
+.bloc-code label { display: block; font-weight: 800; margin: 0 4px 6px; color: var(--fonce); }
+.message-envoi { min-height: 1.4em; margin: 12px 4px 0; font-weight: 700; color: var(--fonce); text-align: center; }
+.envoi-reussi h2 { color: var(--fonce); margin: 6px 0; }

@@ -264,3 +264,33 @@ Options d'un enfant dans `lecons.json` :
 - `"orthographeSouple": true` : une réponse tapée avec une petite faute est acceptée (on vérifie la compréhension, pas l'orthographe).
 
 ⚠️ Ce fichier est public : on y décrit des **aménagements**, jamais un diagnostic.
+
+## 📸 Envoyer une leçon en photo (depuis la v1.13.0)
+En bas de la liste des leçons d'un enfant, le bouton **« 📸 Envoyer une nouvelle leçon »** permet de
+prendre la leçon en photo (une photo par page, jusqu'à 8), de choisir la matière et d'ajouter un petit mot.
+Les photos sont réduites dans le téléphone (≈ 400 Ko chacune) puis envoyées.
+
+**Le trajet d'une photo :**
+1. l'appli envoie les photos à la **boîte aux lettres** : un Cloudflare Worker (`worker/envoi.js`), gratuit ;
+2. le Worker vérifie le **code famille** puis range la demande dans le dépôt **privé**
+   `svaug12345/revisions-demandes`, en un seul commit :
+   `demandes/<enfant>/<date-heure>/demande.json` + `photo-1.jpg`, `photo-2.jpg`…
+   (jamais dans ce dépôt-ci, qui est public : les photos y seraient visibles par tous) ;
+3. Claude lit les demandes « à traiter », fabrique les leçons dans `lecons.json` (même style que les autres,
+   réglages de l'enfant respectés), augmente la version et propose une **pull request** ;
+4. Papa la valide d'un clic (appli GitHub) : la leçon est en ligne une minute plus tard.
+   La demande passe alors au statut « traitée » et ses photos sont effacées.
+
+**Réglages :**
+- `lecons.json` → `"envoi": { "url": "https://mes-revisions-envoi.<sous-domaine>.workers.dev" }`
+  (adresse vide = bouton caché) ;
+- le Worker est mis en ligne par le robot `.github/workflows/worker.yml` (onglet Actions > « Boîte aux lettres ») ;
+  il a besoin de 4 secrets : `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `DEMANDES_TOKEN`, `CODE_FAMILLE` ;
+- compte rendu du robot : `statut.json` sur la branche `statut-worker` ;
+- pour changer le code famille : modifier le secret `CODE_FAMILLE` puis relancer le robot
+  (les téléphones redemanderont le nouveau code au prochain envoi).
+
+**Pour Claude — « traite les demandes » :** ouvrir `svaug12345/revisions-demandes`, prendre chaque
+`demande.json` au statut « à traiter », lire les photos, créer les leçons (modules courts, `"ajoutee"` = date
+d'envoi, réglages de l'enfant : coup de pouce, lecture facile, passions…), puis dans le dépôt privé passer
+le statut à « traitée » avec les `id` des leçons créées et supprimer les photos.

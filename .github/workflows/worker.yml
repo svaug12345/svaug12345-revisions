@@ -1,0 +1,105 @@
+# =====================================================================
+#  ROBOT « BOÎTE AUX LETTRES » — met en ligne le Cloudflare Worker
+#  qui reçoit les photos de leçons envoyées depuis l'appli (worker/).
+# ---------------------------------------------------------------------
+#  Quand se déclenche-t-il ?
+#   - à chaque push qui modifie worker/** ou ce fichier ;
+#   - à la demande : onglet « Actions » > « Boîte aux lettres » > « Run workflow ».
+#
+#  Secrets nécessaires (Réglages du dépôt > Secrets and variables > Actions) :
+#   - CLOUDFLARE_API_TOKEN  : jeton Cloudflare (modèle « Edit Cloudflare Workers »)
+#   - CLOUDFLARE_ACCOUNT_ID : identifiant du compte Cloudflare
+#   - DEMANDES_TOKEN        : jeton GitHub limité au dépôt privé revisions-demandes
+#                             (Contents : Read and write) — transmis au Worker
+#   - CODE_FAMILLE          : le code à taper une fois dans l'appli — transmis au Worker
+#
+#  Compte rendu : statut.json sur la branche « statut-worker » (adresse du Worker,
+#  résultat du test, fin du journal) — Claude le lit, car il n'a pas accès aux journaux.
+# =====================================================================
+name: Boîte aux lettres
+
+on:
+  push:
+    branches: [main]
+    paths: ['worker/**', '.github/workflows/worker.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write     # pour écrire la branche statut-worker
+
+jobs:
+  deployer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Vérifier que les 4 secrets sont là
+        id: verif
+        env:
+          A: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          B: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          C: ${{ secrets.DEMANDES_TOKEN }}
+          D: ${{ secrets.CODE_FAMILLE }}
+        run: |
+          MANQUANTS=""
+          [ -z "$A" ] && MANQUANTS="$MANQUANTS CLOUDFLARE_API_TOKEN"
+          [ -z "$B" ] && MANQUANTS="$MANQUANTS CLOUDFLARE_ACCOUNT_ID"
+          [ -z "$C" ] && MANQUANTS="$MANQUANTS DEMANDES_TOKEN"
+          [ -z "$D" ] && MANQUANTS="$MANQUANTS CODE_FAMILLE"
+          echo "manquants=$MANQUANTS" >> "$GITHUB_OUTPUT"
+          if [ -n "$MANQUANTS" ]; then echo "::error::Secrets manquants :$MANQUANTS"; exit 1; fi
+
+      # wrangler (l'outil officiel de Cloudflare) envoie le code ET pose les deux secrets du Worker
+      - name: Déployer le Worker
+        id: deploiement
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: worker
+          command: deploy
+          secrets: |
+            DEMANDES_TOKEN
+            CODE_FAMILLE
+        env:
+          DEMANDES_TOKEN: ${{ secrets.DEMANDES_TOKEN }}
+          CODE_FAMILLE: ${{ secrets.CODE_FAMILLE }}
+
+      # Petit test : le Worker répond-il ? Et le jeton GitHub voit-il bien le dépôt privé ?
+      - name: Tester
+        id: test
+        env:
+          URL: ${{ steps.deploiement.outputs.deployment-url }}
+          JETON: ${{ secrets.DEMANDES_TOKEN }}
+        run: |
+          sleep 5
+          echo "worker=$(curl -s "$URL" | head -c 200)" >> "$GITHUB_OUTPUT"
+          # 200 = le jeton voit le dépôt ; 404 = dépôt absent ou jeton sans accès
+          echo "depot=$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $JETON" \
+               https://api.github.com/repos/svaug12345/revisions-demandes)" >> "$GITHUB_OUTPUT"
+
+      - name: Écrire le compte rendu (branche statut-worker)
+        if: always()
+        env:
+          JOURNAL: ${{ steps.deploiement.outputs.command-output }}
+          ERREURS: ${{ steps.deploiement.outputs.command-stderr }}
+        run: |
+          jq -n \
+            --arg date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --arg resultat "${{ job.status }}" \
+            --arg secretsManquants "${{ steps.verif.outputs.manquants }}" \
+            --arg adresse "${{ steps.deploiement.outputs.deployment-url }}" \
+            --arg reponseWorker "${{ steps.test.outputs.worker }}" \
+            --arg accesDepotPrive "${{ steps.test.outputs.depot }}" \
+            --arg commit "${{ github.sha }}" \
+            --arg lien "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --arg journal "$(printf '%s\n%s' "$JOURNAL" "$ERREURS" | tail -n 40)" \
+            '$ARGS.named' > "$RUNNER_TEMP/statut.json"
+          cd "$RUNNER_TEMP"
+          git init -q statut && cd statut
+          git config user.name "robot-boite-aux-lettres"
+          git config user.email "actions@users.noreply.github.com"
+          cp ../statut.json .
+          git add statut.json && git commit -qm "Statut boîte aux lettres : ${{ job.status }}"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:statut-worker
