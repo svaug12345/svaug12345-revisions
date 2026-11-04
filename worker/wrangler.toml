@@ -1,4 +1,5 @@
 # Réglages du Cloudflare Worker « boîte aux lettres » (voir envoi.js).
+# Adresse : https://mes-revisions-envoi.sebastien-vaug.workers.dev (compte Cloudflare de Sébastien, 4 nov. 2026)
 # Déployé automatiquement par .github/workflows/worker.yml (pas besoin d'installer quoi que ce soit).
 name = "mes-revisions-envoi"          # -> https://mes-revisions-envoi.<ton-sous-domaine>.workers.dev
 main = "envoi.js"
