@@ -1,8 +1,8 @@
 /* =====================================================================
    « BOÎTE AUX LETTRES » DE MES RÉVISIONS — Cloudflare Worker
    ---------------------------------------------------------------------
-   Rôle : recevoir les photos de leçons envoyées depuis l'appli (bouton
-   « 📸 Envoyer une leçon ») et les ranger dans le dépôt GitHub PRIVÉ
+   Rôle : recevoir (1) les photos de leçons envoyées depuis l'appli (bouton
+   « 📸 Envoyer une leçon ») et (2) les remarques 💬 sur une leçon, et les ranger dans le dépôt GitHub PRIVÉ
    svaug12345/revisions-demandes, une demande = un dossier :
 
      demandes/titouan/2026-11-03-1842-a1b2/
@@ -61,6 +61,9 @@ export default {
     }
     // Identifiant d'enfant : lettres minuscules, chiffres, tirets (sert de nom de dossier)
     if (!/^[a-z0-9-]{1,30}$/.test(d.enfant || '')) return repondre({ ok: false, erreur: 'enfant' }, 400);
+
+    // --- 💬 Une REMARQUE sur une leçon (pas de photo) : un petit fichier JSON dans remarques/<date>/
+    if (d.type === 'remarque') return recevoirRemarque(d, env, repondre);
     const photos = Array.isArray(d.photos) ? d.photos : [];
     if (!photos.length || photos.length > MAX_PHOTOS) return repondre({ ok: false, erreur: 'photos', message: `Entre 1 et ${MAX_PHOTOS} photos` }, 400);
     for (const p of photos) {
@@ -73,9 +76,7 @@ export default {
 
     // --- Nom du dossier : date et heure de Paris + 4 caractères au hasard (deux envois à la même minute)
     const maintenant = new Date();
-    const paris = new Intl.DateTimeFormat('fr-FR', {
-      timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit',
-    }).formatToParts(maintenant).reduce((o, p) => ({ ...o, [p.type]: p.value }), {});
+    const paris = heureDeParis(maintenant);
     const hasard = crypto.randomUUID().slice(0, 4);
     const dossier = `demandes/${d.enfant}/${paris.year}-${paris.month}-${paris.day}-${paris.hour}${paris.minute}-${hasard}`;
 
@@ -101,6 +102,45 @@ export default {
     return repondre({ ok: true, dossier });
   },
 };
+
+/** Date et heure de Paris, découpées : { year, month, day, hour, minute } */
+function heureDeParis(date) {
+  return new Intl.DateTimeFormat('fr-FR', {
+    timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit',
+  }).formatToParts(date).reduce((o, p) => ({ ...o, [p.type]: p.value }), {});
+}
+
+/**
+ * 💬 Remarque sur une leçon, envoyée depuis la bulle d'un bloc de fiche ou d'une question.
+ * Rangée dans remarques/AAAA-MM-JJ/HHMM-<enfant>-xxxx.json, avec l'endroit exact.
+ * Claude les rassemble chaque soir dans un ticket récapitulatif pour Papa (statut « nouvelle » -> « signalée »).
+ */
+async function recevoirRemarque(d, env, repondre) {
+  const court = (x, n) => String(x ?? '').slice(0, n);
+  if (!/^[a-z0-9-]{1,100}$/.test(d.lecon || '')) return repondre({ ok: false, erreur: 'lecon' }, 400);
+  const motifs = (Array.isArray(d.motifs) ? d.motifs : []).slice(0, 6).map((m) => court(m, 40));
+  const texte = court(d.texte, 1000).trim();
+  if (!motifs.length && !texte) return repondre({ ok: false, erreur: 'vide', message: 'Remarque vide' }, 400);
+  const e = d.endroit || {};
+  const remarque = {
+    enfant: d.enfant, lecon: d.lecon, titreLecon: court(d.titreLecon, 120),
+    endroit: { type: e.type === 'question' ? 'question' : 'bloc', numero: Number(e.numero) || 0, titre: court(e.titre, 200) },
+    motifs, texte,
+    envoyeeLe: new Date().toISOString(),
+    versionAppli: court(d.version, 20),
+    statut: 'nouvelle',
+  };
+  const p = heureDeParis(new Date());
+  const chemin = `remarques/${p.year}-${p.month}-${p.day}/${p.hour}${p.minute}-${d.enfant}-${crypto.randomUUID().slice(0, 4)}.json`;
+  try {
+    await commiter(env, [{ chemin, base64: versBase64(JSON.stringify(remarque, null, 2) + '\n') }],
+      `💬 Remarque : ${d.enfant} · ${remarque.titreLecon || d.lecon}`);
+  } catch (err) {
+    console.log('Échec GitHub (remarque) :', err.message);
+    return repondre({ ok: false, erreur: 'github', message: 'Envoi momentanément impossible' }, 502);
+  }
+  return repondre({ ok: true, fichier: chemin });
+}
 
 /** Texte (UTF-8, donc avec accents) -> base64 */
 function versBase64(texte) {

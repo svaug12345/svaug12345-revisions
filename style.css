@@ -1143,3 +1143,27 @@ body.lecture-facile .carte-info b { letter-spacing: 0; overflow-wrap: anywhere; 
 .bloc-code label { display: block; font-weight: 800; margin: 0 4px 6px; color: var(--fonce); }
 .message-envoi { min-height: 1.4em; margin: 12px 4px 0; font-weight: 700; color: var(--fonce); text-align: center; }
 .envoi-reussi h2 { color: var(--fonce); margin: 6px 0; }
+
+/* ---------- 💬 Remarques sur une leçon ---------- */
+/* Bulle discrète : en bas à droite d'un bloc de fiche, en haut à droite d'une question */
+.btn-remarque {
+  border: 0; background: color-mix(in srgb, var(--clair) 70%, white); border-radius: 50%;
+  width: 34px; height: 34px; font-size: 1rem; line-height: 1; cursor: pointer; opacity: .75;
+  display: grid; place-items: center; padding: 0;
+}
+.btn-remarque:hover, .btn-remarque:focus-visible { opacity: 1; }
+.bloc .btn-remarque { position: absolute; right: 8px; bottom: 8px; }
+.bloc:has(.btn-remarque) { padding-bottom: 46px; }
+.carte-question { position: relative; }
+.carte-question > .btn-remarque { position: absolute; top: 10px; right: 10px; }
+/* Panneau qui monte du bas de l'écran */
+.feuille-fond { position: fixed; inset: 0; z-index: 70; background: rgba(15, 23, 42, .45);
+  display: flex; align-items: flex-end; justify-content: center; animation: fondu .15s ease-out; }
+.feuille { width: 100%; max-width: 560px; background: var(--fond); border-radius: 24px 24px 0 0;
+  padding: 16px 16px calc(18px + env(safe-area-inset-bottom)); box-shadow: 0 -10px 30px rgba(0,0,0,.2);
+  animation: monte .25s cubic-bezier(.2, 1.2, .4, 1); max-height: 90vh; overflow: auto; }
+@keyframes monte { from { transform: translateY(100%); } }
+.feuille-tete { display: flex; justify-content: space-between; align-items: center; font-size: 1.15rem; color: var(--fonce); }
+.feuille-fermer { border: 0; background: none; font-size: 1.1rem; cursor: pointer; color: var(--doux); }
+.feuille-ou { color: var(--doux); font-size: .9rem; margin: 4px 0 12px; }
+.feuille .note-envoi { margin-top: 12px; }

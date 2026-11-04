@@ -905,6 +905,77 @@ function afficherEnvoiReussi(nb) {
     el('button', { class: 'btn-principal', onclick: () => history.back() }, '← Retour à mes leçons')));
 }
 
+/* ---- REMARQUES SUR UNE LEÇON 💬 ----
+   Une petite bulle 💬 sur chaque bloc de la fiche et sur chaque question. On la touche,
+   on choisit un motif (trop difficile, une erreur…) et/ou on écrit un mot : la remarque part
+   vers la même boîte aux lettres que les photos, AVEC L'ENDROIT EXACT (leçon, bloc ou question).
+   Chaque soir, Claude en fait un récapitulatif pour Papa (ticket GitHub + notification),
+   sans rien corriger tout seul. */
+
+const MOTIFS_REMARQUE = ['😵 Trop difficile', '🐞 Il y a une erreur', '🤔 Je ne comprends pas', '😴 Trop long', '😍 J’adore !'];
+
+// Le code famille gardé dans le téléphone (le même que pour l'envoi de photos)
+const codeFamille = () => { try { return localStorage.getItem(CLE_CODE_FAMILLE) || ''; } catch { return ''; } };
+const memoriserCode = (code) => { try { code ? localStorage.setItem(CLE_CODE_FAMILLE, code) : localStorage.removeItem(CLE_CODE_FAMILLE); } catch { /* rien */ } };
+
+/** La bulle 💬 (null si la boîte aux lettres n'est pas configurée) */
+function boutonRemarque(lecon, endroit) {
+  if (!etat.donnees.envoi?.url || !lecon) return null;
+  return el('button', {
+    class: 'btn-remarque', title: 'Faire une remarque à cet endroit', 'aria-label': 'Faire une remarque',
+    onclick: (e) => { e.stopPropagation(); ouvrirRemarque(lecon, endroit); },
+  }, '💬');
+}
+
+/** Le panneau qui monte du bas de l'écran pour écrire la remarque */
+function ouvrirRemarque(lecon, endroit) {
+  document.querySelector('.feuille-fond')?.remove();
+  const choisis = new Set();
+  const texte = el('textarea', { class: 'note-envoi', rows: '3', maxlength: '1000', placeholder: 'Explique en quelques mots (facultatif)' });
+  const champCode = el('input', { class: 'code-envoi', type: 'password', autocomplete: 'off', placeholder: 'Code famille' });
+  const blocCode = el('div', { class: 'bloc-code' }, el('label', {}, '🔑 Code famille'), champCode);
+  blocCode.hidden = !!codeFamille();
+  const message = el('p', { class: 'message-envoi' });
+  const fermer = () => fond.remove();
+  const btn = el('button', { class: 'btn-principal', onclick: envoyer }, '📤 Envoyer la remarque');
+
+  async function envoyer() {
+    const code = champCode.value.trim() || codeFamille();
+    if (!choisis.size && !texte.value.trim()) { message.textContent = 'Choisis un motif ou écris un petit mot 🙂'; return; }
+    if (!code) { blocCode.hidden = false; champCode.focus(); message.textContent = 'Tape le code famille 🔑'; return; }
+    btn.disabled = true; btn.textContent = '⏳ Envoi…'; message.textContent = '';
+    try {
+      const rep = await fetch(etat.donnees.envoi.url, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'remarque', code, enfant: etat.enfant?.id || 'inconnu',
+          lecon: lecon.id, titreLecon: lecon.titre, endroit, motifs: [...choisis],
+          texte: texte.value.trim(), version: VERSION }),
+      });
+      const r = await rep.json().catch(() => ({}));
+      if (r.erreur === 'code') { memoriserCode(''); blocCode.hidden = false; champCode.value = ''; throw new Error('Ce code famille n’est pas le bon 🔑'); }
+      if (!rep.ok || !r.ok) throw new Error(r.message || `Envoi refusé (erreur ${rep.status})`);
+      memoriserCode(code);
+      fermer(); son('petit'); toast('📬 Merci ! Remarque envoyée');
+    } catch (err) {
+      message.textContent = err.message.includes('Failed to fetch') ? '📶 Envoi impossible : vérifie internet.' : err.message;
+      btn.disabled = false; btn.textContent = '📤 Envoyer la remarque';
+    }
+  }
+
+  const ou = endroit.type === 'bloc' ? `la partie « ${endroit.titre} »` : `la question « ${endroit.titre} »`;
+  // Le fond grisé : toucher à côté du panneau le ferme
+  const fond = el('div', { class: 'feuille-fond', onclick: (e) => { if (e.target === fond) fermer(); } },
+    el('div', { class: 'feuille', role: 'dialog', 'aria-label': 'Faire une remarque' },
+      el('div', { class: 'feuille-tete' }, el('b', {}, '💬 Une remarque ?'),
+        el('button', { class: 'feuille-fermer', 'aria-label': 'Fermer', onclick: fermer }, '✖')),
+      el('p', { class: 'feuille-ou' }, `Sur ${ou} — leçon « ${lecon.titre} »`),
+      el('div', { class: 'puces-matiere' }, MOTIFS_REMARQUE.map((m) => el('button', {
+        class: 'puce', onclick: (e) => { choisis.has(m) ? choisis.delete(m) : choisis.add(m); e.currentTarget.classList.toggle('choisie'); },
+      }, m))),
+      texte, blocCode, message, btn));
+  document.body.append(fond);
+}
+
 /* ---- PARCOURS : une grosse leçon découpée en petits modules ----
    Dans lecons.json, chaque module est une leçon normale avec en plus
      "parcours": "Arrondir et encadrer", "etape": 2
@@ -1059,7 +1130,9 @@ function dessinerFiche(lecon) {
     b.titre && etat.enfant?.lectureAudio ? boutonLire(function () {
       return [...this.closest('.bloc').querySelectorAll('h3, .texte, .encadre p, .carte-info')].map((x) => x.textContent).join('. ');
     }, 'btn-lire bloc-lire') : null,
-    contenuBloc(b.contenu))));
+    contenuBloc(b.contenu),
+    // 💬 remarque sur ce bloc (envoyée à Papa avec l'endroit exact)
+    boutonRemarque(lecon, { type: 'bloc', numero: i + 1, titre: b.titre || 'Introduction' }))));
 }
 
 // Regroupe les lignes de texte qui se suivent (pour les puces), et dessine les visuels
@@ -1164,6 +1237,9 @@ function questionSuivante(q) {
   const zone = el('div', { class: 'zone-question' });
   const carte = el('div', { class: 'carte-question', style: `--teinte:${teinte}` },
     el('div', { class: 'type-question' }, el('span', {}, emoji), consigne),
+    // 💬 remarque sur cette question (sa position dans la leçon d'origine + son texte)
+    boutonRemarque(q.lecon, { type: 'question', numero: (q.lecon.activites || []).indexOf(activite) + 1,
+      titre: sansMots(activite.question || activite.consigne || activite.recto || consigne) }),
     zone);
   const retour = el('div', { class: 'retour' });
   afficher(

@@ -294,3 +294,19 @@ Les photos sont réduites dans le téléphone (≈ 400 Ko chacune) puis envoyée
 `demande.json` au statut « à traiter », lire les photos, créer les leçons (modules courts, `"ajoutee"` = date
 d'envoi, réglages de l'enfant : coup de pouce, lecture facile, passions…), puis dans le dépôt privé passer
 le statut à « traitée » avec les `id` des leçons créées et supprimer les photos.
+
+## 💬 Remarques sur une leçon (depuis la v1.14.0)
+Une petite bulle 💬 en bas de chaque bloc de fiche et en haut de chaque question. On la touche, on choisit un
+motif (😵 trop difficile, 🐞 une erreur, 🤔 je ne comprends pas, 😴 trop long, 😍 j'adore) et/ou on écrit un mot.
+La remarque part vers la boîte aux lettres avec **l'endroit exact** (leçon, numéro et titre du bloc ou de la
+question) et arrive dans le dépôt privé : `remarques/AAAA-MM-JJ/HHMM-<enfant>-xxxx.json` (statut « nouvelle »).
+Les bulles n'apparaissent que si `"envoi.url"` est réglé (même code famille que pour les photos).
+
+## 🌙 Passage du soir (20 h)
+Chaque soir, une tâche planifiée de Claude :
+1. transforme les photos reçues en leçons et les **publie directement** (sans pull request) ;
+2. rassemble les nouvelles remarques dans un **ticket récapitulatif** du dépôt privé `revisions-demandes`
+   (sans rien corriger) — Papa répond dans le ticket (« corrige la 2 ») et c'est appliqué au passage suivant ;
+3. envoie une notification sur le téléphone de Papa.
+À tout moment : dire à Claude **« vas-y, mets à jour »** pour lancer ce passage tout de suite.
+Les consignes détaillées sont dans `CLAUDE.md` du dépôt privé.
