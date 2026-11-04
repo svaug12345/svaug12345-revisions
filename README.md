@@ -114,7 +114,25 @@ Le code de chaque visuel est dans `visuels.js` (une fonction par visuel, bien co
 
 ## 🔊 Audio
 
-La voix (MP3) sert **uniquement aux mots étrangers** des leçons de langues : les autres leçons n'ont plus de lecture audio.
+Depuis la v1.15.0, **plus de boutons haut-parleur partout** : la voix ne sert que là où elle fait partie de l'exercice,
+et c'est toujours une **voix ElevenLabs** enregistrée à l'avance en MP3 (dossier `audio/`, liste dans `audio/index.json`) :
+- **langues** : les mots étrangers (🔊 / 🐢 dans la bulle du mot) — voir plus bas ;
+- **dictées** : le visuel `{"visuel": "dictee", "phrases": ["morceau 1", "morceau 2", …]}` dicte le texte morceau par
+  morceau (🐢 lent / 🐇 normal, ⏭ suivant, 🔁 tout réécouter) ;
+- **CP** (profil `"lectureAuto": true`, Ava) : la question est lue toute seule (+ un seul 🔊 pour la réécouter),
+  et les activités des sons et des nombres parlent quand on les touche.
+
+Nom d'un MP3 français : empreinte FNV-1a de `fr|<texte lu>` (le texte après `pourLaVoix()`), comme `en|…` pour l'anglais.
+S'il manque un MP3, l'appli se rabat sur la voix du téléphone et l'écrit dans la console (« MP3 manquant »).
+
+**Fabriquer les MP3 français** (après avoir ajouté une dictée ou une leçon de CP) :
+1. lister les phrases à dire et leurs empreintes, avec les fonctions de l'appli elle-même (`pourLaVoix`, `empreinte`) ;
+2. les faire lire par lots (≈ 60 phrases) avec la voix « SebastienV » (ElevenLabs, modèle v4) : une phrase par ligne,
+   séparées par `[pause]` ;
+3. déposer `outils/voix-a-decouper.json` (liens des 2 prises de chaque lot + phrases attendues) : le robot
+   **Voix** (`.github/workflows/voix.yml`) télécharge, coupe aux grands silences avec `outils/decoupe_silences.py`
+   (un MP3 par phrase, et il refuse s'il ne trouve pas exactement autant de morceaux que de phrases), range dans
+   `audio/` et met à jour `audio/index.json`. Compte rendu : branche `statut-voix`.
 
 ## 🇬🇧🇩🇪 Leçons de langues : écouter et répéter (depuis la v1.3.0)
 
@@ -258,8 +276,10 @@ Une grosse leçon peut être découpée en **modules** courts (5 à 8 questions)
 ## 🔊 Lecture à voix haute et confort de lecture (depuis la v1.12.0)
 
 Options d'un enfant dans `lecons.json` :
-- `"lectureAudio": true` : un 🔊 lit chaque bloc de fiche et chaque question, un 🔈 dans chaque réponse (voix du téléphone).
-- `"lectureAuto": true` : la question est lue toute seule (CP). Sur une question : `"dire"` = ce qui est lu à la place du texte, `"lireChoix": false` = ne pas lire les réponses (quand la question teste justement la lecture).
+- `"lectureAuto": true` (CP) : la question est lue toute seule par la voix ElevenLabs, avec UN bouton 🔊 pour la réécouter.
+  Sur une question : `"dire"` = ce qui est lu à la place du texte, `"lireChoix": false` = ne pas lire les réponses
+  (quand la question teste justement la lecture).
+- (`"lectureAudio"`, qui mettait des 🔊 et 🔈 partout avec la voix du téléphone, n'existe plus depuis la v1.15.0.)
 - `"lectureFacile": true` : police Lexend, lettres et lignes plus espacées, mots importants surlignés.
 - `"orthographeSouple": true` : une réponse tapée avec une petite faute est acceptée (on vérifie la compréhension, pas l'orthographe).
 

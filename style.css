@@ -956,10 +956,7 @@ button { cursor: pointer; }
 .btn-lire { border: 0; background: var(--clair); border-radius: 50%; width: 38px; height: 38px; font-size: 1.1rem; flex: none; }
 .btn-lire.petit { width: 32px; height: 32px; font-size: .95rem; margin-left: 6px; }
 .bloc { position: relative; }
-.bloc .bloc-lire { position: absolute; top: 10px; right: 10px; } /* 🔊 en haut à droite de la carte */
-.bloc:has(.bloc-lire) h3 { padding-right: 44px; }
-.lire-choix { margin-left: auto; padding: 2px 4px 2px 10px; font-size: .95rem; opacity: .75; }
-.choix .lire-choix, .tuile .lire-choix { float: right; }
+/* (v1.15.0 : plus de 🔊 sur les blocs ni de 🔈 dans les réponses : seulement le 🔊 « réécouter » des questions en CP) */
 
 /* Confort de lecture : police Lexend, lettres et lignes plus espacées, rien en italique */
 body.lecture-facile { font-family: 'Lexend', 'Nunito', system-ui, sans-serif; }
@@ -1167,3 +1164,13 @@ body.lecture-facile .carte-info b { letter-spacing: 0; overflow-wrap: anywhere; 
 .feuille-fermer { border: 0; background: none; font-size: 1.1rem; cursor: pointer; color: var(--doux); }
 .feuille-ou { color: var(--doux); font-size: .9rem; margin: 4px 0 12px; }
 .feuille .note-envoi { margin-top: 12px; }
+
+/* ---------- 🎧 Dictée (visuel "dictee") ---------- */
+.dictee { display: flex; flex-direction: column; gap: 10px; }
+.dictee-progres { display: flex; flex-wrap: wrap; gap: 6px; }
+.dictee-progres i { width: 14px; height: 14px; border-radius: 50%; background: var(--clair); }
+.dictee-progres i.fait { background: var(--principal); }
+.dictee-progres i.actuel { background: var(--accent); transform: scale(1.25); }
+.dictee-info { margin: 0; }
+.dictee-boutons { display: flex; flex-wrap: wrap; gap: 8px; }
+.dictee-boutons .btn-visuel { flex: 1 1 auto; margin: 0; }

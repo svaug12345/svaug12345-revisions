@@ -259,10 +259,15 @@ function voixDuTelephone(texte, langue = 'fr-FR', vitesse = 0.95) {
   speechSynthesis.speak(phrase);
 }
 
-/* ---- LIRE À VOIX HAUTE (profils avec "lectureAudio": true) ----
-   Pour un enfant qui lit encore difficilement : un bouton 🔊 lit la question, les fiches
-   et les réponses avec la voix du téléphone. "lectureAuto": true -> la question est lue
-   toute seule dès qu'elle s'affiche (utile en CP). */
+/* ---- LIRE À VOIX HAUTE (seulement là où c'est utile) ----
+   Depuis la v1.15.0, plus de 🔊 partout : la voix ne sert que quand elle fait partie de l'exercice
+     - les profils "lectureAuto": true (CP, ne lit pas encore) : la question est lue toute seule,
+       avec UN bouton 🔊 pour la réécouter ; les activités des sons et des nombres parlent aussi ;
+     - les dictées (visuel "dictee" de visuels.js) ;
+     - les mots étrangers des leçons de langues (voir prononcer(), plus bas).
+   La voix est celle d'ElevenLabs, enregistrée à l'avance en MP3 (dossier audio/) : le fichier s'appelle
+   empreinte("fr|" + texte), comme pour les langues. Si un MP3 manque, on se rabat sur la voix du
+   téléphone (moins jolie) et la console le signale : il suffit alors de générer le MP3 manquant. */
 
 /** Prépare un texte pour la voix : sans emojis ni **, et les signes dits en mots (« 8 − 2 » -> « 8 moins 2 »). */
 function pourLaVoix(texte) {
@@ -274,38 +279,59 @@ function pourLaVoix(texte) {
     .replace(/\s+/g, ' ').trim();
 }
 
-/** Lit un texte en français (coupe d'abord ce qui était en train d'être lu). */
-function lireAVoixHaute(texte) {
-  if (!('speechSynthesis' in window)) return;
+let fileVoix = [];  // morceaux de phrase qui attendent leur tour (une question puis ses réponses, par ex.)
+
+/**
+ * Lit un ou plusieurs textes en français, l'un après l'autre (coupe d'abord ce qui était lu).
+ *   lireAVoixHaute('Dans quel mot entends-tu a ?')
+ *   lireAVoixHaute(['Dans quel mot entends-tu a ?', 'chat', 'hibou'])   -> question puis réponses
+ *   lireAVoixHaute(texte, { lent: true })                                -> dictée lente
+ */
+function lireAVoixHaute(textes, { lent = false } = {}) {
   couperVoix();
-  voixDuTelephone(pourLaVoix(texte), 'fr-FR', etat.enfant?.lectureAuto ? 0.85 : 0.95);
+  fileVoix = [].concat(textes).map(pourLaVoix).filter(Boolean);
+  const suivant = () => {
+    const texte = fileVoix.shift();
+    if (texte === undefined) return;
+    const h = empreinte('fr|' + texte);              // même calcul que le script qui fabrique les MP3
+    if (audiosDispo.has(h)) {
+      lecteur = new Audio('audio/' + h + '.mp3');
+      lecteur.preservesPitch = true;                 // ralenti sans voix grave
+      lecteur.playbackRate = lent ? 0.8 : 1;
+      lecteur.onended = () => setTimeout(suivant, 250);  // petit silence entre deux morceaux
+      lecteur.play().catch(() => { voixDuTelephone(texte); });
+    } else {
+      console.warn('MP3 manquant (voix du téléphone en secours) :', JSON.stringify(texte), h);
+      if ('speechSynthesis' in window) {
+        const phrase = new SpeechSynthesisUtterance(texte);
+        phrase.lang = 'fr-FR'; phrase.rate = lent ? 0.7 : 0.9;
+        phrase.onend = () => setTimeout(suivant, 250);
+        speechSynthesis.speak(phrase);
+      }
+    }
+  };
+  suivant();
 }
 
-/** Petit bouton 🔊 qui lit un texte (calculé au moment du clic). */
-function boutonLire(texteOuFonction, classe = 'btn-lire') {
-  return el('button', {
-    class: classe, type: 'button', 'aria-label': 'Lire à voix haute',
-    onclick: (e) => { e.stopPropagation(); lireAVoixHaute(typeof texteOuFonction === 'function' ? texteOuFonction.call(e.currentTarget) : texteOuFonction); }, // this = le bouton
-  }, '🔊');
-}
-
-/** Ajoute la lecture audio à une question qui vient d'être dessinée. */
-function lectureQuestion(act, carte, zone) {
-  if (!etat.enfant?.lectureAudio) return;
-  const enonceTexte = act.dire || [act.question, act.affirmation, act.consigne,
+/** Ce qui est lu pour une question : l'énoncé (ou "dire"), puis les réponses d'un QCM dans l'ordre affiché. */
+function textesQuestion(act, zone) {
+  const enonce = act.dire || [act.question, act.affirmation, act.consigne,
     act.texte && act.texte.replace(/\[[^\]]*\]/g, '…'), act.recto].filter(Boolean).join('. ');
-  const lireChoix = act.lireChoix !== false;
-  // Les réponses proposées, dans l'ordre où elles sont affichées
-  const choix = act.type === 'qcm' && lireChoix && !act.dire
-    ? [...zone.querySelectorAll('.choix')].map((b) => b.textContent) : [];
-  const phrase = () => enonceTexte + (choix.length ? ' ... ' + choix.join(' ... ') + ' ?' : '');
-  carte.querySelector('.type-question')?.append(boutonLire(phrase, 'btn-lire petit'));
-  // Un 🔈 dans chaque réponse pour l'entendre seule (sauf si la question teste justement la lecture)
-  if (lireChoix) zone.querySelectorAll('.choix, .tuile, .etiquette').forEach((b) => {
-    const texte = b.textContent;
-    b.append(el('span', { class: 'lire-choix', onclick: (e) => { e.stopPropagation(); e.preventDefault(); lireAVoixHaute(texte); } }, '🔈'));
-  });
-  if (etat.enfant.lectureAuto) setTimeout(() => lireAVoixHaute(phrase()), 400);
+  // "lireChoix": false quand la question teste justement la lecture des réponses
+  const choix = act.type === 'qcm' && act.lireChoix !== false && !act.dire
+    ? [...zone.querySelectorAll('.choix')].map(texteSans) : [];
+  return [enonce, ...choix];
+}
+
+/** Lecture d'une question qui vient d'être dessinée : seulement pour les profils "lectureAuto" (CP).
+    Elle est lue toute seule, et UN bouton 🔊 permet de la réécouter. */
+function lectureQuestion(act, carte, zone) {
+  if (!etat.enfant?.lectureAuto) return;
+  carte.querySelector('.type-question')?.append(el('button', {
+    class: 'btn-lire petit', type: 'button', 'aria-label': 'Réécouter la question',
+    onclick: (e) => { e.stopPropagation(); lireAVoixHaute(textesQuestion(act, zone)); },
+  }, '🔊'));
+  setTimeout(() => lireAVoixHaute(textesQuestion(act, zone)), 400);
 }
 
 /* ---- ORTHOGRAPHE SOUPLE ("orthographeSouple": true) ----
@@ -1126,10 +1152,6 @@ function dessinerFiche(lecon) {
     style: `--teinte:${couleurs[i % couleurs.length]}`,
   },
     b.titre ? el('h3', { html: miseEnForme('# ' + b.titre).replace(/^<h3>|<\/h3>$/g, '') }) : null,
-    // 🔊 lit le bloc (titre, textes, encadrés, cartes) pour les profils "lectureAudio"
-    b.titre && etat.enfant?.lectureAudio ? boutonLire(function () {
-      return [...this.closest('.bloc').querySelectorAll('h3, .texte, .encadre p, .carte-info')].map((x) => x.textContent).join('. ');
-    }, 'btn-lire bloc-lire') : null,
     contenuBloc(b.contenu),
     // 💬 remarque sur ce bloc (envoyée à Papa avec l'endroit exact)
     boutonRemarque(lecon, { type: 'bloc', numero: i + 1, titre: b.titre || 'Introduction' }))));

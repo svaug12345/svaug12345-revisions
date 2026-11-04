@@ -1,16 +1,16 @@
 {
   "maj": "04/11/2026",
-  "versionApp": "1.14.0",
+  "versionApp": "1.15.0",
 
   "enfants": [
     {"id": "tom", "nom": "Tom", "avatar": "avatars/tom.svg", "couleur": "#22c55e", "age": 6},
     {"id": "gaby", "nom": "Gaby", "avatar": "avatars/gaby.svg", "couleur": "#ec4899", "age": 12},
     {"id": "nanon", "nom": "Nanon", "avatar": "avatars/nanon.svg", "couleur": "#f59e0b", "age": 14},
     {"id": "titouan", "nom": "Titouan", "avatar": "avatars/titouan.svg", "couleur": "#3b82f6", "age": 9, "classe": "CM2",
-     "coupDePouce": true, "questionsParManche": 10, "lectureAudio": true, "lectureFacile": true, "orthographeSouple": true,
+     "coupDePouce": true, "questionsParManche": 10, "lectureFacile": true, "orthographeSouple": true,
      "conseilsAlex": "Titouan est en CM2. Il a besoin d'enchaîner les réussites pour prendre confiance : commence toujours par une question facile, avance par toutes petites étapes, félicite chaque bonne réponse et chaque effort. Passe par l'oral : relis-lui les consignes, ne lui demande jamais d'épeler ni d'écrire, et ne corrige pas son orthographe. Pour les nombres, fais-le manipuler en pensée avec du concret (doigts, joueurs, buts, ballons), découpe les calculs en petits morceaux et laisse-lui le temps. Rappelle les bases utiles avant une notion difficile. S'il se trompe, donne un indice et laisse-le réessayer avant de corriger. Il adore le foot : prends tes exemples dans le foot. Sa petite sœur s'appelle Ava ; ses cousins sont Nanon, Gaby et Tom."},
     {"id": "ava", "nom": "Ava", "avatar": "avatars/ava.svg", "couleur": "#a855f7", "age": 6, "classe": "CP",
-     "coupDePouce": true, "questionsParManche": 6, "lectureAudio": true, "lectureAuto": true,
+     "coupDePouce": true, "questionsParManche": 6, "lectureAuto": true,
      "conseilsAlex": "Ava est en CP : elle commence tout juste à lire. Parle très simplement, avec des phrases très courtes et un ton doux et joyeux. Ne lui demande pas de lire de longs mots : fais-la écouter, répéter, compter sur ses doigts. Joue avec les sons (« Est-ce que tu entends a dans chat ? »). Une seule question à la fois, et félicite chaque réussite. Elle adore les chats : prends tes exemples avec des chats. Son grand frère s'appelle Titouan ; ses cousins sont Nanon, Gaby et Tom."}
   ],
 
@@ -160,6 +160,9 @@
       "ajoutee": "2026-10-26",
       "assistant": true,
       "fiche": [
+        "# 🎧 La dictée",
+        "Prends ton cahier : écoute chaque morceau (🐢 lentement), écris-le, puis passe au suivant. À la fin, réécoute tout pour te relire et compare avec le texte juste en dessous.",
+        {"visuel": "dictee", "phrases": ["Plus ils marchaient, plus ils s'égaraient", "et s'enfonçaient dans la forêt.", "La nuit vint,", "et il s'éleva un grand vent", "qui leur faisait épouvantablement peur.", "Ils croyaient entendre de tous côtés", "des hurlements de loups", "qui venaient à eux pour les manger.", "Ils n'osaient presque pas se parler", "ni tourner la tête.", "Il survint une grosse pluie", "qui les trempa jusqu'aux os ;", "ils glissaient à chaque pas", "et tombaient dans la boue."]},
         "# Le texte (d'après Charles Perrault, 1697)",
         "Plus ils marchaient, plus ils s'égaraient et s'enfonçaient dans la forêt. La nuit vint, et il s'éleva un grand vent qui leur faisait épouvantablement peur. Ils croyaient entendre de tous côtés des hurlements de loups qui venaient à eux pour les manger. Ils n'osaient presque pas se parler ni tourner la tête. Il survint une grosse pluie qui les trempa jusqu'aux os ; ils glissaient à chaque pas et tombaient dans la boue.",
         "# Les mots pièges",

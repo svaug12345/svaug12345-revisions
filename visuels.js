@@ -777,8 +777,40 @@ const VISUELS = {
     return el('div', { class: 'tirs' }, tableau, scene, zone);
   },
 
+  /* DICTÉE : { visuel: "dictee", phrases: ["Plus ils marchaient,", "…"] }
+     La voix (MP3 ElevenLabs, voir lireAVoixHaute dans app.js) dicte le texte MORCEAU PAR MORCEAU,
+     lentement. L'enfant écrit sur son cahier, réécoute autant qu'il veut, passe au morceau suivant,
+     puis réécoute tout le texte d'un coup pour se relire, et compare avec le texte de la fiche. */
+  dictee(v) {
+    const phrases = v.phrases || [];
+    let k = 0, lent = true;
+    const progres = el('div', { class: 'dictee-progres' });
+    const info = el('p', { class: 'dictee-info' });
+    const dire = () => lireAVoixHaute(phrases[k], { lent });
+    const ecouter = el('button', { class: 'btn-visuel', onclick: dire }, '🎧 Écouter');
+    const suivant = el('button', { class: 'btn-visuel', onclick: () => { k++; maj(); if (k < phrases.length) dire(); } }, 'Suivant ⏭');
+    const vitesse = el('button', { class: 'btn-visuel secondaire', onclick: () => { lent = !lent; maj(); } });
+    function maj() {
+      const fini = k >= phrases.length;
+      // une pastille par morceau : faite / en cours / à venir
+      progres.replaceChildren(...phrases.map((_, i) => el('i', { class: i < k ? 'fait' : i === k ? 'actuel' : '' })));
+      // replaceChildren attend les éléments un par un : d'où le « ... » devant le tableau
+      info.replaceChildren(...(fini
+        ? [el('b', {}, '✅ Dictée terminée ! Réécoute tout pour te relire, puis compare avec le texte.')]
+        : [el('b', {}, `Morceau ${k + 1} / ${phrases.length}`), ' — écoute, écris, puis passe au suivant.']));
+      ecouter.hidden = suivant.hidden = fini;
+      vitesse.textContent = lent ? '🐢 Lent' : '🐇 Normal';
+    }
+    maj();
+    return el('div', { class: 'dictee' }, progres, info,
+      el('div', { class: 'dictee-boutons' }, ecouter, suivant, vitesse),
+      el('div', { class: 'dictee-boutons' },
+        el('button', { class: 'btn-visuel secondaire', onclick: () => lireAVoixHaute(phrases) }, '🔁 Tout réécouter'),
+        el('button', { class: 'btn-visuel secondaire', onclick: () => { couperVoix(); k = 0; maj(); } }, '↺ Recommencer')));
+  },
+
   /* ===================== VISUELS DU CP (Ava) =====================
-     Peu de texte, beaucoup d'images, et la voix du téléphone qui lit (lireAVoixHaute). */
+     Peu de texte, beaucoup d'images, et une voix qui lit (lireAVoixHaute : MP3 ElevenLabs). */
 
   /* OÙ EST LE CHAT ? (vocabulaire de position) : { objet: "🐱", nom: "le chat" }
      On touche un mot (sur, sous, devant…) : le chat se place et la phrase est lue. */

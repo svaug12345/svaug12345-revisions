@@ -1,0 +1,61 @@
+# =====================================================================
+#  ROBOT « VOIX » — télécharge les lots de phrases générés avec ElevenLabs,
+#  les découpe en un MP3 par phrase et les range dans audio/ (voir outils/robot_voix.py).
+# ---------------------------------------------------------------------
+#  Se déclenche quand Claude dépose ou modifie outils/voix-a-decouper.json.
+#  Compte rendu : statut.json sur la branche « statut-voix » (Claude n'a pas accès aux journaux).
+#  Aucun secret nécessaire : les liens ElevenLabs sont temporaires (≈ 2 h) et signés.
+# =====================================================================
+name: Voix
+
+on:
+  push:
+    branches: [main]
+    paths: ['outils/voix-a-decouper.json']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: voix
+  cancel-in-progress: false
+
+jobs:
+  decouper:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer ffmpeg (pour détecter les silences et couper)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null
+
+      - name: Télécharger, découper, ranger
+        id: voix
+        run: |
+          set -o pipefail
+          python3 outils/robot_voix.py 2>&1 | tee "$RUNNER_TEMP/voix.log"
+
+      - name: Enregistrer les MP3 dans le dépôt
+        run: |
+          git config user.name "robot-voix"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A audio outils/voix-a-decouper.json
+          if git diff --cached --quiet; then echo "Rien à enregistrer"; exit 0; fi
+          git commit -qm "🎙️ Voix : nouveaux MP3 découpés par le robot"
+          # quelqu'un a pu pousser entre-temps : on se recale avant d'envoyer
+          git pull -q --rebase origin main && git push -q origin HEAD:main
+
+      - name: Écrire le compte rendu (branche statut-voix)
+        if: always()
+        run: |
+          touch "$RUNNER_TEMP/voix.log"; [ -f "$RUNNER_TEMP/voix.json" ] || echo '{}' > "$RUNNER_TEMP/voix.json"
+          jq -n --arg date "$(date -u +%Y-%m-%dT%H:%M:%SZ)" --arg resultat "${{ job.status }}" \
+            --arg commit "${{ github.sha }}" --slurpfile voix "$RUNNER_TEMP/voix.json" \
+            --arg journal "$(tail -n 60 "$RUNNER_TEMP/voix.log")" \
+            '{date: $date, resultat: $resultat, commit: $commit, voix: $voix[0], journal: $journal}' > "$RUNNER_TEMP/statut.json"
+          cd "$RUNNER_TEMP" && git init -q statut && cd statut
+          git config user.name "robot-voix" && git config user.email "actions@users.noreply.github.com"
+          cp ../statut.json . && git add statut.json && git commit -qm "Statut voix : ${{ job.status }}"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:statut-voix
