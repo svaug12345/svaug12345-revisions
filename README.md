@@ -127,12 +127,16 @@ S'il manque un MP3, l'appli se rabat sur la voix du téléphone et l'écrit dans
 
 **Fabriquer les MP3 français** (après avoir ajouté une dictée ou une leçon de CP) :
 1. lister les phrases à dire et leurs empreintes, avec les fonctions de l'appli elle-même (`pourLaVoix`, `empreinte`) ;
-2. les faire lire par lots (≈ 60 phrases) avec la voix « SebastienV » (ElevenLabs, modèle v4) : une phrase par ligne,
-   séparées par `[pause]` ;
+2. les faire lire par lots (≈ 60 phrases) avec la voix « SebastienV », modèle **`eleven_multilingual_v2`** (le v4 ignore
+   les pauses) : une phrase par ligne, séparées par `<break time="1.3s" />`. ⚠️ Écrire les nombres seuls en lettres
+   dans le texte lu (« 10 » serait lu « ten »), « Sète » pour « sept » (sinon « septembre »), « Euh » pour « eu » ;
+   le texte de l'appli ne change pas : on met alors `"dit"` à côté de `"texte"` dans la liste ;
 3. déposer `outils/voix-a-decouper.json` (liens des 2 prises de chaque lot + phrases attendues) : le robot
    **Voix** (`.github/workflows/voix.yml`) télécharge, coupe aux grands silences avec `outils/decoupe_silences.py`
    (un MP3 par phrase, et il refuse s'il ne trouve pas exactement autant de morceaux que de phrases), range dans
    `audio/` et met à jour `audio/index.json`. Compte rendu : branche `statut-voix`.
+4. **vérifier en écoutant… par transcription** : mettre les MP3 bout à bout (avec un silence entre deux), faire
+   transcrire par ElevenLabs Scribe et comparer avec les textes attendus (c'est ainsi qu'on a repéré les nombres en anglais).
 
 ## 🇬🇧🇩🇪 Leçons de langues : écouter et répéter (depuis la v1.3.0)
 
