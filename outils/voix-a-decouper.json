@@ -1,0 +1,751 @@
+{
+ "lots": [
+  {
+   "nom": "lot1-v2",
+   "prises": [
+    "https://elevenlabsusercontent.com/database/workspace/0f93a4757fe54cd7b9d7d5acd191952b/content_generation/aYPWOwj4EmvvOu18ppKr/KIxcghBZqIaSvQ5L2T6f/content.mp3?Expires=1793829600&KeyName=assets-cdn-key-1&Signature=Ce-wZZNCfbqF3jvFOGtXjHrFqX8=",
+    "https://elevenlabsusercontent.com/database/workspace/0f93a4757fe54cd7b9d7d5acd191952b/content_generation/5AmbpZsuh0iMhNrcF6To/hbE2Gn0zZthAtgqGaML2/content.mp3?Expires=1793829600&KeyName=assets-cdn-key-1&Signature=yk2wteGe1FXUkZyzoKulRaYWlEc="
+   ],
+   "phrases": [
+    {
+     "texte": "Vers où va cette flèche ?",
+     "h": "8f65553a"
+    },
+    {
+     "texte": "Ce doigt montre quel côté ?",
+     "h": "78d17259"
+    },
+    {
+     "texte": "On lit une ligne...",
+     "h": "72caf9fe"
+    },
+    {
+     "texte": "Combien de doigts sur mes 2 mains ?",
+     "h": "ff74dd77"
+    },
+    {
+     "texte": "10",
+     "h": "556db8a6"
+    },
+    {
+     "texte": "5",
+     "h": "bda2de66"
+    },
+    {
+     "texte": "2",
+     "h": "c0a2e31f"
+    },
+    {
+     "texte": "5 plus 5 égale 10",
+     "h": "ecadd2f1"
+    },
+    {
+     "texte": "Une dizaine, c'est...",
+     "h": "9ca9195f"
+    },
+    {
+     "texte": "100",
+     "h": "11b99422"
+    },
+    {
+     "texte": "1",
+     "h": "c1a2e4b2"
+    },
+    {
+     "texte": "Compte les chats. Combien y en a-t-il ?",
+     "h": "de7f5f36"
+    },
+    {
+     "texte": "Trouve le mot dix.",
+     "h": "472a2da8"
+    },
+    {
+     "texte": "Il y a sept chats. Combien en manque-t-il pour faire dix ?",
+     "h": "705c2406"
+    },
+    {
+     "texte": "un",
+     "h": "8ec5b5d8"
+    },
+    {
+     "texte": "deux",
+     "h": "072006e1"
+    },
+    {
+     "texte": "trois",
+     "h": "f4df3e4e"
+    },
+    {
+     "texte": "quatre",
+     "h": "d0cc3eb1"
+    },
+    {
+     "texte": "cinq",
+     "h": "78e24ee6"
+    },
+    {
+     "texte": "six",
+     "h": "4855ce45"
+    },
+    {
+     "texte": "sept",
+     "h": "c4b0904f"
+    },
+    {
+     "texte": "huit",
+     "h": "5f20d465"
+    },
+    {
+     "texte": "neuf",
+     "h": "b976e4c1"
+    },
+    {
+     "texte": "dix",
+     "h": "9b3770e8"
+    },
+    {
+     "texte": "Dix ! Une dizaine !",
+     "h": "a56be732"
+    },
+    {
+     "texte": "Combien de doigts sur 2 mains ?",
+     "h": "b048d420"
+    },
+    {
+     "texte": "5 plus 5 égale ?",
+     "h": "e722b8b5"
+    },
+    {
+     "texte": "Il y a huit chats. Combien en manque-t-il pour faire dix ?",
+     "h": "15a50ad0"
+    },
+    {
+     "texte": "Une dizaine et 2 unités, ça fait...",
+     "h": "7e885580"
+    },
+    {
+     "texte": "12",
+     "h": "536db580"
+    },
+    {
+     "texte": "21",
+     "h": "6e6ba16a"
+    },
+    {
+     "texte": "3",
+     "h": "bfa2e18c"
+    },
+    {
+     "texte": "Dans dix-huit, on entend dix .",
+     "h": "212dc9e7"
+    },
+    {
+     "texte": "Une barre de dix et trois cubes, ça fait combien ?",
+     "h": "195e3528"
+    },
+    {
+     "texte": "Quel nombre vient juste après 16 ?",
+     "h": "bd577d2d"
+    },
+    {
+     "texte": "17",
+     "h": "586dbd5f"
+    },
+    {
+     "texte": "15",
+     "h": "5a6dc085"
+    },
+    {
+     "texte": "18",
+     "h": "5d6dc53e"
+    },
+    {
+     "texte": "Range du plus petit au plus grand",
+     "h": "e3034695"
+    },
+    {
+     "texte": "Trouve le nombre treize.",
+     "h": "433b8b51"
+    },
+    {
+     "texte": "onze : une dizaine et 1",
+     "h": "ee586a9b"
+    },
+    {
+     "texte": "douze : une dizaine et 2",
+     "h": "a300bb1f"
+    },
+    {
+     "texte": "treize : une dizaine et 3",
+     "h": "60ff3922"
+    },
+    {
+     "texte": "quatorze : une dizaine et 4",
+     "h": "3bfd2789"
+    },
+    {
+     "texte": "quinze : une dizaine et 5",
+     "h": "ce1489fb"
+    },
+    {
+     "texte": "seize : une dizaine et 6",
+     "h": "ba65ff36"
+    },
+    {
+     "texte": "dix-sept : une dizaine et 7",
+     "h": "3825c81d"
+    },
+    {
+     "texte": "dix-huit : une dizaine et 8",
+     "h": "94520f32"
+    },
+    {
+     "texte": "dix-neuf : une dizaine et 9",
+     "h": "0400d669"
+    },
+    {
+     "texte": "1 dizaine et 2 unités, c'est...",
+     "h": "23a467aa"
+    },
+    {
+     "texte": "Le nombre après 16 ?",
+     "h": "62be4776"
+    },
+    {
+     "texte": "Quel nombre est le plus grand ?",
+     "h": "56cead9b"
+    },
+    {
+     "texte": "1 dizaine et 5 unités, c'est...",
+     "h": "a03589df"
+    },
+    {
+     "texte": "Le nombre avant 14 ?",
+     "h": "57151fcf"
+    },
+    {
+     "texte": "2 plus 1 égale ?",
+     "h": "2aae0dd0"
+    },
+    {
+     "texte": "4",
+     "h": "bea2dff9"
+    },
+    {
+     "texte": "Le signe plus veut dire...",
+     "h": "68910448"
+    },
+    {
+     "texte": "j'ajoute",
+     "h": "c576b058"
+    },
+    {
+     "texte": "j'enlève",
+     "h": "e1db643f"
+    },
+    {
+     "texte": "Trois chats plus deux chats, ça fait combien ?",
+     "h": "641b57b5"
+    }
+   ]
+  },
+  {
+   "nom": "lot2-v2",
+   "prises": [
+    "https://elevenlabsusercontent.com/database/workspace/0f93a4757fe54cd7b9d7d5acd191952b/content_generation/id0Ymraw5mw3yUugAigU/xHGrLEtCOc8l1PoGlR8F/content.mp3?Expires=1793829600&KeyName=assets-cdn-key-1&Signature=IPn3_dOLpzDhy-2ZDYHqXhK3eW8=",
+    "https://elevenlabsusercontent.com/database/workspace/0f93a4757fe54cd7b9d7d5acd191952b/content_generation/aPa7JZXFkEXEYEHhX6wI/tDOm4SuBmWOUQ6RTy6Fy/content.mp3?Expires=1793829600&KeyName=assets-cdn-key-1&Signature=uzNG_2ocWxqACHi04j6Jx2toz3E="
+   ],
+   "phrases": [
+    {
+     "texte": "8 moins 2 égale ?",
+     "h": "dcce84fb"
+    },
+    {
+     "texte": "6",
+     "h": "bca2dcd3"
+    },
+    {
+     "texte": "Quand j'enlève, je fais une soustraction.",
+     "h": "cf6ed2d4"
+    },
+    {
+     "texte": "Il y a 5 chats. 1 chat s'en va. Combien en reste-t-il ?",
+     "h": "89d70ff0"
+    },
+    {
+     "texte": "Il y a 2 enfants sur le tourniquet. 1 enfant monte, puis encore 2 enfants montent.",
+     "h": "e3acc92d"
+    },
+    {
+     "texte": "2 plus 1 plus 2 égale 5",
+     "h": "280eb914"
+    },
+    {
+     "texte": "3 chats dorment. 2 chats arrivent.",
+     "h": "2e2addf8"
+    },
+    {
+     "texte": "3 plus 2 égale 5",
+     "h": "96923506"
+    },
+    {
+     "texte": "Il y a 8 pelotes. Le chat en emporte 2.",
+     "h": "190c0c30"
+    },
+    {
+     "texte": "8 moins 2 égale 6",
+     "h": "d3ce76d0"
+    },
+    {
+     "texte": "Il y a 5 poissons. Le chat en mange 1.",
+     "h": "78721192"
+    },
+    {
+     "texte": "5 moins 1 égale 4",
+     "h": "7471a9d8"
+    },
+    {
+     "texte": "4 moins 1 égale ?",
+     "h": "623775e0"
+    },
+    {
+     "texte": "Deux chats plus un chat ?",
+     "h": "5c20f6f4"
+    },
+    {
+     "texte": "5 plus 0 égale ?",
+     "h": "b0531dec"
+    },
+    {
+     "texte": "6 moins 2 égale ?",
+     "h": "8a5eb871"
+    },
+    {
+     "texte": "Dans quel mot entends-tu a ?",
+     "h": "760f9d15"
+    },
+    {
+     "texte": "chat",
+     "h": "0f4526a9"
+    },
+    {
+     "texte": "hibou",
+     "h": "2d67257e"
+    },
+    {
+     "texte": "livre",
+     "h": "250c5737"
+    },
+    {
+     "texte": "Dans quel mot entends-tu i ?",
+     "h": "8eda1bed"
+    },
+    {
+     "texte": "stylo",
+     "h": "971a0c96"
+    },
+    {
+     "texte": "chocolat",
+     "h": "27e05460"
+    },
+    {
+     "texte": "Dans âne , on entend a .",
+     "h": "7a415cd5"
+    },
+    {
+     "texte": "Quel geste pour le son a ?",
+     "h": "e3797315"
+    },
+    {
+     "texte": "J'ouvre ma main",
+     "h": "ea501e54"
+    },
+    {
+     "texte": "Je lève mon doigt",
+     "h": "3789fcbd"
+    },
+    {
+     "texte": "Trouve la lettre a.",
+     "h": "c6bb69aa"
+    },
+    {
+     "texte": "Quelle lettre peut aussi faire le son i , comme dans stylo ?",
+     "h": "cba41c06"
+    },
+    {
+     "texte": "a",
+     "h": "91a29922"
+    },
+    {
+     "texte": "avion",
+     "h": "220a628a"
+    },
+    {
+     "texte": "âne",
+     "h": "9b3d463b"
+    },
+    {
+     "texte": "canapé",
+     "h": "6ba017a6"
+    },
+    {
+     "texte": "ananas",
+     "h": "139c504f"
+    },
+    {
+     "texte": "i",
+     "h": "99a2a5ba"
+    },
+    {
+     "texte": "pyramide",
+     "h": "8b3b786c"
+    },
+    {
+     "texte": "souris",
+     "h": "d1868a66"
+    },
+    {
+     "texte": "nuit",
+     "h": "d739bb37"
+    },
+    {
+     "texte": "Où entends-tu a ?",
+     "h": "e55da84b"
+    },
+    {
+     "texte": "Où entends-tu i ?",
+     "h": "4d31c3b3"
+    },
+    {
+     "texte": "Dans quel mot entends-tu o ?",
+     "h": "1ce03feb"
+    },
+    {
+     "texte": "robot",
+     "h": "5182167d"
+    },
+    {
+     "texte": "lune",
+     "h": "6095ec69"
+    },
+    {
+     "texte": "Dans quel mot entends-tu u ?",
+     "h": "f814fb39"
+    },
+    {
+     "texte": "rose",
+     "h": "82c40a74"
+    },
+    {
+     "texte": "Dans tortue , on entend o et u .",
+     "h": "27037628"
+    },
+    {
+     "texte": "Quel geste pour le son o ?",
+     "h": "8a4a15eb"
+    },
+    {
+     "texte": "Je forme un rond avec mes doigts",
+     "h": "15f71e97"
+    },
+    {
+     "texte": "Trouve la lettre u.",
+     "h": "66ec6f56"
+    },
+    {
+     "texte": "Trouve la lettre o.",
+     "h": "c6ddfbec"
+    },
+    {
+     "texte": "o",
+     "h": "93a29c48"
+    },
+    {
+     "texte": "bol",
+     "h": "6ad15024"
+    },
+    {
+     "texte": "tortue",
+     "h": "8cfa273a"
+    },
+    {
+     "texte": "carotte",
+     "h": "45f23ec7"
+    },
+    {
+     "texte": "otarie",
+     "h": "16ccc51d"
+    },
+    {
+     "texte": "u",
+     "h": "7da279a6"
+    },
+    {
+     "texte": "fusée",
+     "h": "c7ccff0a"
+    },
+    {
+     "texte": "rue",
+     "h": "c81a55a1"
+    },
+    {
+     "texte": "jus",
+     "h": "e0a8f5ff"
+    },
+    {
+     "texte": "musique",
+     "h": "ee05c342"
+    }
+   ]
+  },
+  {
+   "nom": "lot3-v2",
+   "prises": [
+    "https://elevenlabsusercontent.com/database/workspace/0f93a4757fe54cd7b9d7d5acd191952b/content_generation/peVdg6rB7JM1SkrpX5YA/GPmuvLk36dfQInuUxq08/content.mp3?Expires=1793829600&KeyName=assets-cdn-key-1&Signature=BkA0TSR4P19kd3TdsjmXna3ftUo=",
+    "https://elevenlabsusercontent.com/database/workspace/0f93a4757fe54cd7b9d7d5acd191952b/content_generation/2OqU6ukbxMgFFC7iGOuP/fW2FiZpKwhKr7Lwe99eu/content.mp3?Expires=1793829600&KeyName=assets-cdn-key-1&Signature=3jp78BBMU8yZHvlwMCrkFxJSlwY="
+   ],
+   "phrases": [
+    {
+     "texte": "Où entends-tu o ?",
+     "h": "bfc97075"
+    },
+    {
+     "texte": "Où entends-tu u ?",
+     "h": "80cce907"
+    },
+    {
+     "texte": "Dans quel mot entends-tu é ?",
+     "h": "aed93c90"
+    },
+    {
+     "texte": "étoile",
+     "h": "2fd7101e"
+    },
+    {
+     "texte": "flèche",
+     "h": "1c925d00"
+    },
+    {
+     "texte": "cheval",
+     "h": "c2fe432a"
+    },
+    {
+     "texte": "Dans quel mot entends-tu è ?",
+     "h": "41f240db"
+    },
+    {
+     "texte": "fête",
+     "h": "5ed60e61"
+    },
+    {
+     "texte": "Dans fusée , on entend é .",
+     "h": "d7db5a65"
+    },
+    {
+     "texte": "Quel geste pour le son é ?",
+     "h": "ec751e90"
+    },
+    {
+     "texte": "Je pose ma main sur mon front",
+     "h": "c28a3f87"
+    },
+    {
+     "texte": "Trouve la lettre é. Son accent monte, comme une fusée.",
+     "h": "3360c118"
+    },
+    {
+     "texte": "é",
+     "h": "7103922f"
+    },
+    {
+     "texte": "accordéon",
+     "h": "638c27be"
+    },
+    {
+     "texte": "poupée",
+     "h": "d5d53d1a"
+    },
+    {
+     "texte": "fée",
+     "h": "108622aa"
+    },
+    {
+     "texte": "è",
+     "h": "7003909c"
+    },
+    {
+     "texte": "forêt",
+     "h": "b4a0679d"
+    },
+    {
+     "texte": "crème",
+     "h": "df57b95b"
+    },
+    {
+     "texte": "eu",
+     "h": "99ecd699"
+    },
+    {
+     "texte": "renard",
+     "h": "39cfe2f5"
+    },
+    {
+     "texte": "melon",
+     "h": "55bed3e2"
+    },
+    {
+     "texte": "fenêtre",
+     "h": "b8d36d6a"
+    },
+    {
+     "texte": "Où entends-tu é ?",
+     "h": "80365ad6"
+    },
+    {
+     "texte": "Où entends-tu è ?",
+     "h": "935028a1"
+    },
+    {
+     "texte": "Trouve la lettre é, avec l'accent qui monte.",
+     "h": "7c2544d9"
+    },
+    {
+     "texte": "f plus a, ça fait quelle syllabe ?",
+     "h": "4dacc944"
+    },
+    {
+     "texte": "n plus o, ça fait quelle syllabe ?",
+     "h": "1d426ec6"
+    },
+    {
+     "texte": "Dans quel mot entends-tu fffff, comme dans forêt ?",
+     "h": "8590975b"
+    },
+    {
+     "texte": "Dans quel mot entends-tu nnnn, comme dans Noël ?",
+     "h": "93f0d3ce"
+    },
+    {
+     "texte": "Trouve la syllabe nu.",
+     "h": "45581994"
+    },
+    {
+     "texte": "Trouve la syllabe fé.",
+     "h": "769d31f7"
+    },
+    {
+     "texte": "fffff, comme dans fée",
+     "h": "a427d8ab"
+    },
+    {
+     "texte": "fumée",
+     "h": "76e11584"
+    },
+    {
+     "texte": "film",
+     "h": "94ac8081"
+    },
+    {
+     "texte": "farine",
+     "h": "0fa6d702"
+    },
+    {
+     "texte": "nnnn, comme dans Noël",
+     "h": "21bd6015"
+    },
+    {
+     "texte": "numéro",
+     "h": "243a9992"
+    },
+    {
+     "texte": "Noël",
+     "h": "6b1be77a"
+    },
+    {
+     "texte": "niche",
+     "h": "e6bf3d80"
+    },
+    {
+     "texte": "narines",
+     "h": "b30d6bfb"
+    },
+    {
+     "texte": "f plus a, ça fait ?",
+     "h": "6aff8250"
+    },
+    {
+     "texte": "n plus o, ça fait ?",
+     "h": "c3ba4686"
+    },
+    {
+     "texte": "f plus i, ça fait ?",
+     "h": "f7a67628"
+    },
+    {
+     "texte": "n plus u, ça fait ?",
+     "h": "7424df1c"
+    },
+    {
+     "texte": "Dans quel mot entends-tu ffff, comme dans forêt ?",
+     "h": "5a3600c7"
+    },
+    {
+     "texte": "Quelle est la première lettre de l'alphabet ?",
+     "h": "8451adb1"
+    },
+    {
+     "texte": "z",
+     "h": "88a28af7"
+    },
+    {
+     "texte": "Quelle lettre vient après a ?",
+     "h": "0042a3f6"
+    },
+    {
+     "texte": "b",
+     "h": "90a2978f"
+    },
+    {
+     "texte": "c",
+     "h": "8fa295fc"
+    },
+    {
+     "texte": "d",
+     "h": "8ea29469"
+    },
+    {
+     "texte": "Une lettre peut s'écrire en script et en attaché.",
+     "h": "7f3e7343"
+    },
+    {
+     "texte": "Quelle lettre vient après m ?",
+     "h": "347b9a0a"
+    },
+    {
+     "texte": "n",
+     "h": "94a29ddb"
+    },
+    {
+     "texte": "l",
+     "h": "96a2a101"
+    },
+    {
+     "texte": "Range les lettres dans l'ordre de l'alphabet",
+     "h": "44f864b3"
+    },
+    {
+     "texte": "Trouve la lettre l.",
+     "h": "68db295b"
+    },
+    {
+     "texte": "Trouve la lettre m.",
+     "h": "46d8b53e"
+    },
+    {
+     "texte": "Trouve la lettre b.",
+     "h": "e8c25af5"
+    }
+   ]
+  }
+ ]
+}
