@@ -118,7 +118,7 @@ Depuis la v1.15.0, **plus de boutons haut-parleur partout** : la voix ne sert qu
 et c'est toujours une **voix ElevenLabs** enregistrée à l'avance en MP3 (dossier `audio/`, liste dans `audio/index.json`) :
 - **langues** : les mots étrangers (🔊 / 🐢 dans la bulle du mot) — voir plus bas ;
 - **dictées** : le visuel `{"visuel": "dictee", "phrases": ["morceau 1", "morceau 2", …]}` dicte le texte morceau par
-  morceau (🐢 lent / 🐇 normal, ⏭ suivant, 🔁 tout réécouter) ;
+  morceau (🐢 lent = × 0,72 / 🐇 normal = × 0,9 : la voix ElevenLabs parle vite, ⏭ suivant, 🔁 tout réécouter) ;
 - **CP** (profil `"lectureAuto": true`, Ava) : la question est lue toute seule (+ un seul 🔊 pour la réécouter),
   et les activités des sons et des nombres parlent quand on les touche.
 

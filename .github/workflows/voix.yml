@@ -58,4 +58,8 @@ jobs:
           cd "$RUNNER_TEMP" && git init -q statut && cd statut
           git config user.name "robot-voix" && git config user.email "actions@users.noreply.github.com"
           cp ../statut.json . && git add statut.json && git commit -qm "Statut voix : ${{ job.status }}"
-          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:statut-voix
+          # 3 essais : un envoi peut être refusé si GitHub est occupé juste à ce moment-là
+          for essai in 1 2 3; do
+            git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:statut-voix && break
+            sleep 10
+          done

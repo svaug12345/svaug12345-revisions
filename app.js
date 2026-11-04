@@ -285,9 +285,13 @@ let fileVoix = [];  // morceaux de phrase qui attendent leur tour (une question 
  * Lit un ou plusieurs textes en français, l'un après l'autre (coupe d'abord ce qui était lu).
  *   lireAVoixHaute('Dans quel mot entends-tu a ?')
  *   lireAVoixHaute(['Dans quel mot entends-tu a ?', 'chat', 'hibou'])   -> question puis réponses
- *   lireAVoixHaute(texte, { lent: true })                                -> dictée lente
+ *   lireAVoixHaute(texte, { lent: true })                                -> dictée lente (× 0,72)
+ *   lireAVoixHaute(texte, { vitesse: 1 })                                -> vitesse d'origine
  */
-function lireAVoixHaute(textes, { lent = false } = {}) {
+function lireAVoixHaute(textes, { lent = false, vitesse } = {}) {
+  // Vitesse de lecture des MP3 (1 = telle qu'enregistrée). La voix ElevenLabs parle assez vite :
+  // on ralentit un peu par défaut, beaucoup en mode « lent » (preservesPitch garde une voix naturelle).
+  const rythme = vitesse ?? (lent ? 0.72 : 0.9);
   couperVoix();
   fileVoix = [].concat(textes).map(pourLaVoix).filter(Boolean);
   const suivant = () => {
@@ -297,14 +301,14 @@ function lireAVoixHaute(textes, { lent = false } = {}) {
     if (audiosDispo.has(h)) {
       lecteur = new Audio('audio/' + h + '.mp3');
       lecteur.preservesPitch = true;                 // ralenti sans voix grave
-      lecteur.playbackRate = lent ? 0.8 : 1;
+      lecteur.playbackRate = rythme;
       lecteur.onended = () => setTimeout(suivant, 250);  // petit silence entre deux morceaux
       lecteur.play().catch(() => { voixDuTelephone(texte); });
     } else {
       console.warn('MP3 manquant (voix du téléphone en secours) :', JSON.stringify(texte), h);
       if ('speechSynthesis' in window) {
         const phrase = new SpeechSynthesisUtterance(texte);
-        phrase.lang = 'fr-FR'; phrase.rate = lent ? 0.7 : 0.9;
+        phrase.lang = 'fr-FR'; phrase.rate = rythme * 0.95;
         phrase.onend = () => setTimeout(suivant, 250);
         speechSynthesis.speak(phrase);
       }
