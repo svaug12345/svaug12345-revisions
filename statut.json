@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-04T18:41:02Z",
+  "resultat": "success",
+  "secretsManquants": "",
+  "adresse": "https://mes-revisions-envoi.sebastien-vaug.workers.dev",
+  "reponseWorker": "{\"ok\":true,\"service\":\"Mes Révisions — envoi de leçons\"}",
+  "accesDepotPrive": "200",
+  "testMauvaisCode": "403",
+  "commit": "2ba53da1b6c5eb4074da318021be7408b54409c9",
+  "lien": "https://github.com/svaug12345/svaug12345-revisions/actions/runs/41889479804",
+  "journal": "\n ⛅️ wrangler 3.90.0 (update available 4.157.0)\n----------------------------------------------\n\nTotal Upload: 7.46 KiB / gzip: 2.88 KiB\nYour worker has access to the following bindings:\n- Vars:\n  - DEPOT: \"svaug12345/revisions-demandes\"\n  - BRANCHE: \"main\"\n  - ORIGINES: \"https://baiji.fr,http://localhost:8765\"\nUploaded mes-revisions-envoi (2.21 sec)\nDeployed mes-revisions-envoi triggers (0.33 sec)\n  https://mes-revisions-envoi.sebastien-vaug.workers.dev\nCurrent Version ID: 3ce2365d-a832-48ed-9f1b-a250e11188a5\n\n\u001b[33m▲ \u001b[43;33m[\u001b[43;30mWARNING\u001b[43;33m]\u001b[0m \u001b[1mThe version of Wrangler you are using is now out-of-date.\u001b[0m\n\n  Please update to the latest version to prevent critical errors.\n  Run `npm install --save-dev wrangler@4` to update to the latest version.\n  After installation, run Wrangler with `npx wrangler`."
+}
