@@ -1,6 +1,6 @@
 {
-  "maj": "03/11/2026",
-  "versionApp": "1.13.0",
+  "maj": "04/11/2026",
+  "versionApp": "1.13.1",
 
   "enfants": [
     {"id": "tom", "nom": "Tom", "avatar": "avatars/tom.svg", "couleur": "#22c55e", "age": 6},
@@ -766,6 +766,143 @@
       ]
     },
 
+    {
+      "id": "titouan-relief-1-formes",
+      "pour": ["titouan"],
+      "matiere": "Géographie",
+      "parcours": "Relief et climats de la France",
+      "etape": 1,
+      "titre": "Plaines, plateaux et montagnes",
+      "emoji": "🏔️",
+      "ajoutee": "2026-11-04",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# 🧰 L'altitude, c'est quoi ?",
+        "- L'**altitude**, c'est la **hauteur** d'un endroit, mesurée **à partir du niveau de la mer**, en **mètres**.",
+        {"visuel": "encadre", "style": "exemple", "texte": ["Au bord de la mer : altitude **0 m**. En haut du Mont Blanc : **4 808 m**, presque 50 terrains de foot mis bout à bout… vers le ciel ! ⚽"]},
+        "# Les 4 formes du relief",
+        {"visuel": "cartes", "elements": [{"emoji": "🟩", "titre": "Plaine", "texte": "Basse et plate. La rivière coule tranquille, sans creuser."}, {"emoji": "🟫", "titre": "Plateau", "texte": "Plat, mais plus haut. La rivière creuse une vallée profonde : elle est encaissée."}, {"emoji": "⛰️", "titre": "Moyenne montagne", "texte": "Sommets arrondis, pentes douces. Pas plus de 2 000 m environ."}, {"emoji": "🏔️", "titre": "Haute montagne", "texte": "Sommets pointus, pentes raides, souvent plus de 3 000 m."}]},
+        {"visuel": "decision", "question": "Comment reconnaître ? Touche une réponse", "choix": [{"si": "C'est plat et bas", "alors": "Une **plaine**", "exemple": "Le Bassin parisien"}, {"si": "C'est plat mais haut, avec une rivière encaissée", "alors": "Un **plateau**", "exemple": "Les Causses"}, {"si": "Les sommets sont arrondis", "alors": "Une **moyenne montagne**", "exemple": "Les Vosges"}, {"si": "Les sommets sont pointus", "alors": "Une **haute montagne**", "exemple": "Les Alpes"}]},
+        "# Le vocabulaire de la haute montagne",
+        {"visuel": "cartes", "elements": [{"emoji": "🔺", "titre": "Pic", "texte": "Un sommet pointu."}, {"emoji": "📍", "titre": "Aiguille", "texte": "Un pic très fin qui dépasse de la ligne de crêtes."}, {"emoji": "〰️", "titre": "Ligne de crêtes", "texte": "La ligne qui relie les sommets."}, {"emoji": "🚶", "titre": "Col", "texte": "Un creux dans la ligne de crêtes : on passe par là."}, {"emoji": "🧊", "titre": "Glacier", "texte": "Un énorme fleuve de glace qui avance très lentement."}, {"emoji": "🕳️", "titre": "Crevasse", "texte": "Une fente profonde dans le glacier."}, {"emoji": "💧", "titre": "Torrent", "texte": "Le cours d'eau rapide né de la glace qui fond."}]},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Tirs au but : le relief", "tirs": [{"texte": "Sommets pointus, pentes raides ?", "choix": ["haute montagne", "plaine", "plateau"]}, {"texte": "Bas et plat ?", "choix": ["plaine", "plateau", "haute montagne"]}, {"texte": "Un creux pour passer entre deux sommets ?", "choix": ["col", "pic", "glacier"]}, {"texte": "Un fleuve de glace ?", "choix": ["glacier", "torrent", "crevasse"]}, {"texte": "L'altitude se mesure à partir…", "choix": ["du niveau de la mer", "du sol de ta maison", "des nuages"]}]}
+      ],
+      "activites": [
+        {"type": "vraifaux", "affirmation": "L'altitude se mesure à partir du niveau de la mer.", "reponse": true, "niveau": 1},
+        {"type": "qcm", "question": "Une étendue basse et plate, c'est…", "choix": ["une plaine", "une montagne", "un col"], "niveau": 1, "indice": "Pense à un grand terrain de foot tout plat, tout en bas."},
+        {"type": "qcm", "question": "Des sommets arrondis et des pentes douces, c'est…", "choix": ["une moyenne montagne", "une haute montagne", "une plaine"], "niveau": 1, "indice": "Arrondi = pas très haut."},
+        {"type": "vraifaux", "affirmation": "En haute montagne, les sommets sont pointus.", "reponse": true, "niveau": 1},
+        {"type": "qcm", "question": "Quelle est la différence entre un plateau et une plaine ?", "choix": ["Le plateau est plus haut, la rivière y est encaissée", "La plaine a des sommets pointus", "Il n'y a aucune différence"], "niveau": 2, "indice": "Les deux sont plats… mais l'un est en hauteur."},
+        {"type": "paires", "consigne": "Associe chaque mot à sa définition", "paires": [["Pic", "sommet pointu"], ["Col", "passage entre deux sommets"], ["Glacier", "fleuve de glace"], ["Torrent", "eau rapide de la montagne"]], "niveau": 2},
+        {"type": "qcm", "question": "Une fente profonde dans un glacier s'appelle…", "choix": ["une crevasse", "une aiguille", "une crête"], "niveau": 2, "indice": "Attention, on peut tomber dedans !"},
+        {"type": "qcm", "question": "D'où vient l'eau d'un torrent de montagne ?", "choix": ["De la glace du glacier qui fond", "De la mer", "D'un lac en plaine"], "niveau": 3, "indice": "Quand il fait plus chaud, le bas du glacier…"},
+        {"type": "ordre", "consigne": "Range du plus bas au plus haut", "elements": ["plaine", "plateau", "moyenne montagne", "haute montagne"], "niveau": 3, "indice": "Commence par ce qui est tout plat et tout en bas."}
+      ]
+    },
+    {
+      "id": "titouan-relief-2-montagnes",
+      "pour": ["titouan"],
+      "matiere": "Géographie",
+      "parcours": "Relief et climats de la France",
+      "etape": 2,
+      "titre": "Les montagnes de France",
+      "emoji": "⛰️",
+      "ajoutee": "2026-11-04",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# 🧰 Les couleurs de la carte",
+        {"visuel": "cartes", "elements": [{"emoji": "🟢", "titre": "Vert", "texte": "de 0 à 200 m : les plaines"}, {"emoji": "🟡", "titre": "Jaune", "texte": "de 200 à 500 m"}, {"emoji": "🟠", "titre": "Orange", "texte": "de 500 à 1 500 m"}, {"emoji": "🟤", "titre": "Marron", "texte": "plus de 1 500 m : les hautes terres"}]},
+        "- Le **nord** et l'**ouest** de la France sont surtout des **plaines** (vertes) : le **Bassin parisien**, le **Bassin aquitain**.",
+        "- Les **montagnes** sont plutôt au **centre**, à l'**est** et au **sud**.",
+        "# Les 2 hautes montagnes",
+        {"visuel": "cartes", "elements": [{"emoji": "🏔️", "titre": "Les Alpes", "texte": "À l'est, vers l'Italie et la Suisse. Point culminant : le Mont Blanc, 4 808 m. Le plus haut de France !"}, {"emoji": "🏔️", "titre": "Les Pyrénées", "texte": "Au sud, à la frontière avec l'Espagne. Côté français : le Vignemale, 3 298 m."}]},
+        "# Les 3 moyennes montagnes",
+        {"visuel": "cartes", "elements": [{"emoji": "⛰️", "titre": "Le Massif central", "texte": "Au centre. Le Puy de Sancy, 1 886 m (anciens volcans !)."}, {"emoji": "⛰️", "titre": "Le Jura", "texte": "À l'est, vers la Suisse. Le Crêt de la Neige, 1 723 m."}, {"emoji": "⛰️", "titre": "Les Vosges", "texte": "Au nord-est. Le Ballon de Guebwiller, 1 423 m."}]},
+        {"visuel": "barres", "titre": "Les points culminants (en mètres)", "max": 5000, "elements": [{"label": "Mont Blanc (Alpes)", "valeur": 4808, "texte": "4 808 m", "couleur": "#8b5cf6"}, {"label": "Vignemale (Pyrénées)", "valeur": 3298, "texte": "3 298 m", "couleur": "#8b5cf6"}, {"label": "Monte Cinto (Corse)", "valeur": 2706, "texte": "2 706 m", "couleur": "#ef4444"}, {"label": "Puy de Sancy (Massif central)", "valeur": 1886, "texte": "1 886 m", "couleur": "#f59e0b"}, {"label": "Crêt de la Neige (Jura)", "valeur": 1723, "texte": "1 723 m", "couleur": "#f59e0b"}, {"label": "Ballon de Guebwiller (Vosges)", "valeur": 1423, "texte": "1 423 m", "couleur": "#f59e0b"}], "legende": "Le **point culminant**, c'est le sommet le plus haut d'une montagne."},
+        {"visuel": "encadre", "style": "astuce", "texte": ["Pour retenir les 5 montagnes, pense à une équipe : **2 attaquants** très hauts (**Alpes**, **Pyrénées**) et **3 milieux** (**Massif central**, **Jura**, **Vosges**). ⚽"]},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Tirs au but : les montagnes", "tirs": [{"texte": "Le plus haut sommet de France ?", "choix": ["le Mont Blanc", "le Puy de Sancy", "le Vignemale"]}, {"texte": "Les montagnes à la frontière avec l'Espagne ?", "choix": ["les Pyrénées", "les Vosges", "le Jura"]}, {"texte": "Le Puy de Sancy est dans…", "choix": ["le Massif central", "les Alpes", "les Vosges"]}, {"texte": "Couleur de la carte pour plus de 1 500 m ?", "choix": ["marron", "vert", "jaune"]}, {"texte": "Une moyenne montagne ?", "choix": ["le Jura", "les Alpes", "les Pyrénées"]}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Quelle est la plus haute montagne de France ?", "choix": ["Le Mont Blanc", "Le Puy de Sancy", "Le Ballon de Guebwiller"], "niveau": 1, "indice": "Il est blanc de neige toute l'année, dans les Alpes."},
+        {"type": "vraifaux", "affirmation": "Sur la carte, le vert montre les endroits les plus bas (0 à 200 m).", "reponse": true, "niveau": 1},
+        {"type": "qcm", "question": "Les Pyrénées sont à la frontière avec…", "choix": ["l'Espagne", "l'Italie", "la Belgique"], "niveau": 1, "indice": "Elles sont tout au sud."},
+        {"type": "qcm", "question": "Combien de hautes montagnes y a-t-il en France ?", "choix": ["2", "5", "1"], "niveau": 2, "indice": "Les 2 « attaquants » de l'équipe."},
+        {"type": "paires", "consigne": "Associe chaque montagne à son point culminant", "paires": [["Alpes", "Mont Blanc"], ["Pyrénées", "Vignemale"], ["Massif central", "Puy de Sancy"], ["Vosges", "Ballon de Guebwiller"], ["Jura", "Crêt de la Neige"]], "niveau": 2},
+        {"type": "qcm", "question": "Quelle altitude a le Mont Blanc ?", "choix": ["4 808 m", "1 886 m", "3 298 m"], "niveau": 2, "indice": "C'est le plus haut, donc le plus grand nombre."},
+        {"type": "vraifaux", "affirmation": "Le Puy de Sancy est plus haut que le Ballon de Guebwiller.", "reponse": true, "niveau": 3, "explication": "1 886 m, c'est plus que 1 423 m.", "indice": "Compare 1 886 et 1 423."},
+        {"type": "qcm", "question": "Les grandes plaines de France sont surtout…", "choix": ["au nord et à l'ouest", "au sud-est", "dans les Alpes"], "niveau": 3, "indice": "Regarde où la carte est verte."},
+        {"type": "ordre", "consigne": "Range les sommets du plus haut au plus bas", "elements": ["Mont Blanc", "Vignemale", "Puy de Sancy", "Ballon de Guebwiller"], "niveau": 3, "indice": "4 808, 3 298, 1 886, 1 423…"}
+      ]
+    },
+    {
+      "id": "titouan-relief-3-climats",
+      "pour": ["titouan"],
+      "matiere": "Géographie",
+      "parcours": "Relief et climats de la France",
+      "etape": 3,
+      "titre": "Les climats de France",
+      "emoji": "🌦️",
+      "ajoutee": "2026-11-04",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# 🧰 Climat ou météo ?",
+        "- La **météo**, c'est le temps qu'il fait **aujourd'hui**. Le **climat**, c'est le temps qu'il fait **en général**, année après année, dans une région.",
+        "# Les 4 climats de France",
+        {"visuel": "cartes", "elements": [{"emoji": "🔵", "titre": "Océanique", "texte": "À l'ouest, près de l'océan. Hiver frais et pluvieux, été doux. Des champs entourés de haies : le bocage."}, {"emoji": "🟢", "titre": "Continental", "texte": "À l'est. Hiver froid avec de la neige, été chaud avec des orages. De grands champs ouverts."}, {"emoji": "🟡", "titre": "Méditerranéen", "texte": "Au sud-est, près de la Méditerranée. Hiver doux, été chaud et sec. Vergers, garrigue et maquis."}, {"emoji": "🟤", "titre": "Montagnard", "texte": "Dans les montagnes. Hiver froid et neigeux, été orageux. Pâturages et forêts de sapins."}]},
+        {"visuel": "decision", "question": "Quel temps fait-il ? Touche une réponse", "choix": [{"si": "Il pleut souvent, mais il ne fait jamais très froid", "alors": "Climat **océanique** (ouest)", "exemple": "En Bretagne"}, {"si": "Hiver très froid, été chaud et orageux", "alors": "Climat **continental** (est)", "exemple": "En Lorraine"}, {"si": "Été chaud et sec, beaucoup de soleil", "alors": "Climat **méditerranéen** (sud-est)", "exemple": "À Marseille"}, {"si": "Beaucoup de neige l'hiver", "alors": "Climat **montagnard**", "exemple": "Dans les Alpes"}]},
+        {"visuel": "encadre", "style": "astuce", "texte": ["Il y a **5 zones** de climat montagnard : les **Alpes**, les **Pyrénées**, le **Massif central**, le **Jura** et les **Vosges** (et la montagne de **Corse**)."]},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Tirs au but : les climats", "tirs": [{"texte": "Été chaud et sec, au bord de la Méditerranée ?", "choix": ["méditerranéen", "océanique", "continental"]}, {"texte": "À l'ouest, près de l'océan ?", "choix": ["océanique", "montagnard", "méditerranéen"]}, {"texte": "Hiver froid et neigeux, dans les montagnes ?", "choix": ["montagnard", "océanique", "méditerranéen"]}, {"texte": "Des champs entourés de haies ?", "choix": ["le bocage", "la garrigue", "les alpages"]}, {"texte": "Le temps qu'il fait aujourd'hui ?", "choix": ["la météo", "le climat", "l'altitude"]}]}
+      ],
+      "activites": [
+        {"type": "vraifaux", "affirmation": "La météo, c'est le temps qu'il fait aujourd'hui.", "reponse": true, "niveau": 1},
+        {"type": "qcm", "question": "Combien y a-t-il de climats en France ?", "choix": ["4", "2", "10"], "niveau": 1, "indice": "Océanique, continental, méditerranéen, et…"},
+        {"type": "qcm", "question": "Près de l'océan Atlantique, le climat est…", "choix": ["océanique", "méditerranéen", "montagnard"], "niveau": 1, "indice": "Le nom ressemble à « océan »."},
+        {"type": "qcm", "question": "Où trouve-t-on le climat méditerranéen ?", "choix": ["Au sud-est", "Au nord", "À l'ouest"], "niveau": 2, "indice": "Près de la mer Méditerranée, là où il fait chaud l'été."},
+        {"type": "paires", "consigne": "Associe chaque climat à son paysage", "paires": [["Océanique", "bocage (champs et haies)"], ["Continental", "grands champs ouverts"], ["Méditerranéen", "garrigue et vergers"], ["Montagnard", "pâturages et sapins"]], "niveau": 2},
+        {"type": "vraifaux", "affirmation": "Avec le climat continental, l'hiver est doux.", "reponse": false, "niveau": 2, "explication": "Non : l'hiver continental est froid, avec de la neige. C'est le climat méditerranéen qui a un hiver doux.", "indice": "Le climat continental est à l'est, loin de l'océan."},
+        {"type": "qcm", "question": "Un hiver froid avec de la pluie et de la neige, un été chaud avec des orages : c'est le climat…", "choix": ["continental", "océanique", "méditerranéen"], "niveau": 3, "indice": "C'est à l'est, en Lorraine par exemple."},
+        {"type": "qcm", "question": "Quelle montagne n'a PAS de climat montagnard ?", "choix": ["Aucune : toutes en ont un", "Les Vosges", "Le Jura"], "niveau": 3, "indice": "Les 5 montagnes de France sont toutes en marron sur la carte des climats."}
+      ]
+    },
+    {
+      "id": "titouan-relief-4-etagement",
+      "pour": ["titouan"],
+      "matiere": "Géographie",
+      "parcours": "Relief et climats de la France",
+      "etape": 4,
+      "titre": "L'étagement en montagne",
+      "emoji": "🧗",
+      "ajoutee": "2026-11-04",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# 🧰 Plus on monte, plus il fait froid",
+        "- En montagne, quand on **monte**, il fait **plus froid**. Les plantes et les activités changent donc avec l'**altitude**, comme les **étages** d'un immeuble : c'est l'**étagement**.",
+        "# Adret et ubac",
+        {"visuel": "cartes", "elements": [{"emoji": "☀️", "titre": "Adret", "texte": "Le côté de la montagne au soleil. Plus chaud : on y trouve les villages et les cultures."}, {"emoji": "🌑", "titre": "Ubac", "texte": "Le côté à l'ombre. Plus froid : surtout des forêts."}]},
+        {"visuel": "encadre", "style": "astuce", "texte": ["**A**dret = **A**u soleil ☀️. **U**bac = **U**n peu dans l'ombre 🌑."]},
+        "# Les étages, du bas vers le haut",
+        {"visuel": "cartes", "elements": [{"emoji": "🌾", "titre": "En bas", "texte": "Cultures et villages (côté soleil), forêts de feuillus : chênes, hêtres, châtaigniers."}, {"emoji": "🌲", "titre": "Plus haut", "texte": "Forêts de résineux : sapins, pins, mélèzes, épicéas."}, {"emoji": "🐄", "titre": "Encore plus haut", "texte": "Les alpages : de l'herbe pour les vaches l'été, des pistes de ski l'hiver."}, {"emoji": "❄️", "titre": "Tout en haut", "texte": "Les neiges éternelles : elles ne fondent jamais, même l'été."}]},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Tirs au but : l'étagement", "tirs": [{"texte": "Le versant au soleil ?", "choix": ["l'adret", "l'ubac", "le col"]}, {"texte": "Le versant à l'ombre ?", "choix": ["l'ubac", "l'adret", "la crête"]}, {"texte": "Tout en haut de la montagne ?", "choix": ["les neiges éternelles", "les cultures", "les villages"]}, {"texte": "Les prairies où les vaches mangent l'été ?", "choix": ["les alpages", "la garrigue", "le bocage"]}, {"texte": "Les sapins, ce sont des…", "choix": ["résineux", "feuillus", "cultures"]}]}
+      ],
+      "activites": [
+        {"type": "vraifaux", "affirmation": "Plus on monte en montagne, plus il fait froid.", "reponse": true, "niveau": 1},
+        {"type": "qcm", "question": "Le versant de la montagne exposé au soleil s'appelle…", "choix": ["l'adret", "l'ubac", "le glacier"], "niveau": 1, "indice": "A comme « Au soleil »."},
+        {"type": "qcm", "question": "Sur quel versant trouve-t-on surtout les villages et les cultures ?", "choix": ["L'adret, au soleil", "L'ubac, à l'ombre", "Tout en haut"], "niveau": 1, "indice": "Les plantes et les gens aiment la lumière et la chaleur."},
+        {"type": "qcm", "question": "Que trouve-t-on tout en haut des grandes montagnes ?", "choix": ["Les neiges éternelles", "Des champs de blé", "Des forêts de chênes"], "niveau": 2, "indice": "Là-haut, il fait toujours moins de 0 °C."},
+        {"type": "paires", "consigne": "Associe chaque étage à ce qu'on y trouve", "paires": [["En bas", "cultures et villages"], ["Plus haut", "forêts de sapins"], ["Encore plus haut", "alpages et pistes de ski"], ["Tout en haut", "neiges éternelles"]], "niveau": 2},
+        {"type": "vraifaux", "affirmation": "Les alpages servent aux vaches l'été et aux skieurs l'hiver.", "reponse": true, "niveau": 2},
+        {"type": "ordre", "consigne": "Range les étages du bas vers le haut", "elements": ["cultures et villages", "forêts de feuillus", "forêts de résineux", "alpages", "neiges éternelles"], "niveau": 3, "indice": "Les arbres qui perdent leurs feuilles sont plus bas que les sapins."},
+        {"type": "qcm", "question": "Pourquoi les plantes changent-elles quand on monte ?", "choix": ["Parce qu'il fait de plus en plus froid", "Parce qu'il y a plus de soleil", "Parce que la mer est plus près"], "niveau": 3, "indice": "Pense à la température en haut d'une montagne."}
+      ]
+    },
     {
       "id": "ava-reperer-1-position",
       "pour": ["ava"],
