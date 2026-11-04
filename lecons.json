@@ -1,6 +1,6 @@
 {
   "maj": "04/11/2026",
-  "versionApp": "1.13.1",
+  "versionApp": "1.13.2",
 
   "enfants": [
     {"id": "tom", "nom": "Tom", "avatar": "avatars/tom.svg", "couleur": "#22c55e", "age": 6},
@@ -901,6 +901,105 @@
         {"type": "vraifaux", "affirmation": "Les alpages servent aux vaches l'été et aux skieurs l'hiver.", "reponse": true, "niveau": 2},
         {"type": "ordre", "consigne": "Range les étages du bas vers le haut", "elements": ["cultures et villages", "forêts de feuillus", "forêts de résineux", "alpages", "neiges éternelles"], "niveau": 3, "indice": "Les arbres qui perdent leurs feuilles sont plus bas que les sapins."},
         {"type": "qcm", "question": "Pourquoi les plantes changent-elles quand on monte ?", "choix": ["Parce qu'il fait de plus en plus froid", "Parce qu'il y a plus de soleil", "Parce que la mer est plus près"], "niveau": 3, "indice": "Pense à la température en haut d'une montagne."}
+      ]
+    },
+    {
+      "id": "titouan-homophones-1-a",
+      "pour": ["titouan"],
+      "matiere": "Français",
+      "parcours": "Les homophones",
+      "etape": 1,
+      "titre": "a ou à ?",
+      "emoji": "🅰️",
+      "ajoutee": "2026-11-04",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# 🧰 Des homophones, c'est quoi ?",
+        "- Des mots qui se **prononcent pareil** mais qui **s'écrivent différemment** et ne veulent pas dire la même chose.",
+        {"visuel": "encadre", "style": "exemple", "texte": ["Le joueur **a** un ballon. Il va **à** l'entraînement. ⚽ On entend deux fois « a »… mais ce n'est pas le même mot !"]},
+        "# a ou à ?",
+        {"visuel": "cartes", "elements": [{"emoji": "🅰️", "titre": "a (sans accent)", "texte": "C'est le verbe avoir : il a, elle a. On peut le remplacer par **avait**.", "couleur": "#14b8a6"}, {"emoji": "➡️", "titre": "à (avec accent)", "texte": "Un petit mot qui montre où, quand, comment : à Paris, à 15 h, à pied. **Avait** ne marche pas.", "couleur": "#6366f1"}]},
+        {"visuel": "decision", "question": "Remplace par « avait » : est-ce que la phrase marche encore ?", "choix": [{"si": "Oui, ça marche", "alors": "J'écris **a** (sans accent)", "exemple": "Mbappé a marqué → Mbappé avait marqué ✅"}, {"si": "Non, ça ne veut plus rien dire", "alors": "J'écris **à** (avec accent)", "exemple": "Je vais à Paris → Je vais avait Paris ❌"}]},
+        {"visuel": "encadre", "style": "attention", "texte": ["Avec **tu**, on écrit **as** : tu **as** un maillot."]},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Tirs au but : a ou à ?", "tirs": [{"texte": "Le gardien … un gant troué.", "choix": ["a", "à"]}, {"texte": "On joue … la balle au prisonnier.", "choix": ["à", "a"]}, {"texte": "Titouan … gagné le match.", "choix": ["a", "à"]}, {"texte": "Le match commence … 15 heures.", "choix": ["à", "a"]}, {"texte": "Tu … un nouveau ballon.", "choix": ["as", "a", "à"]}]}
+      ],
+      "activites": [
+        {"type": "vraifaux", "affirmation": "« a » sans accent, c'est le verbe avoir.", "reponse": true, "niveau": 1},
+        {"type": "qcm", "question": "Le gardien … plongé.", "choix": ["a", "à"], "niveau": 1, "indice": "Essaie : « Le gardien avait plongé. » Ça marche ?"},
+        {"type": "qcm", "question": "Je vais … l'entraînement.", "choix": ["à", "a"], "niveau": 1, "indice": "Essaie : « Je vais avait l'entraînement. » Ça marche ?"},
+        {"type": "qcm", "question": "Quel mot peut remplacer « a » pour vérifier ?", "choix": ["avait", "était", "et puis"], "niveau": 1, "indice": "« a » vient du verbe avoir."},
+        {"type": "qcm", "question": "Le PSG joue … domicile.", "choix": ["à", "a"], "niveau": 2, "indice": "« Le PSG joue avait domicile » : ça marche ?"},
+        {"type": "qcm", "question": "Ava … un petit chat.", "choix": ["a", "à"], "niveau": 2, "indice": "« Ava avait un petit chat » : ça marche ?"},
+        {"type": "trous", "consigne": "Complète avec a ou à", "texte": "L'arbitre [a] sifflé [à] la dernière minute.", "intrus": ["as"], "niveau": 2, "indice": "Remplace par « avait » à chaque trou."},
+        {"type": "qcm", "question": "Tu … oublié tes crampons !", "choix": ["as", "a", "à"], "niveau": 3, "indice": "Avec « tu », le verbe avoir s'écrit avec un s."},
+        {"type": "trous", "consigne": "Complète avec a ou à", "texte": "Mon équipe [a] rendez-vous [à] midi, elle [a] un match.", "intrus": ["as"], "niveau": 3, "indice": "Remplace par « avait » à chaque trou."}
+      ]
+    },
+    {
+      "id": "titouan-homophones-2-et",
+      "pour": ["titouan"],
+      "matiere": "Français",
+      "parcours": "Les homophones",
+      "etape": 2,
+      "titre": "et ou est ?",
+      "emoji": "🔗",
+      "ajoutee": "2026-11-04",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# 🧰 Rappel : la ruse du remplacement",
+        "- Pour savoir quel mot écrire, on le **remplace** par un autre : si la phrase marche encore, c'est gagné !",
+        "# et ou est ?",
+        {"visuel": "cartes", "elements": [{"emoji": "🔗", "titre": "et", "texte": "Il relie deux mots ou deux idées. On peut le remplacer par **et puis**.", "couleur": "#14b8a6"}, {"emoji": "🟰", "titre": "est", "texte": "C'est le verbe être : il est, elle est. On peut le remplacer par **était**.", "couleur": "#6366f1"}]},
+        {"visuel": "decision", "question": "Quel remplacement marche ?", "choix": [{"si": "« et puis » marche", "alors": "J'écris **et**", "exemple": "Un ballon et des crampons → un ballon et puis des crampons ✅"}, {"si": "« était » marche", "alors": "J'écris **est**", "exemple": "Le stade est plein → le stade était plein ✅"}]},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Tirs au but : et ou est ?", "tirs": [{"texte": "Le gardien … grand.", "choix": ["est", "et"]}, {"texte": "Titouan … Ava jouent dehors.", "choix": ["et", "est"]}, {"texte": "Le match … fini.", "choix": ["est", "et"]}, {"texte": "Un short … un maillot.", "choix": ["et", "est"]}, {"texte": "« est » se remplace par…", "choix": ["était", "et puis", "avait"]}]}
+      ],
+      "activites": [
+        {"type": "vraifaux", "affirmation": "« est » se remplace par « était ».", "reponse": true, "niveau": 1},
+        {"type": "qcm", "question": "Le ballon … rond.", "choix": ["est", "et"], "niveau": 1, "indice": "« Le ballon était rond » : ça marche ?"},
+        {"type": "qcm", "question": "J'ai des chaussettes … des protège-tibias.", "choix": ["et", "est"], "niveau": 1, "indice": "« des chaussettes et puis des protège-tibias » : ça marche ?"},
+        {"type": "qcm", "question": "Quel mot peut remplacer « et » ?", "choix": ["et puis", "était", "avait"], "niveau": 1},
+        {"type": "qcm", "question": "Le terrain … mouillé.", "choix": ["est", "et"], "niveau": 2, "indice": "« Le terrain était mouillé » ?"},
+        {"type": "qcm", "question": "Il dribble … il tire.", "choix": ["et", "est"], "niveau": 2, "indice": "« Il dribble et puis il tire » ?"},
+        {"type": "trous", "consigne": "Complète avec et ou est", "texte": "Le capitaine [est] fort [et] rapide.", "intrus": ["es"], "niveau": 2, "indice": "Essaie « était », puis « et puis »."},
+        {"type": "trous", "consigne": "Complète avec et ou est", "texte": "Le match [est] serré [et] le public [est] debout.", "intrus": ["es"], "niveau": 3, "indice": "Remplace chaque trou par « était » ou « et puis »."},
+        {"type": "vraifaux", "affirmation": "Dans « Ava et Titouan », on peut dire « Ava était Titouan ».", "reponse": false, "niveau": 3, "explication": "Non : ça ne veut rien dire. Ici c'est « et » (et puis)."}
+      ]
+    },
+    {
+      "id": "titouan-homophones-3-son",
+      "pour": ["titouan"],
+      "matiere": "Français",
+      "parcours": "Les homophones",
+      "etape": 3,
+      "titre": "son ou sont ?",
+      "emoji": "👕",
+      "ajoutee": "2026-11-04",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# 🧰 Rappel : la ruse du remplacement",
+        "- **a** → avait · **et** → et puis · **est** → était. Même ruse pour **son** et **sont** !",
+        "# son ou sont ?",
+        {"visuel": "cartes", "elements": [{"emoji": "👕", "titre": "son", "texte": "Il est devant un nom : son maillot, son ballon. On peut le remplacer par **mon**.", "couleur": "#14b8a6"}, {"emoji": "👥", "titre": "sont", "texte": "C'est le verbe être avec ils / elles : ils sont. On peut le remplacer par **étaient**.", "couleur": "#6366f1"}]},
+        {"visuel": "decision", "question": "Quel remplacement marche ?", "choix": [{"si": "« mon » marche", "alors": "J'écris **son**", "exemple": "Il met son maillot → il met mon maillot ✅"}, {"si": "« étaient » marche", "alors": "J'écris **sont**", "exemple": "Les joueurs sont prêts → les joueurs étaient prêts ✅"}]},
+        "# Les 4 ruses",
+        {"visuel": "cartes", "elements": [{"emoji": "🅰️", "titre": "a", "texte": "→ avait"}, {"emoji": "🔗", "titre": "et", "texte": "→ et puis"}, {"emoji": "🟰", "titre": "est", "texte": "→ était"}, {"emoji": "👕", "titre": "son", "texte": "→ mon"}, {"emoji": "👥", "titre": "sont", "texte": "→ étaient"}]},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Tirs au but : le grand mélange", "tirs": [{"texte": "Les supporters … contents.", "choix": ["sont", "son"]}, {"texte": "Il range … sac.", "choix": ["son", "sont"]}, {"texte": "Le but … magnifique.", "choix": ["est", "et"]}, {"texte": "Il … marqué.", "choix": ["a", "à"]}, {"texte": "« son » se remplace par…", "choix": ["mon", "étaient", "était"]}]}
+      ],
+      "activites": [
+        {"type": "vraifaux", "affirmation": "« sont » se remplace par « étaient ».", "reponse": true, "niveau": 1},
+        {"type": "qcm", "question": "Le gardien enfile … gant.", "choix": ["son", "sont"], "niveau": 1, "indice": "« enfile mon gant » : ça marche ?"},
+        {"type": "qcm", "question": "Les joueurs … fatigués.", "choix": ["sont", "son"], "niveau": 1, "indice": "« Les joueurs étaient fatigués » ?"},
+        {"type": "qcm", "question": "Quel mot peut remplacer « son » ?", "choix": ["mon", "étaient", "était"], "niveau": 1},
+        {"type": "paires", "consigne": "Relie chaque mot à sa ruse", "paires": [["a", "avait"], ["et", "et puis"], ["est", "était"], ["son", "mon"], ["sont", "étaient"]], "niveau": 2},
+        {"type": "trous", "consigne": "Complète avec son ou sont", "texte": "Les filles [sont] au stade avec [son] frère.", "intrus": ["sons"], "niveau": 2, "indice": "Essaie « étaient » puis « mon »."},
+        {"type": "trous", "consigne": "Le grand mélange", "texte": "Titouan [a] mis [son] maillot [et] il [est] parti [à] l'entraînement.", "intrus": ["sont"], "niveau": 3, "indice": "Un trou à la fois : avait ? mon ? et puis ? était ?"},
+        {"type": "qcm", "question": "Ses chaussures … neuves.", "choix": ["sont", "son", "est"], "niveau": 3, "indice": "Il y a plusieurs chaussures : « étaient neuves » ?"}
       ]
     },
     {
