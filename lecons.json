@@ -16,7 +16,7 @@
 
   "envoi": {
     "_explication": "Bouton « 📸 Envoyer une nouvelle leçon » : les photos partent vers la boîte aux lettres (Cloudflare Worker, dossier worker/), qui les range dans le dépôt PRIVÉ svaug12345/revisions-demandes. Tant que \"url\" est vide, le bouton n'apparaît pas.",
-    "url": ""
+    "url": "https://mes-revisions-envoi.sebastien-vaug.workers.dev"
   },
 
   "assistant": {
