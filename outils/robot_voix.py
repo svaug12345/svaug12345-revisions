@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from decoupe_silences import decouper
 
 DEMANDE = 'outils/voix-a-decouper.json'
-SEUILS = [0.75, 0.6, 0.9, 0.5, 1.1]   # durée minimale (s) d'un silence « entre deux phrases »
+SEUILS = [-35, -40, -30, -45, -25]   # niveau (dB) sous lequel on considère qu'il y a silence
 
 
 def main():
@@ -41,7 +41,7 @@ def main():
                 try:
                     noms = decouper(fichier, lot['phrases'], 'audio', seuil)
                     index.update(noms)
-                    compte_rendu.append(f"{lot['nom']} : ✅ {len(noms)} MP3 (prise {i + 1}, seuil {seuil} s)")
+                    compte_rendu.append(f"{lot['nom']} : ✅ {len(noms)} MP3 (prise {i + 1}, seuil {seuil} dB)")
                     reussi = True
                     break
                 except ValueError as e:
