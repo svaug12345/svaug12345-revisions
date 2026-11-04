@@ -129,7 +129,8 @@ def decouper(lot, phrases, sortie, seuil_db=-35):
     cands = [(a, b) for a, b in silences(lot, 0.2, seuil_db) if a > 0.05 and b < total - 0.05]
     if len(cands) < n - 1:
         raise ValueError(f'{len(cands)} silences seulement pour {n} phrases (seuil {seuil_db} dB)')
-    longueurs = [len(p['texte']) for p in phrases]
+    # "dit" (facultatif) = ce que la voix a réellement lu, quand on a dû l'écrire autrement (« dix » pour « 10 »)
+    longueurs = [len(p.get('dit', p['texte'])) for p in phrases]
     coupures = choisir_coupures(cands, total, longueurs, n)
     bornes, t = [], 0.0
     for a, b in coupures:
