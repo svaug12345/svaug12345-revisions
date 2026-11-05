@@ -1195,3 +1195,10 @@ body.lecture-facile .carte-info b { letter-spacing: 0; overflow-wrap: anywhere; 
 .dictee-info { margin: 0; }
 .dictee-boutons { display: flex; flex-wrap: wrap; gap: 8px; }
 .dictee-boutons .btn-visuel { flex: 1 1 auto; margin: 0; }
+
+/* Encadré « 🕗 quand arrive la leçon ? » (écran d'envoi de photos) */
+.info-maj { display: flex; gap: 10px; align-items: flex-start; margin: 12px 0 4px; padding: 10px 14px;
+  border-radius: 14px; background: color-mix(in srgb, var(--accent) 14%, var(--carte)); color: var(--texte); font-size: .92rem; }
+.info-maj .emoji { font-size: 1.4rem; line-height: 1.2; }
+.info-maj p { margin: 0; }
+.envoi-reussi .info-maj { text-align: left; max-width: 480px; margin: 14px auto; }

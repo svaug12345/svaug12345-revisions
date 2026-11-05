@@ -834,6 +834,16 @@ async function reduirePhoto(fichier, cote = 1800, qualite = 0.82) {
   return url.length > 2_500_000 && cote > 1200 ? reduirePhoto(fichier, cote - 400, 0.75) : url;
 }
 
+/** Encadré « 🕗 quand arrive la leçon ? » : l'heure du passage automatique et qui prévenir si c'est urgent.
+    Réglable dans lecons.json : "envoi": { "heure": "20 h", "contact": "Seb" }. */
+function infoMiseAJour() {
+  const { heure = '20 h', contact = 'Seb' } = etat.donnees.envoi || {};
+  return el('div', { class: 'info-maj' },
+    el('span', { class: 'emoji' }, '🕗'),
+    el('p', {}, 'Les nouvelles leçons sont ajoutées ', el('b', {}, `automatiquement chaque soir vers ${heure.replace(/ /g, '\u00a0')}`)  // espace insécable : « 20 h » jamais coupé, '.',
+      el('br'), `Besoin pour plus tôt ? Envoie un petit message à ${contact} 📱`));
+}
+
 // --- L'écran « Nouvelle leçon » ---
 function afficherEnvoi() {
   const enfant = etat.enfant;
@@ -920,6 +930,7 @@ function afficherEnvoi() {
 
   afficher(el('div', { class: 'page-envoi' },
     el('p', { class: 'intro' }, `Prends la leçon de ${enfant.nom} en photo : une photo par page, bien à plat et lisible. On en fera une leçon animée ✨`),
+    infoMiseAJour(),
     el('h3', {}, '1. La matière'), puces,
     el('h3', {}, '2. Les photos'),
     el('div', { class: 'boutons-photo' },
@@ -938,6 +949,7 @@ function afficherEnvoiReussi(nb) {
     el('div', { class: 'gros-emoji' }, '📬'),
     el('h2', {}, 'Leçon bien reçue !'),
     el('p', {}, `${pluriel(nb, 'photo')} envoyée${nb > 1 ? 's' : ''}. La leçon animée arrivera bientôt dans l’appli ✨`),
+    infoMiseAJour(),
     el('button', { class: 'btn-principal', onclick: () => history.back() }, '← Retour à mes leçons')));
 }
 
