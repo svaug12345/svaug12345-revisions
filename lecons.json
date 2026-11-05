@@ -1,6 +1,6 @@
 {
   "maj": "05/11/2026",
-  "versionApp": "1.15.3",
+  "versionApp": "1.15.4",
 
   "enfants": [
     {"id": "tom", "nom": "Tom", "avatar": "avatars/tom.svg", "couleur": "#22c55e", "age": 6},
