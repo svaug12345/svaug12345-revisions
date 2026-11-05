@@ -289,9 +289,14 @@ let fileVoix = [];  // morceaux de phrase qui attendent leur tour (une question 
  *   lireAVoixHaute(texte, { vitesse: 1 })                                -> vitesse d'origine
  */
 function lireAVoixHaute(textes, { lent = false, vitesse } = {}) {
-  // Vitesse de lecture des MP3 (1 = telle qu'enregistrée). La voix ElevenLabs parle assez vite :
-  // on ralentit un peu par défaut, beaucoup en mode « lent » (preservesPitch garde une voix naturelle).
-  const rythme = vitesse ?? (lent ? 0.72 : 0.9);
+  // Vitesse de lecture des MP3 (1 = telle qu'enregistrée). La voix ElevenLabs parle vite (≈ 8 syllabes/s
+  // mesurées, contre 5 à 6 pour une voix posée) : on ralentit par défaut, beaucoup en mode « lent ».
+  // Un profil peut avoir sa propre vitesse ("vitesseVoix" dans lecons.json, ex. 0.75 pour Ava en CP).
+  // On ne descend pas sous 0.7 : en dessous, l'étirement du son (preservesPitch) devient « métallique ».
+  const normal = etat.enfant?.vitesseVoix ?? 0.9;
+  const rythme = vitesse ?? (lent ? Math.min(0.72, normal) : normal);
+  // Silence entre deux morceaux (question puis réponses) : plus long pour un petit lecteur ("pauseVoix", en ms)
+  const pause = etat.enfant?.pauseVoix ?? 250;
   couperVoix();
   fileVoix = [].concat(textes).map(pourLaVoix).filter(Boolean);
   const suivant = () => {
@@ -301,15 +306,16 @@ function lireAVoixHaute(textes, { lent = false, vitesse } = {}) {
     if (audiosDispo.has(h)) {
       lecteur = new Audio('audio/' + h + '.mp3');
       lecteur.preservesPitch = true;                 // ralenti sans voix grave
+      lecteur.webkitPreservesPitch = true;           // même réglage, nom des anciennes versions de Chrome/WebView
       lecteur.playbackRate = rythme;
-      lecteur.onended = () => setTimeout(suivant, 250);  // petit silence entre deux morceaux
+      lecteur.onended = () => setTimeout(suivant, pause);  // petit silence entre deux morceaux
       lecteur.play().catch(() => { voixDuTelephone(texte); });
     } else {
       console.warn('MP3 manquant (voix du téléphone en secours) :', JSON.stringify(texte), h);
       if ('speechSynthesis' in window) {
         const phrase = new SpeechSynthesisUtterance(texte);
         phrase.lang = 'fr-FR'; phrase.rate = rythme * 0.95;
-        phrase.onend = () => setTimeout(suivant, 250);
+        phrase.onend = () => setTimeout(suivant, pause);
         speechSynthesis.speak(phrase);
       }
     }

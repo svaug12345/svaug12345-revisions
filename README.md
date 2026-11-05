@@ -281,6 +281,7 @@ Une grosse leçon peut être découpée en **modules** courts (5 à 8 questions)
 
 Options d'un enfant dans `lecons.json` :
 - `"lectureAuto": true` (CP) : la question est lue toute seule par la voix ElevenLabs, avec UN bouton 🔊 pour la réécouter.
+- `"vitesseVoix": 0.75` : vitesse de lecture des MP3 pour ce profil (défaut 0,9 ; ne pas descendre sous 0,7, la voix devient métallique) ; `"pauseVoix": 600` : silence en ms entre la question et les réponses (défaut 250).
   Sur une question : `"dire"` = ce qui est lu à la place du texte, `"lireChoix": false` = ne pas lire les réponses
   (quand la question teste justement la lecture).
 - (`"lectureAudio"`, qui mettait des 🔊 et 🔈 partout avec la voix du téléphone, n'existe plus depuis la v1.15.0.)
