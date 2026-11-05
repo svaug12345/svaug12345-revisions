@@ -307,8 +307,8 @@ Les photos sont réduites dans le téléphone (≈ 400 Ko chacune) puis envoyée
    La demande passe alors au statut « traitée » et ses photos sont effacées.
 
 **Réglages :**
-- `lecons.json` → `"envoi": { "url": "https://mes-revisions-envoi.<sous-domaine>.workers.dev" }`
-  (adresse vide = bouton caché) ;
+- `lecons.json` → `"envoi": { "url": "https://mes-revisions-envoi.<sous-domaine>.workers.dev", "heure": "20 h", "contact": "Seb" }`
+  (adresse vide = bouton caché ; `heure` et `contact` s'affichent dans l'encadré 🕗 de l'écran d'envoi et de confirmation) ;
 - le Worker est mis en ligne par le robot `.github/workflows/worker.yml` (onglet Actions > « Boîte aux lettres ») ;
   il a besoin de 4 secrets : `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `DEMANDES_TOKEN`, `CODE_FAMILLE` ;
 - compte rendu du robot : `statut.json` sur la branche `statut-worker` ;

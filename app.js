@@ -840,7 +840,7 @@ function infoMiseAJour() {
   const { heure = '20 h', contact = 'Seb' } = etat.donnees.envoi || {};
   return el('div', { class: 'info-maj' },
     el('span', { class: 'emoji' }, '🕗'),
-    el('p', {}, 'Les nouvelles leçons sont ajoutées ', el('b', {}, `automatiquement chaque soir vers ${heure.replace(/ /g, '\u00a0')}`)  // espace insécable : « 20 h » jamais coupé, '.',
+    el('p', {}, 'Les nouvelles leçons sont ajoutées ', el('b', {}, `automatiquement chaque soir vers ${heure.replace(/ /g, '\u00a0')}`), '.', // espace insécable : « 20 h » jamais coupé
       el('br'), `Besoin pour plus tôt ? Envoie un petit message à ${contact} 📱`));
 }
 
