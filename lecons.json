@@ -220,6 +220,112 @@
     },
 
     {
+      "id": "nanon-faible-densite-1-creuse",
+      "pour": ["nanon"],
+      "matiere": "Géographie",
+      "parcours": "Les espaces de faible densité",
+      "etape": 1,
+      "titre": "Un espace rural : la Creuse",
+      "emoji": "🐄",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "fiche": [
+        "# Le chapitre en une question",
+        {"visuel": "encadre", "style": "exemple", "nom": "Problématique", "texte": ["Quels sont les **dynamiques** et les **atouts** des espaces de **faible densité** ?"]},
+        "# La Creuse, un espace de faible densité",
+        {"visuel": "cartes", "elements": [{"emoji": "👥", "titre": "22 hab./km²", "texte": "Seulement 22 habitants par km²."}, {"emoji": "📉", "titre": "−0,4 %", "texte": "La population baisse."}, {"emoji": "🏡", "titre": "78 %", "texte": "des habitants vivent dans une commune rurale : un espace très rural."}, {"emoji": "👴", "titre": "34 % de plus de 60 ans", "texte": "contre 23 % en France : une population âgée."}]},
+        "# L'activité : l'agriculture… et le tourisme",
+        "- L'activité économique majeure est l'**agriculture** : **11,2 %** de la population a un emploi agricole.",
+        "- Les agriculteurs pratiquent l'**élevage extensif bovin**, qui n'est **pas très rémunérateur**.",
+        "- La **nouvelle activité** développée est le **tourisme** : beaucoup de sites touristiques **culturels** (églises, musées, châteaux), de la **verdure**, de l'**eau**, un paysage **harmonieux**.",
+        "- La Creuse a aussi une partie du **parc naturel régional de Millevaches en Limousin**.",
+        {"visuel": "encadre", "style": "retenir", "nom": "Vocabulaire", "texte": ["**Parc naturel régional (PNR)** : un territoire créé pour **protéger et développer** les grands espaces ruraux **habités**.", "**Tourisme vert** : le tourisme centré sur la **découverte de la nature** et le **respect de l'environnement**."]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Combien d'habitants par km² compte la Creuse ?", "choix": ["22", "78", "200", "2 000"]},
+        {"type": "vraifaux", "affirmation": "La population de la Creuse augmente.", "reponse": false, "explication": "Elle baisse : −0,4 %."},
+        {"type": "trous", "texte": "En Creuse, [34] % des habitants ont plus de 60 ans, contre [23] % en France.", "intrus": ["78", "11,2"]},
+        {"type": "qcm", "question": "Quelle est l'activité économique majeure de la Creuse ?", "choix": ["L'agriculture (élevage extensif bovin)", "L'industrie aéronautique", "La pêche", "Les services financiers"]},
+        {"type": "saisie", "question": "Quelle nouvelle activité se développe en Creuse ?", "reponse": ["tourisme", "le tourisme", "tourisme vert", "le tourisme vert"]},
+        {"type": "carte", "recto": "Définis un parc naturel régional (PNR).", "verso": "Un territoire créé pour protéger et développer les grands espaces ruraux habités."},
+        {"type": "carte", "recto": "Définis le tourisme vert.", "verso": "Le tourisme centré sur la découverte de la nature et le respect de l'environnement."},
+        {"type": "qcm", "question": "Quel parc naturel régional se trouve en partie dans la Creuse ?", "choix": ["Millevaches en Limousin", "Vanoise", "Mercantour", "Cévennes"], "explication": "Vanoise, Mercantour et Cévennes sont des parcs nationaux."}
+      ]
+    },
+
+    {
+      "id": "nanon-faible-densite-2-forces",
+      "pour": ["nanon"],
+      "matiere": "Géographie",
+      "parcours": "Les espaces de faible densité",
+      "etape": 2,
+      "titre": "Forces et faiblesses",
+      "emoji": "⚖️",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "fiche": [
+        "# A. Des espaces attractifs",
+        "- **Des territoires peu peuplés** : la France comprend de vastes espaces de faible densité : la **diagonale des faibles densités**.",
+        "- **De nouveaux habitants** : dans certaines régions, une **légère reprise démographique** (**Sud**). Le **vieillissement** et le **dépeuplement** se poursuivent dans la **moitié Nord**.",
+        "- **Des usages variés** : ces territoires attirent des gens qui cherchent une **meilleure qualité de vie** (résidence secondaire, retraite, vacances).",
+        "# B. Des espaces marqués par l'agriculture",
+        {"visuel": "cartes", "elements": [{"emoji": "🌾", "titre": "L'agriculture productiviste", "texte": "En Champagne, la culture des céréales assure des revenus élevés et maintient le peuplement, malgré l'absence de services de proximité.", "couleur": "#22c55e"}, {"emoji": "🏚️", "titre": "La déprise agricole", "texte": "Agriculture pas modernisée, peu diversifiée : moyennes montagnes qui se dépeuplent, moins de surfaces cultivées, population qui baisse et vieillit, commerces et services qui ferment.", "couleur": "#ef4444"}, {"emoji": "🧀", "titre": "De nouvelles dynamiques", "texte": "Valoriser les savoir-faire locaux anciens revitalise certains territoires (produits AOC et AOP en hausse).", "couleur": "#f59e0b"}]},
+        "# C. Des territoires en mutation",
+        "- **Des activités diversifiées** : le **tourisme vert** et les activités liées au **patrimoine** culturel et naturel.",
+        "- **La faible densité devient un atout touristique** : ces espaces sont mis en valeur comme les **parcs naturels régionaux** et les **parcs nationaux**. Les campagnes publicitaires ont construit une image nouvelle et positive.",
+        "- **Des politiques pour un renouveau** : l'État soutient les **zones de revitalisation rurale (ZRR)** : les entreprises y ont des avantages.",
+        "# La carte : les espaces de faible densité en France",
+        {"visuel": "cartes", "elements": [{"emoji": "🟨", "titre": "1. La France des faibles densités", "texte": "La **diagonale du vide** : Morvan, Massif central, Landes, Pyrénées. Aussi les Alpes (du Sud)."}, {"emoji": "⛷️", "titre": "2. Un atout : le tourisme", "texte": "Stations de sports d'hiver (Jura, Alpes, Massif central, Pyrénées) et parcs nationaux (Vanoise, Écrins, Mercantour, Cévennes, Pyrénées)."}, {"emoji": "➡️", "titre": "3. De nouvelles dynamiques", "texte": "Une ligne : territoire **attractif au sud** de cette ligne. Flèches rouges : **migration de nouveaux habitants** vers le sud."}]},
+        "# La carte mentale",
+        {"visuel": "liens", "types": {"plus": {"emoji": "➕", "label": "atout", "couleur": "#22c55e"}, "moins": {"emoji": "➖", "label": "faiblesse", "couleur": "#ef4444"}, "lieu": {"emoji": "📍", "label": "où ?", "couleur": "#6366f1"}}, "liens": [{"de": "Les localisations", "vers": "Diagonale des faibles densités, des Ardennes aux Pyrénées", "type": "lieu"}, {"de": "Les localisations", "vers": "Montagnes : Alpes du Sud, Massif central", "type": "lieu"}, {"de": "Dynamiques démographiques", "vers": "Déprise démographique et vieillissement", "type": "moins"}, {"de": "Dynamiques démographiques", "vers": "Nouveaux habitants : retraités, néo-ruraux, résidences secondaires", "type": "plus"}, {"de": "Dynamiques agricoles", "vers": "Agriculture productiviste (Beauce, Champagne)", "type": "plus"}, {"de": "Dynamiques agricoles", "vers": "Agriculture en crise en moyenne montagne (Massif central, Jura)", "type": "moins"}, {"de": "Le tourisme", "vers": "Tourisme vert (parcs) et culturel, stations de sports d'hiver", "type": "plus"}]}
+      ],
+      "activites": [
+        {"type": "saisie", "question": "Comment s'appelle la bande de faibles densités qui va des Ardennes aux Pyrénées ?", "reponse": ["diagonale du vide", "la diagonale du vide", "diagonale des faibles densités", "la diagonale des faibles densités"]},
+        {"type": "vraifaux", "affirmation": "Les espaces de faible densité gagnent légèrement des habitants dans le Sud, mais continuent de se dépeupler dans la moitié Nord.", "reponse": true},
+        {"type": "qcm", "question": "Pourquoi la Champagne reste-t-elle peuplée malgré l'absence de services de proximité ?", "choix": ["L'agriculture productiviste (céréales) rapporte des revenus élevés", "Les stations de ski", "Les parcs nationaux", "Les zones de revitalisation rurale"]},
+        {"type": "trous", "texte": "La valorisation des [savoir-faire] locaux anciens revitalise certains territoires agricoles (produits [AOC] et AOP en augmentation).", "intrus": ["usines", "OGM"]},
+        {"type": "saisie", "question": "Que veut dire ZRR ?", "reponse": ["zone de revitalisation rurale", "zones de revitalisation rurale"], "explication": "L'État les soutient : les entreprises qui s'y installent ont des avantages."},
+        {"type": "qcm", "question": "Lequel est un ATOUT ➕ des espaces de faible densité ?", "choix": ["L'arrivée de nouveaux habitants (retraités, néo-ruraux)", "La déprise agricole", "Le vieillissement de la population", "La fermeture des commerces et des services"]},
+        {"type": "qcm", "question": "Lequel est un PARC NATIONAL de la carte ?", "choix": ["Le Mercantour", "Millevaches", "Le Morvan", "La Beauce"]},
+        {"type": "qcm", "question": "Où sont les territoires attractifs, selon la carte ?", "choix": ["Au sud de la ligne", "Au nord de la ligne", "Seulement à Paris", "Seulement sur le littoral"]},
+        {"type": "carte", "recto": "Cite les 3 « usages variés » qui attirent des gens dans les espaces de faible densité.", "verso": "Résidence secondaire, retraite, vacances : on y cherche une meilleure qualité de vie."}
+      ]
+    },
+
+    {
+      "id": "nanon-svt-genetique",
+      "pour": ["nanon"],
+      "matiere": "SVT",
+      "titre": "Diversité et stabilité génétique du vivant",
+      "emoji": "🧬",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "fiche": [
+        "# Caractères et phénotype",
+        {"visuel": "encadre", "style": "retenir", "nom": "Définitions", "texte": ["**Caractère** : un attribut **observable** (ex. : couleur des yeux) ou **mesurable** que présente un groupe d'espèces, une espèce ou un individu.", "**Phénotype** : l'ensemble des caractères d'un individu.", "**Hématie** = globule rouge 🩸"]},
+        "# Héréditaire… ou pas ?",
+        {"visuel": "decision", "question": "Ce caractère se transmet-il aux enfants ?", "choix": [{"si": "Il se transmet de génération en génération dans les familles", "alors": "Il est **héréditaire**.", "exemple": "Exemple : la couleur des yeux"}, {"si": "Il vient de l'environnement", "alors": "Les **facteurs environnementaux** peuvent modifier certains caractères, mais ces modifications ne sont **en aucun cas héréditaires**.", "exemple": "Exemple : le Soleil ☀️ et la couleur de peau (bronzer)"}]},
+        "# Où est l'information héréditaire ?",
+        "- Des **expériences de transfert de noyau** chez la **vache** démontrent que l'**information héréditaire** transmise de génération en génération est localisée dans le **noyau**.",
+        "- Au microscope, dans le noyau de cellules **en cours de division**, on voit des **filaments colorés** : ce sont les **chromosomes**.",
+        "# Les chromosomes humains",
+        {"visuel": "cartes", "elements": [{"emoji": "🔢", "titre": "23 paires", "texte": "Les cellules humaines possèdent 23 paires de chromosomes (46 en tout)."}, {"emoji": "👩", "titre": "XX", "texte": "Chromosomes sexuels de la femme."}, {"emoji": "👨", "titre": "XY", "texte": "Chromosomes sexuels de l'homme."}]},
+        {"visuel": "encadre", "style": "attention", "texte": ["Un **nombre anormal** de chromosomes, comme la **trisomie 21**, peut entraîner des caractères différents chez l'individu."]}
+      ],
+      "activites": [
+        {"type": "carte", "recto": "Qu'est-ce qu'un caractère ?", "verso": "Un attribut observable (couleur des yeux) ou mesurable que présente un groupe d'espèces, une espèce ou un individu."},
+        {"type": "saisie", "question": "Comment appelle-t-on l'ensemble des caractères d'un individu ?", "reponse": ["phénotype", "le phénotype"]},
+        {"type": "qcm", "question": "Qu'est-ce qu'une hématie ?", "choix": ["Un globule rouge", "Un globule blanc", "Un chromosome", "Un noyau"]},
+        {"type": "vraifaux", "affirmation": "Un bronzage obtenu au soleil se transmet aux enfants.", "reponse": false, "explication": "Les modifications dues à l'environnement ne sont en aucun cas héréditaires."},
+        {"type": "qcm", "question": "Les expériences de transfert de noyau chez la vache montrent que l'information héréditaire est…", "choix": ["dans le noyau", "dans le sang", "dans les globules rouges", "dans la peau"]},
+        {"type": "saisie", "question": "Comment s'appellent les filaments colorés visibles dans le noyau des cellules en cours de division ?", "reponse": ["chromosomes", "les chromosomes", "des chromosomes"]},
+        {"type": "qcm", "question": "Combien de paires de chromosomes ont les cellules humaines ?", "choix": ["23", "46", "21", "2"], "explication": "23 paires, soit 46 chromosomes."},
+        {"type": "paires", "consigne": "Associe", "paires": [["XX", "Femme"], ["XY", "Homme"], ["Trisomie 21", "Nombre anormal de chromosomes"]]},
+        {"type": "trous", "texte": "Certains caractères sont [héréditaires] : ils se transmettent de génération en génération au sein des [familles].", "intrus": ["environnementaux", "cellules"]}
+      ]
+    },
+
+    {
       "id": "gaby-fr-passe-simple",
       "pour": ["gaby"],
       "matiere": "Français",
