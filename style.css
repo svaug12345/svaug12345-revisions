@@ -663,6 +663,27 @@ button { cursor: pointer; }
 @keyframes popPoint { from { opacity: 0; transform: scale(3); } to { opacity: 1; transform: none; } }
 .densite small { color: var(--doux); }
 
+/* --- Croquis d'une aire urbaine (v1.16.0) : taches de couleur + flèches, légende à toucher --- */
+.croquis { display: flex; flex-direction: column; gap: 10px; }
+.croquis-svg { width: 100%; max-width: 440px; margin: 0 auto; display: block; border: 2px solid #1f2937; border-radius: 10px; background: #fff; }
+.croquis-zone { stroke: rgba(0, 0, 0, .15); stroke-width: 1; cursor: pointer; transition: opacity .25s; }
+.croquis-zone.eteinte { opacity: .25; }                      /* les autres zones s'effacent */
+.croquis-etalement path { fill: #111827; cursor: pointer; transition: transform .25s; transform-origin: 0 0; }
+.croquis-mobilite { stroke: #111827; stroke-width: 2.2; cursor: pointer; }
+#croquis-pointe path { fill: #111827; }
+.montre-etalement .croquis-etalement path { fill: #dc2626; transform: scale(1.15); }   /* flèches choisies en rouge */
+.montre-mobilites .croquis-mobilite { stroke: #2563eb; stroke-width: 3.5; }
+.croquis-legende { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.croquis-legende button { display: flex; align-items: center; gap: 8px; text-align: left; padding: 8px 10px; border-radius: 12px;
+  border: 2px solid #e2e8f0; background: var(--carte); color: var(--texte); font: inherit; font-size: .9rem; font-weight: 700; cursor: pointer; }
+.croquis-legende button.actif { border-color: var(--principal); background: color-mix(in srgb, var(--principal) 12%, var(--carte)); }
+.croquis-pastille { width: 22px; height: 16px; border-radius: 4px; border: 1.5px solid #1f2937; flex: none; }
+.croquis-picto { width: 22px; text-align: center; font-style: normal; font-weight: 900; flex: none; }
+.croquis-explication { margin: 0; padding: 10px 12px; border-radius: 12px; background: #f8fafc; min-height: 2.6em; }
+.croquis-reveler, .croquis-cacher { font: inherit; font-weight: 800; border: 0; border-radius: 99px; padding: 6px 14px; cursor: pointer;
+  background: var(--principal); color: #fff; }
+.croquis-cacher { align-self: center; }
+
 /* --- Éprouvette --- */
 .eprouvette { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: center; }
 .eprouvette-svg { width: 200px; max-width: 60%; }

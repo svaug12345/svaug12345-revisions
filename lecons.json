@@ -1,6 +1,6 @@
 {
-  "maj": "05/11/2026",
-  "versionApp": "1.15.4",
+  "maj": "07/11/2026",
+  "versionApp": "1.16.0",
 
   "enfants": [
     {"id": "tom", "nom": "Tom", "avatar": "avatars/tom.svg", "couleur": "#22c55e", "age": 6},
@@ -73,6 +73,149 @@
         {"type": "vraifaux", "affirmation": "Les États-Unis entrent en guerre après l'attaque de Pearl Harbor.", "reponse": true},
         {"type": "trous", "texte": "Le 6 août 1945, une bombe atomique frappe [Hiroshima], puis le 9 août [Nagasaki].", "intrus": ["Tokyo", "Kyoto"]},
         {"type": "carte", "recto": "Qu'est-ce que le régime de Vichy ?", "verso": "Le régime dirigé par Pétain (1940-1944), qui collabore avec l'Allemagne nazie."}
+      ]
+    },
+
+    {
+      "id": "nanon-aires-urbaines-1-toulouse",
+      "pour": ["nanon"],
+      "matiere": "Géographie",
+      "parcours": "Les aires urbaines en France",
+      "etape": 1,
+      "titre": "Une aire urbaine : Toulouse",
+      "emoji": "🛩️",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "fiche": [
+        "# Le chapitre en une phrase",
+        "La **population urbaine** et la **surface occupée par l'espace urbain** n'ont pas cessé d'augmenter depuis **50 ans** : on parle d'**urbanisation**.",
+        {"visuel": "encadre", "style": "exemple", "nom": "La grande question du chapitre", "texte": ["Comment l'**étalement des aires urbaines** modifie-t-il le territoire ?"]},
+        "# Les 3 espaces d'une aire urbaine",
+        {"visuel": "cartes", "elements": [{"emoji": "🏙️", "titre": "La ville-centre", "texte": "Services de proximité et commerces de détail."}, {"emoji": "🏘️", "titre": "La banlieue", "texte": "Lotissements pavillonnaires et collectifs."}, {"emoji": "🏭", "titre": "La couronne périurbaine", "texte": "Centres commerciaux, zones industrielles (Airbus), aéroport de Toulouse-Blagnac."}]},
+        {"visuel": "encadre", "style": "retenir", "nom": "Définition", "texte": ["**Aire urbaine** : un espace constitué d'une **ville-centre**, de **banlieues** et d'une **couronne périurbaine**."]},
+        "# Toulouse grandit… et s'étale",
+        {"visuel": "barres", "titre": "Habitants de l'aire urbaine de Toulouse", "elements": [{"label": "En 1968", "valeur": 474209, "texte": "474 209", "couleur": "#94a3b8"}, {"label": "En 2013", "valeur": 1291517, "texte": "1 291 517", "couleur": "#f59e0b"}], "legende": "Presque **3 fois plus** d'habitants en 45 ans."},
+        "- On parle d'**étalement urbain** depuis 1968 car la **banlieue** et la **couronne périurbaine** se sont beaucoup agrandies, repoussant la limite de l'aire urbaine bien plus loin.",
+        "- Une part croissante de la population vit dans les **grandes aires urbaines** comme Toulouse, dont la croissance est parmi les plus élevées des aires urbaines de métropoles de plus de **500 000 habitants**.",
+        "# Pourquoi tout le monde veut venir à Toulouse ? (à apprendre par ❤️)",
+        {"visuel": "cartes", "elements": [{"emoji": "💼", "titre": "L'emploi", "texte": "Airbus."}, {"emoji": "🎓", "titre": "La formation", "texte": "Ville universitaire."}, {"emoji": "☀️", "titre": "Le cadre de vie", "texte": "Agréable, ensoleillé."}]},
+        "- Depuis **2006**, les **nouveaux habitants** ont préféré s'installer dans la **banlieue** ou la **couronne périurbaine** à cause du **coût de l'immobilier**, moins élevé que dans le centre-ville.",
+        "- Résultat : un paysage de **lotissements pavillonnaires**, caractéristique de l'étalement urbain.",
+        "# Les mots à savoir",
+        {"visuel": "encadre", "style": "retenir", "nom": "Vocabulaire", "texte": ["**Périurbanisation** : l'extension des espaces urbains à la périphérie des agglomérations.", "**Étalement urbain** : l'étalement des banlieues et des zones périurbaines d'une ville.", "**Héliotropisme** : le fait d'avoir envie de vivre dans un cadre agréable (le soleil ☀️)."]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Quels sont les trois espaces d'une aire urbaine ?", "choix": ["Ville-centre, banlieue, couronne périurbaine", "Ville-centre, campagne, littoral", "Centre-ville, quartier, village", "Banlieue, montagne, couronne périurbaine"]},
+        {"type": "saisie", "question": "Comment appelle-t-on le fait d'avoir envie de vivre dans un cadre agréable, au soleil ?", "reponse": ["héliotropisme", "l'héliotropisme"], "explication": "Hélio = soleil (comme l'hélium, découvert dans le Soleil) ☀️"},
+        {"type": "paires", "consigne": "Associe chaque espace de l'aire urbaine de Toulouse à ce qu'on y trouve", "paires": [["Ville-centre", "Commerces de détail"], ["Banlieue", "Lotissements pavillonnaires"], ["Couronne périurbaine", "Aéroport de Blagnac"]]},
+        {"type": "vraifaux", "affirmation": "Depuis 2006, les nouveaux habitants de Toulouse s'installent surtout dans le centre-ville.", "reponse": false, "explication": "Ils préfèrent la banlieue ou la couronne périurbaine, où l'immobilier coûte moins cher."},
+        {"type": "trous", "texte": "L'aire urbaine de Toulouse est attractive pour l'[emploi] (Airbus), la [formation] (ville universitaire) et son [cadre de vie] (ensoleillement).", "intrus": ["mer", "montagne"]},
+        {"type": "qcm", "question": "Combien d'habitants comptait l'aire urbaine de Toulouse en 2013 ?", "choix": ["1 291 517", "474 209", "500 000", "13,1 millions"], "explication": "Contre 474 209 en 1968 : presque 3 fois plus."},
+        {"type": "carte", "recto": "Définis la périurbanisation.", "verso": "L'extension des espaces urbains à la périphérie des agglomérations."},
+        {"type": "carte", "recto": "Définis l'étalement urbain.", "verso": "L'étalement des banlieues et des zones périurbaines d'une ville."},
+        {"type": "qcm", "question": "Pourquoi les nouveaux habitants s'installent-ils en périphérie de Toulouse ?", "choix": ["Le coût de l'immobilier y est moins élevé", "Il y a plus de soleil qu'au centre", "Il n'y a plus de place à l'université", "Airbus l'oblige"]}
+      ]
+    },
+
+    {
+      "id": "nanon-aires-urbaines-2-mobilites",
+      "pour": ["nanon"],
+      "matiere": "Géographie",
+      "parcours": "Les aires urbaines en France",
+      "etape": 2,
+      "titre": "Les mobilités",
+      "emoji": "🚗",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "fiche": [
+        "# Le problème de la voiture",
+        {"visuel": "cartes", "elements": [{"emoji": "🚦", "titre": "Les embouteillages", "texte": ""}, {"emoji": "🌫️", "titre": "La pollution atmosphérique", "texte": ""}]},
+        "- L'**automobile** assure **60 %** des **3,8 déplacements par jour et par habitant** de l'aire urbaine.",
+        "- Mais les axes routiers sont aujourd'hui **saturés** aux heures des **migrations pendulaires**.",
+        {"visuel": "encadre", "style": "retenir", "texte": ["L'**emploi** se concentre de plus en plus dans les **grands pôles urbains**, alors que les **actifs résident** de plus en plus dans des **couronnes périurbaines**, voire au-delà.", "→ Chaque jour, ils font l'aller-retour domicile ↔ travail : ce sont les **migrations pendulaires** (comme le balancier d'une horloge 🕰️)."]},
+        "# Les autres façons de se déplacer",
+        {"visuel": "cartes", "elements": [{"emoji": "🚶", "titre": "La marche", "texte": ""}, {"emoji": "🚋", "titre": "Les transports en commun", "texte": ""}, {"emoji": "🚲", "titre": "Le vélo", "texte": ""}]},
+        "- Les habitants les utilisent pour leur **facilité d'accès**, leur **rapidité** (notamment en heures de pointe) et parce que ce sont des **modes de déplacement « durables »**.",
+        "- Les **collectivités locales** encouragent maintenant les mobilités avec d'autres moyens de transport (**vélo, tramways**) : cela permet de **dynamiser et rénover les quartiers** qui bénéficient de ces nouvelles infrastructures.",
+        "# Le croquis à savoir refaire",
+        {"visuel": "croquis", "titre": "Croquis : une aire urbaine", "zones": [{"nom": "ville-centre", "couleur": "#f4a3b4", "texte": "le cœur de l'aire urbaine : **services de proximité et commerces de détail**."}, {"nom": "banlieue", "couleur": "#f8c29a", "texte": "les communes collées à la ville-centre : **lotissements pavillonnaires et collectifs**."}, {"nom": "communes périurbaines", "couleur": "#f7e27a", "texte": "la **couronne périurbaine** : centres commerciaux, zones industrielles (Airbus), équipements qui demandent beaucoup d'espace (aéroport de Toulouse-Blagnac)."}, {"nom": "espace rural", "couleur": "#cfe8a9", "texte": "la campagne autour, que l'aire urbaine grignote peu à peu."}], "etalement": "la ville s'étend de plus en plus loin sur la campagne (grosses flèches noires vers l'extérieur).", "mobilites": "les trajets de tous les jours entre le domicile (en périphérie) et le travail (au centre) : ce sont les **migrations pendulaires** (flèches à deux pointes).", "legende": "Au contrôle, il faudra savoir refaire ce croquis : entraîne-toi avec « 🙈 Cacher la légende »."}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Quels sont les deux problèmes des déplacements en voiture ?", "choix": ["Les embouteillages et la pollution atmosphérique", "Le bruit et le prix de l'essence", "Les accidents et les radars", "Le manque de routes et de parkings"]},
+        {"type": "saisie", "question": "Comment appelle-t-on les allers-retours quotidiens entre le domicile et le travail ?", "reponse": ["migrations pendulaires", "les migrations pendulaires", "migration pendulaire"]},
+        {"type": "trous", "texte": "L'automobile assure [60] % des [3,8] déplacements par jour et par habitant de l'aire urbaine.", "intrus": ["85", "13,1"]},
+        {"type": "vraifaux", "affirmation": "L'emploi se concentre dans les grands pôles urbains, alors que les actifs habitent de plus en plus loin, dans les couronnes périurbaines.", "reponse": true},
+        {"type": "qcm", "question": "Pourquoi les collectivités encouragent-elles le vélo et le tramway ?", "choix": ["Pour dynamiser et rénover les quartiers qui en bénéficient", "Pour interdire les voitures en ville", "Pour faire baisser le prix des logements", "Pour attirer Airbus"]},
+        {"type": "paires", "consigne": "Associe chaque élément du croquis à sa couleur ou à son symbole", "paires": [["Ville-centre", "Rose"], ["Banlieue", "Orange"], ["Communes périurbaines", "Jaune"], ["Espace rural", "Vert"], ["Étalement urbain", "Grosse flèche noire"], ["Mobilités quotidiennes", "Flèche à deux pointes"]]},
+        {"type": "ordre", "consigne": "Du centre vers l'extérieur de l'aire urbaine", "elements": ["Ville-centre", "Banlieue", "Communes périurbaines", "Espace rural"]},
+        {"type": "carte", "recto": "Cite les 3 autres modes de déplacement et pourquoi on les choisit.", "verso": "La marche, les transports en commun, le vélo : faciles d'accès, rapides (heures de pointe) et durables."}
+      ]
+    },
+
+    {
+      "id": "nanon-aires-urbaines-3-croissance",
+      "pour": ["nanon"],
+      "matiere": "Géographie",
+      "parcours": "Les aires urbaines en France",
+      "etape": 3,
+      "titre": "La croissance urbaine en France",
+      "emoji": "📈",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "fiche": [
+        "# Séance 2 : le poids des aires urbaines",
+        {"visuel": "encadre", "style": "exemple", "nom": "Problématique", "texte": ["Quels sont les aspects de l'**emprise urbaine** sur le territoire français ?"]},
+        {"visuel": "encadre", "style": "retenir", "nom": "Définition", "texte": ["**Unité urbaine** : une commune ou un ensemble de communes présentant une **zone de bâti continu** (pas de coupure de plus de **200 mètres** entre deux constructions) qui compte **au moins 2 000 habitants**."]},
+        {"visuel": "barres", "titre": "Les aires urbaines les plus peuplées (en millions d'habitants)", "elements": [{"label": "Paris · **13,1 M**", "valeur": 13.1, "texte": " ", "couleur": "#e11d48"}, {"label": "Lyon · **2,4 M**", "valeur": 2.4, "texte": " ", "couleur": "#f43f5e"}, {"label": "Marseille · **1,8 M**", "valeur": 1.8, "texte": " ", "couleur": "#f43f5e"}, {"label": "Lille · **1,5 M**", "valeur": 1.5, "texte": " ", "couleur": "#fb7185"}, {"label": "Toulouse · **1,4 M**", "valeur": 1.4, "texte": " ", "couleur": "#fb7185"}, {"label": "Bordeaux · **1,3 M**", "valeur": 1.3, "texte": " ", "couleur": "#fb7185"}, {"label": "Nantes · **1 M**", "valeur": 1, "texte": " ", "couleur": "#fda4af"}, {"label": "Nice · **1 M**", "valeur": 1, "texte": " ", "couleur": "#fda4af"}, {"label": "Rennes · **0,8 M**", "valeur": 0.8, "texte": " ", "couleur": "#fecdd3"}, {"label": "Strasbourg · **0,8 M**", "valeur": 0.8, "texte": " ", "couleur": "#fecdd3"}], "legende": "Paris pèse plus de **5 fois** Lyon, la 2e !"},
+        "- **85 %** de la population française est **urbaine**.",
+        "- Les aires urbaines connaissent une **forte croissance** et s'étalent sur la campagne en couronnes de plus en plus éloignées : on parle de **périurbanisation**.",
+        "# Séance 3 : la répartition de la population",
+        {"visuel": "encadre", "style": "exemple", "nom": "Problématique", "texte": ["Comment s'organise la **répartition de la population** ?"]},
+        "- La population française est **inégalement répartie** sur le territoire.",
+        {"visuel": "cartes", "elements": [{"emoji": "🗼", "titre": "La macrocéphalie", "texte": "Le poids dominant de l'aire urbaine parisienne."}, {"emoji": "🏖️", "titre": "La littoralisation", "texte": "De fortes densités le long des littoraux."}, {"emoji": "🌾", "titre": "La « France du vide »", "texte": "Les régions de faibles densités."}]},
+        {"visuel": "encadre", "style": "retenir", "nom": "Vocabulaire", "texte": ["**Macrocéphalie** : espace largement dominé par un pôle urbain qui **freine ou empêche le développement de pôles secondaires**. (macro = grand, céphalie = tête : une « grosse tête » 🧠)", "**Littoralisation** : concentration de la population et des activités **sur le littoral**."]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Quelle part de la population française est urbaine ?", "choix": ["85 %", "50 %", "60 %", "97 %"]},
+        {"type": "trous", "texte": "Une unité urbaine est une zone de bâti continu, sans coupure de plus de [200] mètres entre deux constructions, qui compte au moins [2 000] habitants.", "intrus": ["500", "500 000"]},
+        {"type": "saisie", "question": "Comment appelle-t-on la concentration de la population et des activités sur le littoral ?", "reponse": ["littoralisation", "la littoralisation"]},
+        {"type": "saisie", "question": "Quel mot désigne un espace dominé par un pôle urbain qui empêche le développement de pôles secondaires ?", "reponse": ["macrocéphalie", "la macrocéphalie"], "explication": "En France, c'est l'aire urbaine de Paris (13,1 millions d'habitants)."},
+        {"type": "ordre", "consigne": "Range ces aires urbaines de la plus peuplée à la moins peuplée", "elements": ["Paris", "Lyon", "Marseille", "Toulouse", "Rennes"]},
+        {"type": "vraifaux", "affirmation": "La « France du vide », ce sont les régions de faibles densités.", "reponse": true},
+        {"type": "qcm", "question": "Quand les aires urbaines s'étalent sur la campagne en couronnes de plus en plus éloignées, on parle de…", "choix": ["périurbanisation", "littoralisation", "macrocéphalie", "héliotropisme"]},
+        {"type": "paires", "consigne": "Associe chaque aire urbaine à sa population", "paires": [["Paris", "13,1 millions"], ["Lyon", "2,4 millions"], ["Marseille", "1,8 million"], ["Toulouse", "1,4 million"]]}
+      ]
+    },
+
+    {
+      "id": "nanon-aires-urbaines-4-controle",
+      "pour": ["nanon"],
+      "matiere": "Géographie",
+      "parcours": "Les aires urbaines en France",
+      "etape": 4,
+      "titre": "Spécial contrôle",
+      "emoji": "📝",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "fiche": [
+        "# Ce qui tombe au contrôle",
+        {"visuel": "tuiles", "elements": ["✏️ Le **croquis** d'une aire urbaine", "❓ C'est quoi l'**étalement urbain** ?", "❓ C'est quoi la **périurbanisation** ?", "❓ C'est quoi les **migrations pendulaires** ?", "❓ C'est quoi la **littoralisation** ?", "⚖️ **Causes et conséquences** de l'étalement urbain"]},
+        "# Causes et conséquences de l'étalement urbain",
+        {"visuel": "liens", "types": {"cause": {"emoji": "➡️", "label": "entraîne", "couleur": "#f59e0b"}}, "liens": [{"de": "Ville attractive (emploi, formation, soleil)", "vers": "Beaucoup de nouveaux habitants", "type": "cause"}, {"de": "Immobilier moins cher en périphérie", "vers": "Installation en banlieue et couronne périurbaine", "type": "cause"}, {"de": "Installation en banlieue et couronne périurbaine", "vers": "Lotissements pavillonnaires, aire urbaine plus grande", "type": "cause"}, {"de": "Habiter loin du travail", "vers": "Migrations pendulaires en voiture", "type": "cause"}, {"de": "Migrations pendulaires en voiture", "vers": "Embouteillages, routes saturées, pollution", "type": "cause"}]},
+        {"visuel": "encadre", "style": "astuce", "nom": "Pour bien répondre", "texte": ["**Causes** : l'attractivité (emploi avec Airbus, formation, cadre de vie ensoleillé = héliotropisme) + le **coût de l'immobilier**, moins élevé en périphérie.", "**Conséquences** : des **lotissements pavillonnaires**, une aire urbaine qui s'étend sur la campagne, des **migrations pendulaires**, des **embouteillages** et de la **pollution**.", "**Solutions** : les collectivités développent le **vélo** et le **tramway**."]},
+        "# Le croquis, une dernière fois",
+        {"visuel": "croquis", "titre": "Croquis : une aire urbaine", "zones": [{"nom": "ville-centre", "couleur": "#f4a3b4", "texte": "le cœur de l'aire urbaine : **services de proximité et commerces de détail**."}, {"nom": "banlieue", "couleur": "#f8c29a", "texte": "les communes collées à la ville-centre : **lotissements pavillonnaires et collectifs**."}, {"nom": "communes périurbaines", "couleur": "#f7e27a", "texte": "la **couronne périurbaine** : centres commerciaux, zones industrielles (Airbus), équipements qui demandent beaucoup d'espace (aéroport de Toulouse-Blagnac)."}, {"nom": "espace rural", "couleur": "#cfe8a9", "texte": "la campagne autour, que l'aire urbaine grignote peu à peu."}], "etalement": "la ville s'étend de plus en plus loin sur la campagne (grosses flèches noires vers l'extérieur).", "mobilites": "les trajets de tous les jours entre le domicile (en périphérie) et le travail (au centre) : ce sont les **migrations pendulaires** (flèches à deux pointes).", "legende": "Au contrôle, il faudra savoir refaire ce croquis : entraîne-toi avec « 🙈 Cacher la légende »."}
+      ],
+      "activites": [
+        {"type": "carte", "recto": "C'est quoi l'étalement urbain ?", "verso": "L'étalement des banlieues et des zones périurbaines d'une ville."},
+        {"type": "carte", "recto": "C'est quoi la périurbanisation ?", "verso": "L'extension des espaces urbains à la périphérie des agglomérations."},
+        {"type": "carte", "recto": "C'est quoi les migrations pendulaires ?", "verso": "Les allers-retours quotidiens entre le domicile (en périphérie) et le travail (dans les grands pôles urbains)."},
+        {"type": "carte", "recto": "C'est quoi la littoralisation ?", "verso": "La concentration de la population et des activités sur le littoral."},
+        {"type": "qcm", "question": "Laquelle est une CAUSE de l'étalement urbain ?", "choix": ["L'immobilier moins cher en périphérie", "Les embouteillages", "La pollution atmosphérique", "Les lotissements pavillonnaires"], "explication": "Embouteillages, pollution et lotissements sont des conséquences."},
+        {"type": "qcm", "question": "Laquelle est une CONSÉQUENCE de l'étalement urbain ?", "choix": ["Des routes saturées aux heures de pointe", "Le soleil de Toulouse", "L'université", "Le coût de l'immobilier en centre-ville"]},
+        {"type": "vraifaux", "affirmation": "Sur le croquis, les grosses flèches noires représentent les mobilités quotidiennes.", "reponse": false, "explication": "Les grosses flèches = l'étalement urbain ; les flèches fines à deux pointes = les mobilités quotidiennes."},
+        {"type": "paires", "consigne": "Associe chaque mot à sa définition", "paires": [["Aire urbaine", "Ville-centre + banlieues + couronne périurbaine"], ["Héliotropisme", "Envie de vivre dans un cadre agréable"], ["Macrocéphalie", "Un pôle urbain qui domine tout"], ["Littoralisation", "Concentration sur le littoral"]]},
+        {"type": "saisie", "question": "Comment s'appelle l'espace jaune du croquis, entre la banlieue et l'espace rural ?", "reponse": ["couronne périurbaine", "la couronne périurbaine", "communes périurbaines", "les communes périurbaines", "périurbain", "espace périurbain"]}
       ]
     },
 

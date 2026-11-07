@@ -109,6 +109,7 @@ Tous acceptent `"titre"` et `"legende"`, et leurs textes acceptent le **gras** e
 | `son` | CP : un son (lettre script + attachée, geste, mots-images à écouter) | `{"visuel":"son","lettres":"a A","son":"a","geste":"…","mots":[{"emoji":"🐱","mot":"chat"}]}` |
 | `syllabes` | CP : f + a = fa, on touche pour entendre | `{"visuel":"syllabes","consonnes":["f","n"],"voyelles":["a","i","o"]}` |
 | `alphabet` | CP : lettres script → attachées | `{"visuel":"alphabet"}` |
+| `croquis` | Géo : croquis d'une aire urbaine (taches de couleur du centre vers l'extérieur, grosses flèches = étalement, flèches à 2 pointes = mobilités) ; on touche une zone pour son explication, « 🙈 Cacher la légende » pour réciter | `{"visuel":"croquis","zones":[{"nom":"ville-centre","couleur":"#f4a3b4","texte":"…"}],"etalement":"…","mobilites":"…"}` |
 
 Le code de chaque visuel est dans `visuels.js` (une fonction par visuel, bien commentée).
 

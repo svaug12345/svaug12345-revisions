@@ -1003,4 +1003,103 @@ const VISUELS = {
       class: 'alpha-case', style: cascade(i % 8), onclick: () => lireAVoixHaute(l),
     }, el('span', {}, l), el('i', {}, '→'), el('span', { class: 'attache' }, l))));
   },
+
+  /* CROQUIS D'UNE AIRE URBAINE (géographie, depuis la v1.16.0) :
+       { zones: [{ nom, couleur, texte }, …]   // du centre vers l'extérieur (4 au maximum)
+         etalement: "texte", mobilites: "texte" }   // explications des deux sortes de flèches
+     Dessin façon cahier : taches de couleur emboîtées, grosses flèches noires = étalement urbain,
+     flèches fines à deux pointes = mobilités quotidiennes (migrations pendulaires).
+     On touche une zone (sur le dessin ou dans la légende) : elle s'allume et son explication s'affiche.
+     Le bouton « 🙈 Cacher la légende » remplace les noms par « ? » pour réciter le croquis de tête. */
+  croquis(v) {
+    const NS = 'http://www.w3.org/2000/svg';
+    const svg = (tag, attrs) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); return n; };
+    const zones = (v.zones || []).slice(0, 4);
+    // Une tache « faite main » : ellipse un peu bosselée (rayons rx, ry autour de 160, 110)
+    const tache = (rx, ry, graine) => {
+      let d = '';
+      const n = 14;
+      for (let k = 0; k <= n; k++) {
+        const a = (k / n) * Math.PI * 2;
+        const bosse = 1 + 0.07 * Math.sin(a * 3 + graine) + 0.04 * Math.cos(a * 5 + graine * 2);
+        const x = 160 + Math.cos(a) * rx * bosse, y = 110 + Math.sin(a) * ry * bosse;
+        d += (k ? ' L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1);
+      }
+      return d + ' Z';
+    };
+    // Tailles des taches, de l'extérieur (espace rural = tout le cadre) vers le centre
+    const tailles = [null, [128, 88], [78, 54], [38, 24]];
+    const dessin = svg('svg', { viewBox: '0 0 320 220', class: 'croquis-svg', role: 'img' });
+    const formes = [];
+    // On dessine de l'extérieur vers l'intérieur pour que le centre soit au-dessus
+    for (let i = zones.length - 1; i >= 0; i--) {
+      const z = zones[i];
+      const rang = zones.length - 1 - i; // 0 = zone la plus extérieure
+      const forme = rang === 0 && zones.length === 4
+        ? svg('rect', { x: 2, y: 2, width: 316, height: 216, rx: 8 })
+        : svg('path', { d: tache(...tailles[rang + (4 - zones.length)], i + 1) });
+      forme.setAttribute('fill', z.couleur || '#ddd');
+      forme.setAttribute('class', 'croquis-zone');
+      forme.addEventListener('click', () => choisir(i));
+      formes[i] = forme;
+      dessin.append(forme);
+    }
+    // Grosses flèches noires (étalement) : partent de la banlieue vers l'extérieur
+    const grosseFleche = (x, y, angle) => {
+      const g = svg('g', { transform: `translate(${x} ${y}) rotate(${angle})`, class: 'croquis-etalement' });
+      g.append(svg('path', { d: 'M0 -7 L22 -7 L22 -14 L40 0 L22 14 L22 7 L0 7 Z' }));
+      g.addEventListener('click', () => choisir('etalement'));
+      return g;
+    };
+    [[228, 58, -35], [76, 66, 200], [222, 158, 40], [84, 150, 150]].forEach((f) => dessin.append(grosseFleche(...f)));
+    // Flèches fines à deux pointes (mobilités quotidiennes) : entre la couronne et le centre
+    // Pointe de flèche réutilisable (« marker » SVG), posée aux deux bouts des traits fins
+    const defs = svg('defs', {});
+    const pointe = svg('marker', { id: 'croquis-pointe', viewBox: '0 0 10 10', refX: 8, refY: 5, markerWidth: 6, markerHeight: 6, orient: 'auto-start-reverse' });
+    pointe.append(svg('path', { d: 'M0 0 L10 5 L0 10 Z' }));
+    defs.append(pointe);
+    dessin.append(defs);
+    [[100, 104, 138, 110], [178, 114, 236, 118], [160, 74, 160, 96]].forEach(([x1, y1, x2, y2]) => {
+      const l = svg('line', { x1, y1, x2, y2, class: 'croquis-mobilite', 'marker-start': 'url(#croquis-pointe)', 'marker-end': 'url(#croquis-pointe)' });
+      l.addEventListener('click', () => choisir('mobilites'));
+      dessin.append(l);
+    });
+
+    // Légende (boutons) + zone d'explication
+    const explication = el('p', { class: 'croquis-explication' }, 'Touche une couleur ou une flèche 👆');
+    const boutons = [];
+    const legende = el('div', { class: 'croquis-legende' });
+    const ajouterBouton = (cle, pastille, nom) => {
+      const b = el('button', { onclick: () => choisir(cle) }, pastille, el('span', { class: 'croquis-nom' }, nom));
+      b.dataset.nom = nom;
+      boutons.push([cle, b]);
+      legende.append(b);
+    };
+    zones.forEach((z, i) => ajouterBouton(i, el('i', { class: 'croquis-pastille', style: `background:${z.couleur}` }), z.nom));
+    if (v.etalement) ajouterBouton('etalement', el('i', { class: 'croquis-picto' }, '➡'), 'étalement urbain');
+    if (v.mobilites) ajouterBouton('mobilites', el('i', { class: 'croquis-picto fin' }, '⟷'), 'mobilités quotidiennes');
+
+    // Allume l'élément choisi et affiche son explication (le nom reste caché si la légende l'est)
+    let cache = false;
+    function choisir(cle) {
+      formes.forEach((f, i) => f.classList.toggle('eteinte', typeof cle === 'number' && i !== cle));
+      dessin.classList.toggle('montre-etalement', cle === 'etalement');
+      dessin.classList.toggle('montre-mobilites', cle === 'mobilites');
+      boutons.forEach(([c, b]) => b.classList.toggle('actif', c === cle));
+      const texte = typeof cle === 'number' ? zones[cle].texte : v[cle];
+      const nom = typeof cle === 'number' ? zones[cle].nom : (cle === 'etalement' ? 'Étalement urbain' : 'Mobilités quotidiennes');
+      explication.replaceChildren(...(cache
+        ? [el('b', {}, '❓ Comment ça s’appelle ? '), el('button', { class: 'croquis-reveler', onclick: () => explication.replaceChildren(el('b', {}, nom + ' : '), ...enrichir(texte || '')) }, 'Voir la réponse')]
+        : [el('b', {}, nom + ' : '), ...enrichir(texte || '')]));
+    }
+    // Cacher / montrer les noms de la légende, pour s'entraîner à refaire le croquis
+    const basculer = el('button', { class: 'croquis-cacher', onclick: () => {
+      cache = !cache;
+      boutons.forEach(([, b]) => (b.querySelector('.croquis-nom').textContent = cache ? '?' : b.dataset.nom));
+      basculer.textContent = cache ? '👀 Montrer la légende' : '🙈 Cacher la légende';
+      explication.textContent = cache ? 'Touche une couleur : sauras-tu dire son nom ?' : 'Touche une couleur ou une flèche 👆';
+    } }, '🙈 Cacher la légende');
+
+    return el('div', { class: 'croquis' }, dessin, legende, explication, basculer);
+  },
 };
