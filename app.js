@@ -673,10 +673,172 @@ async function appelerAlex(lecon, carte, agentId) {
 /** Termine l'appel en cours (bouton Raccrocher, changement d'écran…). */
 function raccrocherAlex() {
   if (!alex) return;
-  const { conversation, carte } = alex;
+  const { conversation, carte, majEtat } = alex;
   alex = null;
   conversation?.endSession().catch(() => {});
-  if (carte.isConnected) etatAlex(carte, 'repos', 'À bientôt ! 👋');
+  // majEtat : fonction d'affichage propre au bouton (le coach de langues a la sienne)
+  if (carte.isConnected) (majEtat || etatAlex)(carte, 'repos', 'À bientôt ! 👋');
+}
+
+/* ---------- 3 ter. LE COACH DE LANGUES (anglais, allemand, espagnol) ----------
+   Sur la page des leçons de Tom, Gaby et Nanon : un bloc « 🌍 Coach de langues »
+   avec un bouton par langue. On touche → on PARLE avec Alex dans cette langue,
+   sans leçon précise : conversation, jeux de rôle, vocabulaire…
+
+   Le niveau (1 à 6) :
+   - niveau de départ : lecons.json > enfants > "coachLangues": { "en": 3, "de": 2, "es": 1 }
+     (un enfant sans "coachLangues" n'a pas de coach de langues) ;
+   - quand l'enfant réussit bien, le coach propose d'aller « un cran plus loin ».
+     S'il accepte, le coach appelle l'outil client « changer_niveau » (déclaré dans
+     ElevenLabs) : l'appli enregistre le nouveau niveau dans le téléphone et fait la fête 🎉.
+     La fois suivante, la séance reprend à ce niveau ;
+   - les descriptions des niveaux sont dans lecons.json > "coachLangues" > "niveaux".
+
+   Agent ElevenLabs à part (pas le même qu'Alex des leçons) : son identifiant est dans
+   lecons.json > "coachLangues" > "agentId". Niveaux 1 et 2 : la conversation est réglée
+   en français (l'enfant explique souvent en français) ; à partir du 3, elle est réglée
+   dans la langue étrangère, pour que la reconnaissance vocale comprenne bien l'enfant.
+   ------------------------------------------------------------------------- */
+
+const CLE_NIVEAUX = 'revisions-niveaux-langues'; // { gaby: { en: 4, de: 2 }, … } dans le téléphone
+
+/** Le niveau actuel d'un enfant dans une langue : le plus haut entre celui du fichier et celui du téléphone. */
+function niveauLangue(enfant, langue) {
+  let enregistre = 0;
+  try { enregistre = JSON.parse(localStorage.getItem(CLE_NIVEAUX))?.[enfant.id]?.[langue] || 0; } catch { /* rien */ }
+  return Math.min(6, Math.max(1, enfant.coachLangues?.[langue] || 1, enregistre));
+}
+
+/** Enregistre un nouveau niveau (entre 1 et 6) dans le téléphone. Renvoie le niveau retenu.
+    On l'écrit tel quel, même plus bas : si l'enfant redescend avec le coach, on le respecte
+    (mais jamais sous le niveau de départ du fichier, voir niveauLangue). */
+function changerNiveauLangue(enfant, langue, niveau) {
+  const n = Math.min(6, Math.max(1, Math.round(Number(niveau)) || 1));
+  try {
+    const tous = JSON.parse(localStorage.getItem(CLE_NIVEAUX)) || {};
+    tous[enfant.id] ??= {};
+    tous[enfant.id][langue] = n;
+    localStorage.setItem(CLE_NIVEAUX, JSON.stringify(tous));
+  } catch { /* stockage bloqué : le niveau ne sera pas retenu */ }
+  return niveauLangue(enfant, langue);
+}
+
+/** Le bloc « 🌍 Coach de langues » (null si l'enfant n'en a pas ou si l'agent n'est pas configuré). */
+function blocCoachLangues() {
+  const enfant = etat.enfant;
+  const config = etat.donnees.coachLangues;
+  if (!enfant?.coachLangues || !config?.agentId) return null;
+  return el('section', { class: 'groupe coach-langues' },
+    el('h2', {}, '🌍 Coach de langues'),
+    el('p', { class: 'coach-intro' }, 'Parle avec Alex ! Si tu y arrives bien, il te proposera de monter d’un cran 🚀'),
+    el('div', { class: 'coach-boutons' },
+      Object.entries(config.langues).map(([code, langue]) => {
+        const bouton = el('button', { class: 'coach-langue', type: 'button', style: `--c:${langue.couleur || '#6366f1'}` });
+        bouton.dataset.langue = code;
+        etatCoach(bouton, 'repos');
+        bouton.addEventListener('click', () =>
+          (alex?.carte === bouton ? raccrocherAlex() : appelerCoach(code, bouton)));
+        return bouton;
+      })));
+}
+
+/* Ce qu'affiche un bouton de langue selon l'état de l'appel (comme la pastille d'Alex) */
+const TEXTES_COACH = {
+  connexion: ['⏳', 'Ça sonne…'],
+  parle: ['🔊', 'Alex parle'],
+  ecoute: ['👂', 'À toi !'],
+};
+
+/** Redessine un bouton de langue : au repos, drapeau + langue + niveau ; en appel, l'état + ✖. */
+function etatCoach(bouton, mode, message) {
+  const code = bouton.dataset.langue;
+  const langue = etat.donnees.coachLangues.langues[code];
+  bouton.dataset.mode = mode;
+  if (mode === 'repos') {
+    const n = niveauLangue(etat.enfant, code);
+    bouton.replaceChildren(
+      el('span', { class: 'coach-drapeau', 'aria-hidden': 'true' }, langue.drapeau),
+      el('b', {}, langue.libelle),
+      // Petite jauge : ●●●○○○ = niveau 3 sur 6
+      el('small', { class: 'coach-niveau', title: `Niveau ${n} sur 6` }, `Niveau ${n} `, el('span', {}, '●'.repeat(n) + '○'.repeat(6 - n))));
+  } else {
+    const [icone, texte] = TEXTES_COACH[mode];
+    bouton.replaceChildren(
+      el('span', { class: 'coach-drapeau', 'aria-hidden': 'true' }, icone),
+      el('b', {}, texte),
+      el('small', {}, `${langue.drapeau} ✖ raccrocher`));
+  }
+  if (message) toast(message);
+}
+
+async function appelerCoach(code, bouton) {
+  if (bouton.dataset.mode === 'connexion') return; // anti double-clic
+  raccrocherAlex();          // un seul appel à la fois (autre langue, ou Alex d'une leçon)
+  couperVoix(); fermerLecteurMot();
+  etatCoach(bouton, 'connexion');
+  const enfant = etat.enfant;
+  const config = etat.donnees.coachLangues;
+  const langue = config.langues[code];
+  const niveau = niveauLangue(enfant, code);
+  let debut = 0;
+  try {
+    await navigator.mediaDevices.getUserMedia({ audio: true });
+    const { Conversation } = await import('https://cdn.jsdelivr.net/npm/@elevenlabs/client@1.32.1/+esm');
+    const appel = { carte: bouton, conversation: null, majEtat: etatCoach };
+    alex = appel;
+    // Niveaux 1-2 : on reste en français ; à partir de 3, on bascule dans la langue étrangère
+    const enLangue = niveau >= 3;
+    const conversation = await Conversation.startSession({
+      agentId: config.agentId,
+      overrides: {
+        agent: {
+          language: enLangue ? code : 'fr',
+          firstMessage: (enLangue ? langue.bonjour : langue.bonjourFr)
+            .replaceAll('{prenom}', enfant.nom).replaceAll('{niveau}', String(niveau)),
+        },
+      },
+      dynamicVariables: {
+        prenom: enfant.nom,
+        age: String(enfant.age || 10),
+        classe: enfant.classe || `${enfant.age || 10} ans`,
+        langue: langue.nom,                         // « anglais », « allemand », « espagnol »
+        niveau: String(niveau),
+        niveau_suivant: String(Math.min(6, niveau + 1)),
+        description_niveau: config.niveaux[niveau - 1] || '',
+        conseils: enfant.conseilsAlex || 'Aucune consigne particulière.',
+      },
+      // Outil appelé PAR LE COACH quand l'enfant accepte de monter (ou redescendre) d'un cran
+      clientTools: {
+        changer_niveau: ({ niveau: nouveau }) => {
+          const avant = niveauLangue(enfant, code);
+          const apres = changerNiveauLangue(enfant, code, nouveau);
+          if (apres > avant) {
+            eclats(bouton, ['🚀', '⭐', '🎉', langue.drapeau]);
+            toast(`🚀 Niveau ${apres} débloqué en ${langue.nom} !`);
+            son('fin'); // petite fanfare
+          }
+          return `Niveau enregistré : ${apres} sur 6. Continue la séance à ce niveau.`;
+        },
+      },
+      onConnect: () => { debut = Date.now(); etatCoach(bouton, 'parle'); },
+      onModeChange: ({ mode }) => { if (alex === appel) etatCoach(bouton, mode === 'speaking' ? 'parle' : 'ecoute'); },
+      onDisconnect: () => {
+        if (alex !== appel) return;
+        const tropCourt = !debut || Date.now() - debut < 3000;
+        alex = null;
+        if (bouton.isConnected) etatCoach(bouton, 'repos', tropCourt ? 'Alex n’a pas pu décrocher 😕 Réessaie dans un moment.' : 'À bientôt ! 👋');
+      },
+      onError: (e) => console.warn('Coach de langues :', e),
+    });
+    if (alex !== appel) { conversation.endSession(); return; }
+    appel.conversation = conversation;
+  } catch (e) {
+    console.warn('Coach de langues :', e);
+    if (alex?.carte === bouton) alex = null;
+    const micro = e && (e.name === 'NotAllowedError' || e.name === 'NotFoundError');
+    if (bouton.isConnected) etatCoach(bouton, 'repos', micro ? 'Autorise le micro pour parler à Alex 🎤'
+      : 'Alex n’est pas joignable (internet ?) 😕');
+  }
 }
 
 /* ---------- 4. NAVIGATION ------------------------------------ */
@@ -789,11 +951,11 @@ function afficherLecons() {
     afficher(el('div', { class: 'vide' },
       el('div', { class: 'gros-emoji' }, '📭'),
       el('p', {}, archivees.length ? 'Toutes tes leçons sont archivées 📦' : 'Pas encore de leçon ici. Demande à Papa d’en ajouter 😉')),
-      boutonEnvoi(), blocArchives);
+      blocCoachLangues(), boutonEnvoi(), blocArchives);
     return;
   }
 
-  afficher(...parMatiere(lecons).map(([matiere, liste]) =>
+  afficher(blocCoachLangues(), ...parMatiere(lecons).map(([matiere, liste]) =>
     el('section', { class: 'groupe' },
       el('h2', {}, matiere),
       cartesDe(liste),

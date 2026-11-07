@@ -1,11 +1,11 @@
 {
   "maj": "07/11/2026",
-  "versionApp": "1.18.0",
+  "versionApp": "1.19.0",
 
   "enfants": [
-    {"id": "tom", "nom": "Tom", "avatar": "avatars/tom.svg", "couleur": "#22c55e", "age": 6},
-    {"id": "gaby", "nom": "Gaby", "avatar": "avatars/gaby.svg", "couleur": "#ec4899", "age": 12},
-    {"id": "nanon", "nom": "Nanon", "avatar": "avatars/nanon.svg", "couleur": "#f59e0b", "age": 14},
+    {"id": "tom", "nom": "Tom", "avatar": "avatars/tom.svg", "couleur": "#22c55e", "age": 6, "coachLangues": {"en": 1, "de": 1, "es": 1}},
+    {"id": "gaby", "nom": "Gaby", "avatar": "avatars/gaby.svg", "couleur": "#ec4899", "age": 12, "coachLangues": {"en": 3, "de": 2, "es": 1}},
+    {"id": "nanon", "nom": "Nanon", "avatar": "avatars/nanon.svg", "couleur": "#f59e0b", "age": 14, "coachLangues": {"en": 4, "de": 2, "es": 2}},
     {"id": "titouan", "nom": "Titouan", "avatar": "avatars/titouan.svg", "couleur": "#3b82f6", "age": 9, "classe": "CM2",
      "coupDePouce": true, "questionsParManche": 10, "lectureFacile": true, "orthographeSouple": true,
      "conseilsAlex": "Titouan est en CM2. Il a besoin d'enchaîner les réussites pour prendre confiance : commence toujours par une question facile, avance par toutes petites étapes, félicite chaque bonne réponse et chaque effort. Passe par l'oral : relis-lui les consignes, ne lui demande jamais d'épeler ni d'écrire, et ne corrige pas son orthographe. Pour les nombres, fais-le manipuler en pensée avec du concret (doigts, joueurs, buts, ballons), découpe les calculs en petits morceaux et laisse-lui le temps. Rappelle les bases utiles avant une notion difficile. S'il se trompe, donne un indice et laisse-le réessayer avant de corriger. Il adore le foot : prends tes exemples dans le foot. Sa petite sœur s'appelle Ava ; ses cousins sont Nanon, Gaby et Tom."},
@@ -30,6 +30,30 @@
   "assistant": {
     "_explication": "Alex, le coach vocal (agent ElevenLabs). Il reçoit la fiche et le quiz de la leçon ouverte. Il n'apparaît que sur les leçons qui ont \"assistant\": true.",
     "agentId": "agent_7401m6bb2175fbj9x1z3y88n246t"
+  },
+
+  "coachLangues": {
+    "_explication": "Coach de langues (agent ElevenLabs à part, anglais / allemand / espagnol). Visible pour les enfants qui ont \"coachLangues\" dans leur profil (niveau de départ 1 à 6 par langue). Le coach propose de monter d'un cran quand c'est réussi ; le nouveau niveau est gardé dans le téléphone. {prenom} et {niveau} sont remplacés dans les messages d'accueil (bonjourFr : niveaux 1-2, bonjour : niveau 3 et plus).",
+    "agentId": "agent_4301m6vtnfm4e73tpsgs9aemv598",
+    "langues": {
+      "en": {"libelle": "Anglais", "nom": "anglais", "drapeau": "🇬🇧", "couleur": "#2563eb",
+        "bonjourFr": "Coucou {prenom} ! C'est Alex, ton coach d'anglais. Hello! On joue avec l'anglais ? Tu as une idée de sujet, ou je t'en propose un ?",
+        "bonjour": "Hi {prenom}! It's Alex, your English coach. You're at level {niveau}. Do you have a topic in mind, or shall I pick one?"},
+      "de": {"libelle": "Allemand", "nom": "allemand", "drapeau": "🇩🇪", "couleur": "#dc2626",
+        "bonjourFr": "Coucou {prenom} ! C'est Alex, ton coach d'allemand. Hallo! On joue avec l'allemand ? Tu as une idée de sujet, ou je t'en propose un ?",
+        "bonjour": "Hallo {prenom}! Ich bin Alex, dein Deutsch-Coach. Du bist auf Niveau {niveau}. Hast du ein Thema, oder soll ich eins vorschlagen?"},
+      "es": {"libelle": "Espagnol", "nom": "espagnol", "drapeau": "🇪🇸", "couleur": "#f59e0b",
+        "bonjourFr": "Coucou {prenom} ! C'est Alex, ton coach d'espagnol. ¡Hola! On joue avec l'espagnol ? Tu as une idée de sujet, ou je t'en propose un ?",
+        "bonjour": "¡Hola {prenom}! Soy Alex, tu coach de español. Estás en el nivel {niveau}. ¿Tienes un tema en mente o te propongo uno?"}
+    },
+    "niveaux": [
+      "Niveau 1, premiers mots : saluer, couleurs, nombres jusqu'à vingt, animaux, objets de la maison. Tu expliques en français et tu fais répéter les mots dans la langue, avec des petits jeux (devinettes, « comment on dit… »).",
+      "Niveau 2, petites phrases : se présenter, dire son âge, ce qu'on aime ou pas, décrire sa famille, poser des questions très simples. Moitié français, moitié langue étrangère.",
+      "Niveau 3, petite conversation : l'école, les loisirs, la journée, la météo, faire des courses, au présent. Tu parles surtout la langue étrangère, le français seulement pour débloquer.",
+      "Niveau 4, raconter : le week-end, les vacances, un film, des projets, avec le passé et le futur. Presque tout dans la langue étrangère, des phrases plus longues.",
+      "Niveau 5, discuter : donner son avis et le justifier, comparer, imaginer avec « si… », jeux de rôle plus libres. Tout dans la langue étrangère.",
+      "Niveau 6, débattre : sujets de société, nuances, connecteurs logiques, expressions idiomatiques, reformuler avec élégance. Tout dans la langue étrangère, au rythme naturel."
+    ]
   },
 
   "lecons": [

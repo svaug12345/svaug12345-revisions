@@ -164,6 +164,22 @@ S'il manque un MP3, l'appli se rabat sur la voix du téléphone et l'écrit dans
   Les MP3 sont nommés d'après l'empreinte de `langue|texte prononcé` ; sans MP3, c'est la voix du téléphone dans la bonne langue.
 - Le micro (🎤) utilise la reconnaissance vocale de Chrome : il faut internet et autoriser le micro la 1re fois.
 
+## 🌍 Coach de langues (depuis la v1.19.0)
+
+Sur la page des leçons de **Tom, Gaby et Nanon**, un bloc **« 🌍 Coach de langues »** : un bouton par langue
+(🇬🇧 anglais, 🇩🇪 allemand, 🇪🇸 espagnol). On le touche → on **parle** avec Alex dans cette langue
+(conversation, jeux de rôle, devinettes, vocabulaire), sans leçon précise. On retouche le bouton pour raccrocher.
+
+- **Niveaux 1 à 6** (descriptions dans `lecons.json` > `"coachLangues"` > `"niveaux"`) : premiers mots → petites
+  phrases → petite conversation → raconter → discuter → débattre. Niveaux 1-2 : la conversation est réglée en
+  français ; à partir du 3, dans la langue étrangère.
+- **Niveau de départ** dans le profil de l'enfant : `"coachLangues": {"en": 3, "de": 2, "es": 1}`.
+  Un enfant sans `"coachLangues"` n'a pas le coach.
+- **Un cran plus loin** : quand l'enfant enchaîne les réussites, Alex propose de monter d'un niveau. S'il accepte,
+  Alex appelle l'outil `changer_niveau` (outil « client » ElevenLabs) : l'appli fait la fête 🚀 et garde le nouveau
+  niveau **dans le téléphone** (comme les étoiles). La fois suivante, la séance reprend là.
+- Agent ElevenLabs à part : « Mes Révisions – Alex, coach de langues » (`agentId` dans `lecons.json`).
+
 ## 🔁 Deuxième chance (depuis la v1.4.0)
 
 À la fin d'un quiz, s'il y a des erreurs, l'appli enchaîne **une fois** sur les questions ratées.
