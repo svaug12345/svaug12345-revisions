@@ -9,207 +9,258 @@
    "phrases": [
     {
      "texte": "Les unités : un plus trois, ça fait quatre unités",
-     "h": "c75aa496"
+     "h": "c75aa496",
+     "dit": "Les unités : un plus trois, ça fait quatre unités"
     },
     {
      "texte": "vingt et un plus quarante-trois égale soixante-quatre",
-     "h": "524cb7cf"
+     "h": "524cb7cf",
+     "dit": "vingt et un plus quarante-trois égale soixante-quatre"
     },
     {
      "texte": "60 plus 4 égale ?",
-     "h": "42e7778b"
+     "h": "42e7778b",
+     "dit": "soixante plus quatre égale combien ?"
     },
     {
      "texte": "75 plus 3 égale ?",
-     "h": "79b326da"
+     "h": "79b326da",
+     "dit": "soixante-quinze plus trois égale combien ?"
     },
     {
      "texte": "50 plus 30 égale ?",
-     "h": "73c9d445"
+     "h": "73c9d445",
+     "dit": "cinquante plus trente égale combien ?"
     },
     {
      "texte": "40 plus 7 égale ?",
-     "h": "f5b9990a"
+     "h": "f5b9990a",
+     "dit": "quarante plus Sète égale combien ?"
     },
     {
      "texte": "? plus 1 égale 80",
-     "h": "b1a3d9ce"
+     "h": "b1a3d9ce",
+     "dit": "combien plus un égale quatre-vingts"
     },
     {
      "texte": "55 plus ? égale 65",
-     "h": "9a57e406"
+     "h": "9a57e406",
+     "dit": "cinquante-cinq plus combien égale soixante-cinq"
     },
     {
      "texte": "10 plus 7 égale ?",
-     "h": "f1fc3687"
+     "h": "f1fc3687",
+     "dit": "dix plus Sète égale combien ?"
     },
     {
      "texte": "70",
-     "h": "d15f7150"
+     "h": "d15f7150",
+     "dit": "soixante-dix"
     },
     {
      "texte": "30 plus 30 égale ?",
-     "h": "bfde55e7"
+     "h": "bfde55e7",
+     "dit": "trente plus trente égale combien ?"
     },
     {
      "texte": "60",
-     "h": "d761b959"
+     "h": "d761b959",
+     "dit": "soixante"
     },
     {
      "texte": "33",
-     "h": "6c695fad"
+     "h": "6c695fad",
+     "dit": "trente-trois"
     },
     {
      "texte": "90",
-     "h": "e582230e"
+     "h": "e582230e",
+     "dit": "quatre-vingt-dix"
     },
     {
      "texte": "42 plus 5 égale ?",
-     "h": "3cde48e6"
+     "h": "3cde48e6",
+     "dit": "quarante-deux plus cinq égale combien ?"
     },
     {
      "texte": "47",
-     "h": "e866514a"
+     "h": "e866514a",
+     "dit": "quarante-sept"
     },
     {
      "texte": "92",
-     "h": "e3821fe8"
+     "h": "e3821fe8",
+     "dit": "quatre-vingt-douze"
     },
     {
      "texte": "45",
-     "h": "e6664e24"
+     "h": "e6664e24",
+     "dit": "quarante-cinq"
     },
     {
      "texte": "3 plus 58 égale ?",
-     "h": "fe471651"
+     "h": "fe471651",
+     "dit": "trois plus cinquante-huit égale combien ?"
     },
     {
      "texte": "61",
-     "h": "d661b7c6"
+     "h": "d661b7c6",
+     "dit": "soixante et un"
     },
     {
      "texte": "88",
-     "h": "e3845e7f"
+     "h": "e3845e7f",
+     "dit": "quatre-vingt-huit"
     },
     {
      "texte": "51",
-     "h": "de6402f5"
+     "h": "de6402f5",
+     "dit": "cinquante et un"
     },
     {
      "texte": "21 plus 43 égale ?",
-     "h": "54793247"
+     "h": "54793247",
+     "dit": "vingt et un plus quarante-trois égale combien ?"
     },
     {
      "texte": "64",
-     "h": "db61bfa5"
+     "h": "db61bfa5",
+     "dit": "soixante-quatre"
     },
     {
      "texte": "46",
-     "h": "e96652dd"
+     "h": "e96652dd",
+     "dit": "quarante-six"
     },
     {
      "texte": "63",
-     "h": "d461b4a0"
+     "h": "d461b4a0",
+     "dit": "soixante-trois"
     },
     {
      "texte": "28 plus ? égale 38",
-     "h": "71bad284"
+     "h": "71bad284",
+     "dit": "vingt-huit plus combien égale trente-huit"
     },
     {
      "texte": "Combien d'élèves préfèrent le chat ?",
-     "h": "d2e2197a"
+     "h": "d2e2197a",
+     "dit": "Combien d'élèves préfèrent le chat ?"
     },
     {
      "texte": "Quel animal les élèves préfèrent-ils le plus ?",
-     "h": "c0f7db88"
+     "h": "c0f7db88",
+     "dit": "Quel animal les élèves préfèrent-ils le plus ?"
     },
     {
      "texte": "le lapin",
-     "h": "907d7cf2"
+     "h": "907d7cf2",
+     "dit": "le lapin"
     },
     {
      "texte": "le chien",
-     "h": "14143639"
+     "h": "14143639",
+     "dit": "le chien"
     },
     {
      "texte": "le chat",
-     "h": "3d4c3d42"
+     "h": "3d4c3d42",
+     "dit": "le chat"
     },
     {
      "texte": "Quel animal les élèves préfèrent-ils le moins ?",
-     "h": "8e78cc66"
+     "h": "8e78cc66",
+     "dit": "Quel animal les élèves préfèrent-ils le moins ?"
     },
     {
      "texte": "le poisson rouge",
-     "h": "9306be35"
+     "h": "9306be35",
+     "dit": "le poisson rouge"
     },
     {
      "texte": "Combien d'élèves préfèrent le chien ?",
-     "h": "031b5fe3"
+     "h": "031b5fe3",
+     "dit": "Combien d'élèves préfèrent le chien ?"
     },
     {
      "texte": "Compte les bâtons. Combien y en a-t-il ?",
-     "h": "2fa040e0"
+     "h": "2fa040e0",
+     "dit": "Compte les bâtons. Combien y en a-t-il ?"
     },
     {
      "texte": "Combien y a-t-il d'élèves dans la classe ? (6 plus 4 plus 8 plus 9)",
-     "h": "e6af5d22"
+     "h": "e6af5d22",
+     "dit": "Combien y a-t-il d'élèves dans la classe ?"
     },
     {
      "texte": "27",
-     "h": "686b97f8"
+     "h": "686b97f8",
+     "dit": "vingt-sept"
     },
     {
      "texte": "26",
-     "h": "696b998b"
+     "h": "696b998b",
+     "dit": "vingt-six"
     },
     {
      "texte": "Le plateau qui descend porte l'objet le plus...",
-     "h": "68c16d49"
+     "h": "68c16d49",
+     "dit": "Le plateau qui descend porte l'objet le plus..."
     },
     {
      "texte": "lourd",
-     "h": "b44bce2b"
+     "h": "b44bce2b",
+     "dit": "lourd"
     },
     {
      "texte": "léger",
-     "h": "9290bf79"
+     "h": "9290bf79",
+     "dit": "léger"
     },
     {
      "texte": "Si la balance est bien droite, les deux objets ont la même masse.",
-     "h": "6202da49"
+     "h": "6202da49",
+     "dit": "Si la balance est bien droite, les deux objets ont la même masse."
     },
     {
      "texte": "La poupée fait descendre son plateau. Elle est...",
-     "h": "537d00d6"
+     "h": "537d00d6",
+     "dit": "La poupée fait descendre son plateau. Elle est..."
     },
     {
      "texte": "plus lourde",
-     "h": "646a1dac"
+     "h": "646a1dac",
+     "dit": "plus lourde"
     },
     {
      "texte": "plus légère",
-     "h": "54fcbdaa"
+     "h": "54fcbdaa",
+     "dit": "plus légère"
     },
     {
      "texte": "pareille",
-     "h": "5c751db3"
+     "h": "5c751db3",
+     "dit": "pareille"
     },
     {
      "texte": "Le camion monte, la chenille descend. Le plus lourd, c'est...",
-     "h": "e058dcb8"
+     "h": "e058dcb8",
+     "dit": "Le camion monte, la chenille descend. Le plus lourd, c'est..."
     },
     {
      "texte": "la chenille",
-     "h": "482dcc66"
+     "h": "482dcc66",
+     "dit": "la chenille"
     },
     {
      "texte": "le camion",
-     "h": "83ed8fa7"
+     "h": "83ed8fa7",
+     "dit": "le camion"
     },
     {
      "texte": "A est plus lourd que B. C est plus lourd que A. Range-les du plus léger au plus lourd.",
-     "h": "9df60135"
+     "h": "9df60135",
+     "dit": "A est plus lourd que B. C est plus lourd que A. Range-les du plus léger au plus lourd."
     }
    ]
   }
