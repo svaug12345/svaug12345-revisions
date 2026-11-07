@@ -231,6 +231,9 @@ function son(type) {
    l'ancien MP3 n'est plus utilisé et on retombe sur la voix du téléphone. */
 
 let audiosDispo = new Set(); // empreintes des MP3 présents (lu dans audio/index.json au démarrage)
+// Depuis la v1.17.1 : versions RALENTIES (étirées à l'avance, sans changer la hauteur de la voix) pour les
+// tout-petits, dans audio/lent/. Utilisées par les profils "voixLente": true (Elouan) quand elles existent.
+let audiosLents = new Set();
 let lecteur = null;          // le MP3 en cours de lecture
 
 /** Empreinte FNV-1a 32 bits du texte (encodé en UTF-8), en 8 caractères hexadécimaux.
@@ -303,8 +306,10 @@ function lireAVoixHaute(textes, { lent = false, vitesse } = {}) {
     const texte = fileVoix.shift();
     if (texte === undefined) return;
     const h = empreinte('fr|' + texte);              // même calcul que le script qui fabrique les MP3
-    if (audiosDispo.has(h)) {
-      lecteur = new Audio('audio/' + h + '.mp3');
+    // profil "voixLente" : on prend la version ralentie si elle existe, sinon la normale
+    const lente = etat.enfant?.voixLente && audiosLents.has(h);
+    if (lente || audiosDispo.has(h)) {
+      lecteur = new Audio((lente ? 'audio/lent/' : 'audio/') + h + '.mp3');
       lecteur.preservesPitch = true;                 // ralenti sans voix grave
       lecteur.webkitPreservesPitch = true;           // même réglage, nom des anciennes versions de Chrome/WebView
       lecteur.playbackRate = rythme;
@@ -1724,6 +1729,10 @@ async function demarrer() {
     const rep = await fetch('audio/index.json', { cache: 'no-store' });
     if (rep.ok) audiosDispo = new Set(await rep.json());
   } catch { /* pas de liste : tant pis */ }
+  try {
+    const rep = await fetch('audio/lent/index.json', { cache: 'no-store' });
+    if (rep.ok) audiosLents = new Set(await rep.json());
+  } catch { /* pas de versions lentes : on garde les normales */ }
 
   // Premier écran = racine de la pile
   pile.push([afficherAccueil, []]);

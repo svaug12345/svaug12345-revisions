@@ -1,6 +1,6 @@
 {
   "maj": "07/11/2026",
-  "versionApp": "1.17.0",
+  "versionApp": "1.17.1",
 
   "enfants": [
     {"id": "tom", "nom": "Tom", "avatar": "avatars/tom.svg", "couleur": "#22c55e", "age": 6},
@@ -16,7 +16,7 @@
      "coupDePouce": true, "questionsParManche": 6, "lectureAuto": true, "lectureFacile": true, "vitesseVoix": 0.8, "pauseVoix": 500,
      "conseilsAlex": "Malo a 6 ans, il est en CP. Il lit déjà les sons simples et apprend les sons à deux lettres (ou, on, an, ai, oi…), et il fait des additions avec des dizaines. Il se débrouille bien, mais il peut se braquer quand c'est trop dur ou quand on insiste : garde un ton joyeux et détendu, propose de petits défis courts, commence toujours par une question qu'il va réussir et félicite ses efforts. S'il bloque ou dit non, n'insiste pas : propose-lui de choisir entre deux questions, donne un indice ou fais une petite pause rigolote, puis reviens-y plus tard. Ne dis jamais « c'est facile ». Pour les nombres, parle de paquets de dix et de cubes tout seuls, et laisse-le compter sur ses doigts. Une seule question à la fois, avec des phrases courtes."},
     {"id": "elouan", "nom": "Elouan", "avatar": "avatars/elouan.svg", "couleur": "#84cc16", "age": 4, "classe": "Maternelle",
-     "coupDePouce": true, "questionsParManche": 5, "lectureAuto": true, "vitesseVoix": 0.75, "pauseVoix": 700,
+     "coupDePouce": true, "questionsParManche": 5, "lectureAuto": true, "voixLente": true, "vitesseVoix": 0.8, "pauseVoix": 900,
      "conseilsAlex": "Elouan est en maternelle : il ne lit pas encore, et il apprend à bien prononcer les mots et à en connaître de nouveaux. Parle lentement, avec des phrases très courtes, d'une voix douce et joyeuse. Dis les mots bien clairement et propose-lui de les répéter avec toi, en tapant dans les mains à chaque morceau (« Dis avec moi : di-plo-do-cus ! »). Quand il prononce mal un mot, ne dis jamais que c'est faux : redis simplement le mot correctement, avec le sourire (« Oui ! Le diplodocus ! »). Une seule question à la fois ; il peut répondre en disant un mot ou en montrant. Il adore les dinosaures : prends toujours tes exemples avec des dinosaures. Félicite chaque essai."}
   ],
 

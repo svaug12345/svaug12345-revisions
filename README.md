@@ -289,6 +289,10 @@ Options d'un enfant dans `lecons.json` :
   Sur une question : `"dire"` = ce qui est lu à la place du texte, `"lireChoix": false` = ne pas lire les réponses
   (quand la question teste justement la lecture).
 - (`"lectureAudio"`, qui mettait des 🔊 et 🔈 partout avec la voix du téléphone, n'existe plus depuis la v1.15.0.)
+- `"voixLente": true` (depuis la v1.17.1, Elouan) : utilise les MP3 **ralentis à l'avance** du dossier `audio/lent/`
+  (même nom que l'original, liste dans `audio/lent/index.json`), étirés avec ffmpeg sans changer la hauteur de la voix :
+  `ffmpeg -i audio/<h>.mp3 -af rubberband=tempo=0.72 -ac 1 -b:a 96k audio/lent/<h>.mp3`. Plus naturel que de trop
+  baisser `vitesseVoix`. Sans version lente, la normale est utilisée. **Après une nouvelle leçon d'Elouan : refaire ses versions lentes.**
 - `"lectureFacile": true` : police Lexend, lettres et lignes plus espacées, mots importants surlignés.
 - `"orthographeSouple": true` : une réponse tapée avec une petite faute est acceptée (on vérifie la compréhension, pas l'orthographe).
 
