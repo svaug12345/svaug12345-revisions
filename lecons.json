@@ -1,6 +1,6 @@
 {
   "maj": "07/11/2026",
-  "versionApp": "1.19.0",
+  "versionApp": "1.19.1",
 
   "enfants": [
     {"id": "tom", "nom": "Tom", "avatar": "avatars/tom.svg", "couleur": "#22c55e", "age": 6, "coachLangues": {"en": 1, "de": 1, "es": 1}},
@@ -33,26 +33,26 @@
   },
 
   "coachLangues": {
-    "_explication": "Coach de langues (agent ElevenLabs à part, anglais / allemand / espagnol). Visible pour les enfants qui ont \"coachLangues\" dans leur profil (niveau de départ 1 à 6 par langue). Le coach propose de monter d'un cran quand c'est réussi ; le nouveau niveau est gardé dans le téléphone. {prenom} et {niveau} sont remplacés dans les messages d'accueil (bonjourFr : niveaux 1-2, bonjour : niveau 3 et plus).",
+    "_explication": "Coach de langues (agent ElevenLabs à part, anglais / allemand / espagnol). Visible pour les enfants qui ont \"coachLangues\" dans leur profil (niveau de départ 1 à 6 par langue). Le coach propose de monter d'un cran quand c'est réussi ; le nouveau niveau est gardé dans le téléphone. {prenom} et {niveau} sont remplacés dans les messages d'accueil (bonjourDebutant : niveaux 1-2, bonjour : niveau 3 et plus). Le coach parle le plus possible dans la langue à apprendre, le français ne sert qu'à débloquer..",
     "agentId": "agent_4301m6vtnfm4e73tpsgs9aemv598",
     "langues": {
       "en": {"libelle": "Anglais", "nom": "anglais", "drapeau": "🇬🇧", "couleur": "#2563eb",
-        "bonjourFr": "Coucou {prenom} ! C'est Alex, ton coach d'anglais. Hello! On joue avec l'anglais ? Tu as une idée de sujet, ou je t'en propose un ?",
+        "bonjourDebutant": "Hello {prenom}! I'm Alex. Let's speak English! How are you today?",
         "bonjour": "Hi {prenom}! It's Alex, your English coach. You're at level {niveau}. Do you have a topic in mind, or shall I pick one?"},
       "de": {"libelle": "Allemand", "nom": "allemand", "drapeau": "🇩🇪", "couleur": "#dc2626",
-        "bonjourFr": "Coucou {prenom} ! C'est Alex, ton coach d'allemand. Hallo! On joue avec l'allemand ? Tu as une idée de sujet, ou je t'en propose un ?",
+        "bonjourDebutant": "Hallo {prenom}! Ich bin Alex. Wir sprechen Deutsch! Wie geht's dir heute?",
         "bonjour": "Hallo {prenom}! Ich bin Alex, dein Deutsch-Coach. Du bist auf Niveau {niveau}. Hast du ein Thema, oder soll ich eins vorschlagen?"},
       "es": {"libelle": "Espagnol", "nom": "espagnol", "drapeau": "🇪🇸", "couleur": "#f59e0b",
-        "bonjourFr": "Coucou {prenom} ! C'est Alex, ton coach d'espagnol. ¡Hola! On joue avec l'espagnol ? Tu as une idée de sujet, ou je t'en propose un ?",
+        "bonjourDebutant": "¡Hola {prenom}! Soy Alex. ¡Hablamos español! ¿Qué tal estás hoy?",
         "bonjour": "¡Hola {prenom}! Soy Alex, tu coach de español. Estás en el nivel {niveau}. ¿Tienes un tema en mente o te propongo uno?"}
     },
     "niveaux": [
-      "Niveau 1, premiers mots : saluer, couleurs, nombres jusqu'à vingt, animaux, objets de la maison. Tu expliques en français et tu fais répéter les mots dans la langue, avec des petits jeux (devinettes, « comment on dit… »).",
-      "Niveau 2, petites phrases : se présenter, dire son âge, ce qu'on aime ou pas, décrire sa famille, poser des questions très simples. Moitié français, moitié langue étrangère.",
-      "Niveau 3, petite conversation : l'école, les loisirs, la journée, la météo, faire des courses, au présent. Tu parles surtout la langue étrangère, le français seulement pour débloquer.",
-      "Niveau 4, raconter : le week-end, les vacances, un film, des projets, avec le passé et le futur. Presque tout dans la langue étrangère, des phrases plus longues.",
-      "Niveau 5, discuter : donner son avis et le justifier, comparer, imaginer avec « si… », jeux de rôle plus libres. Tout dans la langue étrangère.",
-      "Niveau 6, débattre : sujets de société, nuances, connecteurs logiques, expressions idiomatiques, reformuler avec élégance. Tout dans la langue étrangère, au rythme naturel."
+      "Niveau 1, premiers mots : saluer, couleurs, nombres jusqu'à vingt, animaux, objets de la maison. Tu parles dans la langue étrangère avec des phrases de trois ou quatre mots, très lentement, et tu fais répéter. Le français seulement en un ou deux mots pour débloquer, puis tu reviens tout de suite à la langue.",
+      "Niveau 2, petites phrases : se présenter, dire son âge, ce qu'on aime ou pas, décrire sa famille, questions très simples. Tout dans la langue étrangère avec des phrases courtes et lentes ; le français seulement si l'enfant bloque deux fois.",
+      "Niveau 3, petite conversation : l'école, les loisirs, la journée, la météo, faire des courses, au présent. Tout dans la langue étrangère ; si l'enfant bloque, reformule plus simplement dans la langue avant de passer au français.",
+      "Niveau 4, raconter : le week-end, les vacances, un film, des projets, avec le passé et le futur. Tout dans la langue étrangère, des phrases plus longues.",
+      "Niveau 5, discuter : donner son avis et le justifier, comparer, imaginer avec « si… », jeux de rôle plus libres. Tout dans la langue étrangère, sans traduction.",
+      "Niveau 6, débattre : sujets de société, nuances, connecteurs logiques, expressions idiomatiques, reformuler avec élégance. Tout dans la langue étrangère, au rythme naturel, sans traduction."
     ]
   },
 

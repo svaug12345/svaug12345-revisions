@@ -171,8 +171,9 @@ Sur la page des leçons de **Tom, Gaby et Nanon**, un bloc **« 🌍 Coach de la
 (conversation, jeux de rôle, devinettes, vocabulaire), sans leçon précise. On retouche le bouton pour raccrocher.
 
 - **Niveaux 1 à 6** (descriptions dans `lecons.json` > `"coachLangues"` > `"niveaux"`) : premiers mots → petites
-  phrases → petite conversation → raconter → discuter → débattre. Niveaux 1-2 : la conversation est réglée en
-  français ; à partir du 3, dans la langue étrangère.
+  phrases → petite conversation → raconter → discuter → débattre. Dès le niveau 1, la séance est réglée **dans la
+  langue à apprendre** : Alex la parle le plus possible (phrases très courtes et lentes aux petits niveaux),
+  le français ne sert qu'à débloquer, et il fait redire dans la langue ce que l'enfant dit en français.
 - **Niveau de départ** dans le profil de l'enfant : `"coachLangues": {"en": 3, "de": 2, "es": 1}`.
   Un enfant sans `"coachLangues"` n'a pas le coach.
 - **Un cran plus loin** : quand l'enfant enchaîne les réussites, Alex propose de monter d'un niveau. S'il accepte,

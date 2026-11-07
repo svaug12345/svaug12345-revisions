@@ -562,8 +562,8 @@ function secouer(element) {
      créer de plus quand on ajoute une leçon.
    - Le SDK officiel « @elevenlabs/client » n'est téléchargé qu'au premier appel
      (version figée, la même que sur les autres pages de baiji.fr).
-   - Côté ElevenLabs : mode « zéro conservation » (rien n'est enregistré),
-     appels acceptés seulement depuis baiji.fr, 30 appels par jour maximum.
+   - Côté ElevenLabs : 30 appels par jour maximum (les conversations restent
+     dans l'historique ElevenLabs : pas de mode « zéro conservation », choix de Papa).
    ------------------------------------------------------------- */
 
 let alex = null; // { conversation, carte (= la pastille) } pendant un appel, sinon null
@@ -695,9 +695,9 @@ function raccrocherAlex() {
    - les descriptions des niveaux sont dans lecons.json > "coachLangues" > "niveaux".
 
    Agent ElevenLabs à part (pas le même qu'Alex des leçons) : son identifiant est dans
-   lecons.json > "coachLangues" > "agentId". Niveaux 1 et 2 : la conversation est réglée
-   en français (l'enfant explique souvent en français) ; à partir du 3, elle est réglée
-   dans la langue étrangère, pour que la reconnaissance vocale comprenne bien l'enfant.
+   lecons.json > "coachLangues" > "agentId". La conversation est TOUJOURS réglée dans la
+   langue étrangère (reconnaissance vocale et accueil) : le coach parle le plus possible
+   la langue à apprendre, même au niveau 1 ; le français ne sert qu'à débloquer.
    ------------------------------------------------------------------------- */
 
 const CLE_NIVEAUX = 'revisions-niveaux-langues'; // { gaby: { en: 4, de: 2 }, … } dans le téléphone
@@ -786,15 +786,15 @@ async function appelerCoach(code, bouton) {
     const { Conversation } = await import('https://cdn.jsdelivr.net/npm/@elevenlabs/client@1.32.1/+esm');
     const appel = { carte: bouton, conversation: null, majEtat: etatCoach };
     alex = appel;
-    // Niveaux 1-2 : on reste en français ; à partir de 3, on bascule dans la langue étrangère
-    const enLangue = niveau >= 3;
+    // Toute la séance est réglée dans la langue à apprendre (même au niveau 1).
+    // Accueil : "bonjourDebutant" (phrases très simples) aux niveaux 1-2, sinon "bonjour".
+    const accueil = (niveau <= 2 && langue.bonjourDebutant) || langue.bonjour;
     const conversation = await Conversation.startSession({
       agentId: config.agentId,
       overrides: {
         agent: {
-          language: enLangue ? code : 'fr',
-          firstMessage: (enLangue ? langue.bonjour : langue.bonjourFr)
-            .replaceAll('{prenom}', enfant.nom).replaceAll('{niveau}', String(niveau)),
+          language: code,
+          firstMessage: accueil.replaceAll('{prenom}', enfant.nom).replaceAll('{niveau}', String(niveau)),
         },
       },
       dynamicVariables: {
