@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-07T12:39:41Z",
+  "resultat": "success",
+  "commit": "44563b6fcfaa7bfb4c5c1f0edec6d19dba8185f6",
+  "voix": {
+    "reussis": 1,
+    "echecs": [],
+    "journal": [
+      "malo-maths-lot2 : ✅ 51 MP3 (prise 1, seuil -35 dB)"
+    ]
+  },
+  "journal": "coupures : plus courte 1.07 s ; corrélation durées/textes 0.91\n 3.16 s  c75aa496  Les unités : un plus trois, ça fait quatre unités\n 2.63 s  524cb7cf  vingt et un plus quarante-trois égale soixante-quatre\n 2.02 s  42e7778b  60 plus 4 égale ?\n 2.27 s  79b326da  75 plus 3 égale ?\n 2.01 s  73c9d445  50 plus 30 égale ?\n 2.07 s  f5b9990a  40 plus 7 égale ?\n 1.50 s  b1a3d9ce  ? plus 1 égale 80\n 2.36 s  9a57e406  55 plus ? égale 65\n 1.55 s  f1fc3687  10 plus 7 égale ?\n 0.71 s  d15f7150  70\n 1.52 s  bfde55e7  30 plus 30 égale ?\n 0.61 s  d761b959  60\n 0.57 s  6c695fad  33\n 0.78 s  e582230e  90\n 1.38 s  3cde48e6  42 plus 5 égale ?\n 0.64 s  e866514a  47\n 0.79 s  e3821fe8  92\n 0.62 s  e6664e24  45\n 1.52 s  fe471651  3 plus 58 égale ?\n 0.69 s  d661b7c6  61\n 0.68 s  e3845e7f  88\n 0.70 s  de6402f5  51\n 1.74 s  54793247  21 plus 43 égale ?\n 0.71 s  db61bfa5  64\n 0.64 s  e96652dd  46\n 0.77 s  d461b4a0  63\n 2.49 s  71bad284  28 plus ? égale 38\n 1.22 s  d2e2197a  Combien d'élèves préfèrent le chat ?\n 2.03 s  c0f7db88  Quel animal les élèves préfèrent-ils le plus ?\n 0.54 s  907d7cf2  le lapin\n 0.49 s  14143639  le chien\n 0.44 s  3d4c3d42  le chat\n 2.68 s  8e78cc66  Quel animal les élèves préfèrent-ils le moins ?\n 0.68 s  9306be35  le poisson rouge\n 1.36 s  031b5fe3  Combien d'élèves préfèrent le chien ?\n 1.51 s  2fa040e0  Compte les bâtons. Combien y en a-t-il ?\n 1.49 s  e6af5d22  Combien y a-t-il d'élèves dans la classe ? (6 plus 4 plus 8 plus 9)\n 0.55 s  686b97f8  27\n 0.56 s  696b998b  26\n 1.59 s  68c16d49  Le plateau qui descend porte l'objet le plus...\n 0.33 s  b44bce2b  lourd\n 0.39 s  9290bf79  léger\n 2.42 s  6202da49  Si la balance est bien droite, les deux objets ont la même masse.\n 2.02 s  537d00d6  La poupée fait descendre son plateau. Elle est...\n 0.48 s  646a1dac  plus lourde\n 0.56 s  54fcbdaa  plus légère\n 0.58 s  5c751db3  pareille\n 3.21 s  e058dcb8  Le camion monte, la chenille descend. Le plus lourd, c'est...\n 0.61 s  482dcc66  la chenille\n 0.54 s  83ed8fa7  le camion\n 6.22 s  9df60135  A est plus lourd que B. C est plus lourd que A. Range-les du plus lége\n✅ 51 MP3 écrits dans audio\nmalo-maths-lot2 : ✅ 51 MP3 (prise 1, seuil -35 dB)"
+}
