@@ -1,6 +1,6 @@
 {
   "maj": "07/11/2026",
-  "versionApp": "1.16.0",
+  "versionApp": "1.17.0",
 
   "enfants": [
     {"id": "tom", "nom": "Tom", "avatar": "avatars/tom.svg", "couleur": "#22c55e", "age": 6},
@@ -11,7 +11,13 @@
      "conseilsAlex": "Titouan est en CM2. Il a besoin d'enchaîner les réussites pour prendre confiance : commence toujours par une question facile, avance par toutes petites étapes, félicite chaque bonne réponse et chaque effort. Passe par l'oral : relis-lui les consignes, ne lui demande jamais d'épeler ni d'écrire, et ne corrige pas son orthographe. Pour les nombres, fais-le manipuler en pensée avec du concret (doigts, joueurs, buts, ballons), découpe les calculs en petits morceaux et laisse-lui le temps. Rappelle les bases utiles avant une notion difficile. S'il se trompe, donne un indice et laisse-le réessayer avant de corriger. Il adore le foot : prends tes exemples dans le foot. Sa petite sœur s'appelle Ava ; ses cousins sont Nanon, Gaby et Tom."},
     {"id": "ava", "nom": "Ava", "avatar": "avatars/ava.svg", "couleur": "#a855f7", "age": 6, "classe": "CP",
      "coupDePouce": true, "questionsParManche": 6, "lectureAuto": true, "vitesseVoix": 0.75, "pauseVoix": 600,
-     "conseilsAlex": "Ava est en CP : elle commence tout juste à lire. Parle très simplement, avec des phrases très courtes et un ton doux et joyeux. Ne lui demande pas de lire de longs mots : fais-la écouter, répéter, compter sur ses doigts. Joue avec les sons (« Est-ce que tu entends a dans chat ? »). Une seule question à la fois, et félicite chaque réussite. Elle adore les chats : prends tes exemples avec des chats. Son grand frère s'appelle Titouan ; ses cousins sont Nanon, Gaby et Tom."}
+     "conseilsAlex": "Ava est en CP : elle commence tout juste à lire. Parle très simplement, avec des phrases très courtes et un ton doux et joyeux. Ne lui demande pas de lire de longs mots : fais-la écouter, répéter, compter sur ses doigts. Joue avec les sons (« Est-ce que tu entends a dans chat ? »). Une seule question à la fois, et félicite chaque réussite. Elle adore les chats : prends tes exemples avec des chats. Son grand frère s'appelle Titouan ; ses cousins sont Nanon, Gaby et Tom."},
+    {"id": "malo", "nom": "Malo", "avatar": "avatars/malo.svg", "couleur": "#06b6d4", "age": 6, "classe": "CP",
+     "coupDePouce": true, "questionsParManche": 6, "lectureAuto": true, "lectureFacile": true, "vitesseVoix": 0.8, "pauseVoix": 500,
+     "conseilsAlex": "Malo a 6 ans, il est en CP. Il lit déjà les sons simples et apprend les sons à deux lettres (ou, on, an, ai, oi…), et il fait des additions avec des dizaines. Il se débrouille bien, mais il peut se braquer quand c'est trop dur ou quand on insiste : garde un ton joyeux et détendu, propose de petits défis courts, commence toujours par une question qu'il va réussir et félicite ses efforts. S'il bloque ou dit non, n'insiste pas : propose-lui de choisir entre deux questions, donne un indice ou fais une petite pause rigolote, puis reviens-y plus tard. Ne dis jamais « c'est facile ». Pour les nombres, parle de paquets de dix et de cubes tout seuls, et laisse-le compter sur ses doigts. Une seule question à la fois, avec des phrases courtes."},
+    {"id": "elouan", "nom": "Elouan", "avatar": "avatars/elouan.svg", "couleur": "#84cc16", "age": 4, "classe": "Maternelle",
+     "coupDePouce": true, "questionsParManche": 5, "lectureAuto": true, "vitesseVoix": 0.75, "pauseVoix": 700,
+     "conseilsAlex": "Elouan est en maternelle : il ne lit pas encore, et il apprend à bien prononcer les mots et à en connaître de nouveaux. Parle lentement, avec des phrases très courtes, d'une voix douce et joyeuse. Dis les mots bien clairement et propose-lui de les répéter avec toi, en tapant dans les mains à chaque morceau (« Dis avec moi : di-plo-do-cus ! »). Quand il prononce mal un mot, ne dis jamais que c'est faux : redis simplement le mot correctement, avec le sourire (« Oui ! Le diplodocus ! »). Une seule question à la fois ; il peut répondre en disant un mot ou en montrant. Il adore les dinosaures : prends toujours tes exemples avec des dinosaures. Félicite chaque essai."}
   ],
 
   "envoi": {
@@ -1547,6 +1553,360 @@
         {"type": "vraifaux", "affirmation": "Une lettre peut s'écrire en script et en attaché.", "reponse": true, "niveau": 1},
         {"type": "qcm", "question": "Quelle lettre vient après m ?", "choix": ["n", "l", "o"], "niveau": 2, "indice": "… l, m, …"},
         {"type": "ordre", "consigne": "Range les lettres dans l'ordre de l'alphabet", "elements": ["a", "b", "c", "d", "e"], "niveau": 2}
+      ]
+    },
+
+    {
+      "id": "malo-sons-1-ou",
+      "pour": ["malo"],
+      "matiere": "Lecture",
+      "parcours": "Les sons à deux lettres",
+      "etape": 1,
+      "titre": "Le son ou",
+      "emoji": "🐺",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Le son ou",
+        {"visuel": "son", "lettres": "ou OU", "son": "ou", "graphies": ["ou"], "geste": "Je fais une bouche toute ronde, comme le loup qui hurle : « ouuuh ! »", "mots": [{"emoji": "🐺", "mot": "loup"}, {"emoji": "🐔", "mot": "poule"}, {"emoji": "🦉", "mot": "hibou"}, {"emoji": "🍲", "mot": "soupe"}, {"emoji": "👄", "mot": "bouche"}, {"emoji": "🐥", "mot": "poussin"}]},
+        {"visuel": "encadre", "style": "attention", "texte": ["**o** et **ou**, ce n'est pas le même son : **lo** ≠ **lou**, un **pot** ≠ un **pou**."]},
+        "# Je lis des syllabes",
+        {"visuel": "syllabes", "consonnes": ["l", "m", "p", "r"], "voyelles": ["ou", "o", "a", "i"]},
+        {"visuel": "encadre", "style": "exemple", "texte": ["Le loup joue avec la poule. 🐺🐔", "Le hibou mange de la soupe. 🦉🍲"], "nom": "Je lis des phrases"},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Lis et tire au but !", "tirs": [{"texte": "Où entends-tu « ou » ?", "choix": ["🐺 loup", "🐱 chat"]}, {"texte": "Où entends-tu « ou » ?", "choix": ["🦉 hibou", "🐟 poisson"]}, {"texte": "l + ou = ?", "choix": ["lou", "lo"], "dire": "l plus ou, ça fait ?"}, {"texte": "Le mot de l'image 🐔", "choix": ["poule", "pile"], "dire": "Trouve le mot qui va avec l'image."}, {"texte": "Le mot de l'image 🍲", "choix": ["soupe", "sapin"], "dire": "Trouve le mot qui va avec l'image."}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Dans quel mot entends-tu « ou » ?", "choix": ["🐺 loup", "🐱 chat", "🐴 cheval"], "niveau": 1, "indice": "Fais le loup : ouuuh !"},
+        {"type": "qcm", "question": "l + ou = ?", "choix": ["lou", "lo", "li"], "niveau": 1, "indice": "Le l, puis le son ou.", "dire": "l plus ou, ça fait quoi ?"},
+        {"type": "vraifaux", "affirmation": "Dans « hibou », on entend « ou ».", "reponse": true, "niveau": 1},
+        {"type": "qcm", "question": "Quel mot va avec 🐔 ?", "choix": ["poule", "pile", "pomme"], "niveau": 2, "indice": "Cherche le mot avec « ou ».", "lireChoix": false, "dire": "Lis les mots. Lequel va avec l'image ?"},
+        {"type": "qcm", "question": "Quel mot a le son « ou » ?", "choix": ["bouche", "biche", "barbe"], "niveau": 2, "indice": "Cherche les lettres o et u collées.", "lireChoix": false, "dire": "Lis les mots. Lequel a le son ou ?"},
+        {"type": "qcm", "question": "Lis : « Le loup joue avec la poule. » Avec qui joue le loup ?", "choix": ["avec la poule", "avec le chat", "avec la vache"], "niveau": 3, "indice": "Relis la fin de la phrase.", "lireChoix": false, "dire": "Lis la phrase. Avec qui joue le loup ?"}
+      ]
+    },
+
+    {
+      "id": "malo-sons-2-on",
+      "pour": ["malo"],
+      "matiere": "Lecture",
+      "parcours": "Les sons à deux lettres",
+      "etape": 2,
+      "titre": "Le son on",
+      "emoji": "🎈",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Le son on",
+        {"visuel": "son", "lettres": "on om", "son": "on", "graphies": ["on", "om"], "geste": "Je gonfle mes joues comme un ballon : « on ! »", "mots": [{"emoji": "🎈", "mot": "ballon"}, {"emoji": "🐷", "mot": "cochon"}, {"emoji": "🍋", "mot": "citron"}, {"emoji": "🌉", "mot": "pont"}, {"emoji": "🍬", "mot": "bonbon"}, {"emoji": "🧑‍🚒", "mot": "pompier"}]},
+        {"visuel": "encadre", "style": "astuce", "texte": ["Devant **p** ou **b**, on écrit **om** : un **pompier**, une **ombre**."]},
+        "# Je lis des syllabes",
+        {"visuel": "syllabes", "consonnes": ["m", "b", "t", "s"], "voyelles": ["on", "ou", "o", "a"]},
+        {"visuel": "encadre", "style": "exemple", "texte": ["Le cochon a un ballon rond. 🐷🎈", "Le pompier mange un bonbon. 🧑‍🚒🍬"], "nom": "Je lis des phrases"},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Lis et tire au but !", "tirs": [{"texte": "Où entends-tu « on » ?", "choix": ["🎈 ballon", "🐺 loup"]}, {"texte": "Où entends-tu « on » ?", "choix": ["🐷 cochon", "🐱 chat"]}, {"texte": "b + on = ?", "choix": ["bon", "bou"], "dire": "b plus on, ça fait ?"}, {"texte": "Le mot de l'image 🍋", "choix": ["citron", "carotte"], "dire": "Trouve le mot qui va avec l'image."}, {"texte": "Le mot de l'image 🌉", "choix": ["pont", "pou"], "dire": "Trouve le mot qui va avec l'image."}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Dans quel mot entends-tu « on » ?", "choix": ["🎈 ballon", "🐔 poule", "🐱 chat"], "niveau": 1, "indice": "Gonfle tes joues : on !"},
+        {"type": "qcm", "question": "m + on = ?", "choix": ["mon", "mou", "ma"], "niveau": 1, "indice": "Le m, puis le son on.", "dire": "m plus on, ça fait quoi ?"},
+        {"type": "vraifaux", "affirmation": "Dans « cochon », on entend « on ».", "reponse": true, "niveau": 1},
+        {"type": "qcm", "question": "Quel mot va avec 🍬 ?", "choix": ["bonbon", "banane", "bébé"], "niveau": 2, "indice": "Cherche le mot avec deux fois « on ».", "lireChoix": false, "dire": "Lis les mots. Lequel va avec l'image ?"},
+        {"type": "qcm", "question": "Lequel s'écrit avec « om » ?", "choix": ["pompier", "ponton", "poupée"], "niveau": 3, "indice": "Devant p, on écrit om.", "lireChoix": false, "dire": "Lis les mots. Lequel s'écrit avec o, m ?"},
+        {"type": "qcm", "question": "Lis : « Le cochon a un ballon rond. » Qu'a le cochon ?", "choix": ["un ballon", "un bonbon", "un citron"], "niveau": 3, "indice": "Relis la phrase doucement.", "lireChoix": false, "dire": "Lis la phrase. Qu'est-ce qu'il a, le cochon ?"}
+      ]
+    },
+
+    {
+      "id": "malo-sons-3-an-en",
+      "pour": ["malo"],
+      "matiere": "Lecture",
+      "parcours": "Les sons à deux lettres",
+      "etape": 3,
+      "titre": "Le son an (an, en)",
+      "emoji": "🐘",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Le son an",
+        {"visuel": "son", "lettres": "an en", "son": "an", "graphies": ["an", "en"], "geste": "Je fais tourner ma main comme un manège et je dis « an ».", "mots": [{"emoji": "🐘", "mot": "éléphant"}, {"emoji": "🐍", "mot": "serpent"}, {"emoji": "🦷", "mot": "dent"}, {"emoji": "🍊", "mot": "orange"}, {"emoji": "🧒", "mot": "enfant"}, {"emoji": "👖", "mot": "pantalon"}]},
+        {"visuel": "encadre", "style": "retenir", "texte": ["Le son **an** peut s'écrire **an** ou **en** : un élé**phant**, une **dent**, un **enfant**."]},
+        "# Je lis des syllabes",
+        {"visuel": "syllabes", "consonnes": ["m", "l", "t", "d"], "voyelles": ["an", "en", "on", "ou"]},
+        {"visuel": "encadre", "style": "exemple", "texte": ["Maman a une orange. 🍊", "L'enfant voit un serpent. 🧒🐍"], "nom": "Je lis des phrases"},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Lis et tire au but !", "tirs": [{"texte": "Où entends-tu « an » ?", "choix": ["🐘 éléphant", "🐺 loup"]}, {"texte": "Où entends-tu « an » ?", "choix": ["🦷 dent", "🎈 ballon"]}, {"texte": "m + an = ?", "choix": ["man", "mon"], "dire": "m plus an, ça fait ?"}, {"texte": "Le mot de l'image 🐍", "choix": ["serpent", "sapin"], "dire": "Trouve le mot qui va avec l'image."}, {"texte": "Le mot de l'image 🍊", "choix": ["orange", "ours"], "dire": "Trouve le mot qui va avec l'image."}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Dans quel mot entends-tu « an » ?", "choix": ["🐘 éléphant", "🐷 cochon", "🐔 poule"], "niveau": 1, "indice": "Fais tourner ta main : an !"},
+        {"type": "qcm", "question": "t + an = ?", "choix": ["tan", "ton", "tou"], "niveau": 1, "indice": "Le t, puis le son an.", "dire": "t plus an, ça fait quoi ?"},
+        {"type": "vraifaux", "affirmation": "Dans « dent », on entend « an ».", "reponse": true, "niveau": 2, "indice": "Ici, le son an s'écrit e, n."},
+        {"type": "qcm", "question": "Quel mot va avec 🧒 ?", "choix": ["enfant", "éléphant", "orange"], "niveau": 2, "indice": "Cherche le mot qui commence par « en ».", "lireChoix": false, "dire": "Lis les mots. Lequel va avec l'image ?"},
+        {"type": "qcm", "question": "Le son « an » s'écrit…", "choix": ["an ou en", "on ou om", "ou"], "niveau": 2, "indice": "Pense à « dent » et à « éléphant »."},
+        {"type": "qcm", "question": "Lis : « L'enfant voit un serpent. » Que voit l'enfant ?", "choix": ["un serpent", "un éléphant", "une dent"], "niveau": 3, "indice": "Relis la fin de la phrase.", "lireChoix": false, "dire": "Lis la phrase. Qu'est-ce que l'enfant voit ?"}
+      ]
+    },
+
+    {
+      "id": "malo-sons-4-ai-ei",
+      "pour": ["malo"],
+      "matiere": "Lecture",
+      "parcours": "Les sons à deux lettres",
+      "etape": 4,
+      "titre": "ai et ei (son è)",
+      "emoji": "🍓",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# ai et ei font « è »",
+        {"visuel": "son", "lettres": "ai ei", "son": "è", "graphies": ["ai", "ei"], "geste": "Je pose ma main sur ma tête et je dis « è ».", "mots": [{"emoji": "🥛", "mot": "lait"}, {"emoji": "🏠", "mot": "maison"}, {"emoji": "🍓", "mot": "fraise"}, {"emoji": "🧹", "mot": "balai"}, {"emoji": "🐋", "mot": "baleine"}, {"emoji": "❄️", "mot": "neige"}, {"emoji": "👸", "mot": "reine"}]},
+        {"visuel": "encadre", "style": "retenir", "texte": ["**a** + **i** = **ai** et **e** + **i** = **ei** : les deux se lisent **è**, comme dans **lait** et **neige**."]},
+        "# Je lis des syllabes",
+        {"visuel": "syllabes", "consonnes": ["l", "m", "r", "f"], "voyelles": ["ai", "ei", "a", "i"]},
+        {"visuel": "encadre", "style": "exemple", "texte": ["La reine boit du lait. 👸🥛", "Il neige sur la maison. ❄️🏠"], "nom": "Je lis des phrases"},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Lis et tire au but !", "tirs": [{"texte": "Où entends-tu « è » ?", "choix": ["🥛 lait", "🐺 loup"]}, {"texte": "Où entends-tu « è » ?", "choix": ["🍓 fraise", "🎈 ballon"]}, {"texte": "l + ai = ?", "choix": ["lè", "la"], "dire": "l plus a, i, ça fait ?"}, {"texte": "Le mot de l'image 🐋", "choix": ["baleine", "banane"], "dire": "Trouve le mot qui va avec l'image."}, {"texte": "Le mot de l'image 🧹", "choix": ["balai", "ballon"], "dire": "Trouve le mot qui va avec l'image."}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Dans quel mot entends-tu « è » ?", "choix": ["🍓 fraise", "🐷 cochon", "🐺 loup"], "niveau": 1, "indice": "Main sur la tête : è !"},
+        {"type": "qcm", "question": "Comment se lit « ai » ?", "choix": ["è", "a-i", "a"], "niveau": 1, "indice": "Les deux lettres ensemble font un seul son.", "lireChoix": false, "dire": "Comment se lisent les lettres a et i collées ?"},
+        {"type": "vraifaux", "affirmation": "Dans « neige », « ei » se lit « è ».", "reponse": true, "niveau": 2},
+        {"type": "qcm", "question": "Quel mot va avec 🏠 ?", "choix": ["maison", "melon", "moto"], "niveau": 2, "indice": "Cherche le mot avec « ai ».", "lireChoix": false, "dire": "Lis les mots. Lequel va avec l'image ?"},
+        {"type": "qcm", "question": "Quel mot a le son « è » ?", "choix": ["reine", "rame", "robe"], "niveau": 2, "indice": "Cherche les lettres e et i collées.", "lireChoix": false, "dire": "Lis les mots. Lequel a le son è ?"},
+        {"type": "qcm", "question": "Lis : « La reine boit du lait. » Que boit la reine ?", "choix": ["du lait", "de la soupe", "de l'eau"], "niveau": 3, "indice": "Relis la fin de la phrase.", "lireChoix": false, "dire": "Lis la phrase. Qu'est-ce que la reine boit ?"}
+      ]
+    },
+
+    {
+      "id": "malo-sons-5-oi",
+      "pour": ["malo"],
+      "matiere": "Lecture",
+      "parcours": "Les sons à deux lettres",
+      "etape": 5,
+      "titre": "Le son oi",
+      "emoji": "👑",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Le son oi",
+        {"visuel": "son", "lettres": "oi OI", "son": "oi", "graphies": ["oi"], "geste": "Je fais une couronne avec mes mains, comme le roi : « oi ! »", "mots": [{"emoji": "👑", "mot": "roi"}, {"emoji": "🐟", "mot": "poisson"}, {"emoji": "⭐", "mot": "étoile"}, {"emoji": "🐦", "mot": "oiseau"}, {"emoji": "🍐", "mot": "poire"}, {"emoji": "3️⃣", "mot": "trois"}]},
+        {"visuel": "encadre", "style": "attention", "texte": ["**o** et **i** collés ne se lisent pas « o-i » : ils font **oi**, comme dans **roi**."]},
+        "# Je révise mes sons",
+        {"visuel": "syllabes", "consonnes": ["r", "p", "b", "t"], "voyelles": ["oi", "ou", "on", "an"]},
+        {"visuel": "encadre", "style": "exemple", "texte": ["Le roi a trois poissons. 👑🐟", "Un oiseau mange une poire. 🐦🍐"], "nom": "Je lis des phrases"},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Lis et tire au but !", "tirs": [{"texte": "Où entends-tu « oi » ?", "choix": ["👑 roi", "🐺 loup"]}, {"texte": "Où entends-tu « oi » ?", "choix": ["🍐 poire", "🍋 citron"]}, {"texte": "r + oi = ?", "choix": ["roi", "rou"], "dire": "r plus o, i, ça fait ?"}, {"texte": "Le mot de l'image 🐟", "choix": ["poisson", "poussin"], "dire": "Trouve le mot qui va avec l'image."}, {"texte": "Le mot de l'image ⭐", "choix": ["étoile", "éléphant"], "dire": "Trouve le mot qui va avec l'image."}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Dans quel mot entends-tu « oi » ?", "choix": ["👑 roi", "🐘 éléphant", "🐔 poule"], "niveau": 1, "indice": "Fais la couronne du roi : oi !"},
+        {"type": "qcm", "question": "p + oi = ?", "choix": ["poi", "pou", "po"], "niveau": 1, "indice": "Le p, puis le son oi.", "dire": "p plus o, i, ça fait quoi ?"},
+        {"type": "vraifaux", "affirmation": "Dans « oiseau », on entend « oi ».", "reponse": true, "niveau": 1},
+        {"type": "qcm", "question": "Quel mot va avec 🐟 ?", "choix": ["poisson", "poussin", "pompier"], "niveau": 2, "indice": "Cherche le mot avec « oi ».", "lireChoix": false, "dire": "Lis les mots. Lequel va avec l'image ?"},
+        {"type": "qcm", "question": "Quel son font les lettres « ou » ?", "choix": ["ou", "o", "oi"], "niveau": 2, "indice": "Comme le loup !", "lireChoix": false, "dire": "Rappel : quel son font les lettres o et u collées ?"},
+        {"type": "qcm", "question": "Lis : « Le roi a trois poissons. » Combien de poissons ?", "choix": ["trois", "deux", "un"], "niveau": 3, "indice": "Relis la phrase doucement.", "lireChoix": false, "dire": "Lis la phrase. Combien de poissons a le roi ?"}
+      ]
+    },
+
+    {
+      "id": "malo-dizaines-1-lire",
+      "pour": ["malo"],
+      "matiere": "Maths",
+      "parcours": "Les dizaines",
+      "etape": 1,
+      "titre": "Dizaines et unités",
+      "emoji": "🔟",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# 🧰 Rappel : un paquet de 10",
+        {"visuel": "dizaine", "objet": "⭐"},
+        "# Je lis un nombre",
+        "Les **barres** sont des paquets de **10** (les dizaines). Les **cubes** sont tout seuls (les unités).",
+        {"visuel": "dizaines", "exemples": ["14", "23", "35", "40", "52"]},
+        {"visuel": "encadre", "style": "retenir", "texte": ["Dans **34** : le **3** = 3 dizaines (30), le **4** = 4 unités.", "Le chiffre de **gauche** = les dizaines, celui de **droite** = les unités."]},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Compte et tire au but !", "tirs": [{"texte": "Combien de dizaines dans 23 ?", "choix": ["2", "3"], "dire": "Combien de dizaines dans vingt-trois ?"}, {"texte": "Combien d'unités dans 23 ?", "choix": ["3", "2"], "dire": "Combien d'unités dans vingt-trois ?"}, {"texte": "4 dizaines et 1 unité = ?", "choix": ["41", "14"], "dire": "Quatre dizaines et une unité, c'est quel nombre ?"}, {"texte": "Combien de dizaines dans 50 ?", "choix": ["5", "50"], "dire": "Combien de dizaines dans cinquante ?"}, {"texte": "2 dizaines = ?", "choix": ["20", "2"], "dire": "Deux dizaines, ça fait combien ?"}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "10 unités, c'est…", "choix": ["1 dizaine", "10 dizaines", "1 unité"], "niveau": 1, "indice": "Un paquet de 10, c'est une dizaine.", "dire": "Dix unités, c'est quoi ?"},
+        {"type": "qcm", "question": "Combien de dizaines dans 30 ?", "choix": ["3", "30", "0"], "niveau": 1, "indice": "30, c'est 10 + 10 + 10.", "dire": "Combien de dizaines dans trente ?"},
+        {"type": "qcm", "question": "Dans 24, combien d'unités ?", "choix": ["4", "2", "24"], "niveau": 2, "indice": "Les unités, c'est le chiffre de droite.", "dire": "Dans vingt-quatre, combien d'unités ?"},
+        {"type": "vraifaux", "affirmation": "45 = 4 dizaines et 5 unités", "reponse": true, "niveau": 2, "dire": "Vrai ou faux : quarante-cinq, c'est quatre dizaines et cinq unités."},
+        {"type": "qcm", "question": "3 dizaines et 6 unités, c'est…", "choix": ["36", "63", "9"], "niveau": 2, "indice": "Les dizaines d'abord, à gauche.", "dire": "Trois dizaines et six unités, c'est quel nombre ?"},
+        {"type": "qcm", "question": "Quel nombre a 5 dizaines et 0 unité ?", "choix": ["50", "5", "15"], "niveau": 3, "indice": "5 paquets de 10, et aucun cube.", "dire": "Quel nombre a cinq dizaines et zéro unité ?"}
+      ]
+    },
+
+    {
+      "id": "malo-dizaines-2-ajouter-10",
+      "pour": ["malo"],
+      "matiere": "Maths",
+      "parcours": "Les dizaines",
+      "etape": 2,
+      "titre": "J'ajoute des dizaines",
+      "emoji": "➕",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# J'ajoute des paquets de 10",
+        "Appuie sur **▶ Et après ?** pour voir le calcul étape par étape.",
+        {"visuel": "dizaines", "exemples": ["20 + 30", "40 + 10", "23 + 10", "35 + 20"]},
+        {"visuel": "encadre", "style": "astuce", "texte": ["Ajouter **10**, c'est ajouter **1 barre** : le chiffre des dizaines avance de 1, les unités ne bougent pas.", "23 + 10 = **33**"]},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Calcule et tire au but !", "tirs": [{"texte": "20 + 30 = ?", "choix": ["50", "23"], "dire": "vingt plus trente ?"}, {"texte": "40 + 10 = ?", "choix": ["50", "41"], "dire": "quarante plus dix ?"}, {"texte": "23 + 10 = ?", "choix": ["33", "24"], "dire": "vingt-trois plus dix ?"}, {"texte": "60 + 20 = ?", "choix": ["80", "62"], "dire": "soixante plus vingt ?"}, {"texte": "15 + 10 = ?", "choix": ["25", "16"], "dire": "quinze plus dix ?"}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "10 + 10 = ?", "choix": ["20", "11", "2"], "niveau": 1, "indice": "Une barre, puis encore une barre.", "dire": "dix plus dix ?"},
+        {"type": "qcm", "question": "20 + 30 = ?", "choix": ["50", "23", "5"], "niveau": 1, "indice": "2 barres + 3 barres = 5 barres.", "dire": "vingt plus trente ?"},
+        {"type": "vraifaux", "affirmation": "30 + 30 = 60", "reponse": true, "niveau": 2, "dire": "Vrai ou faux : trente plus trente égale soixante."},
+        {"type": "qcm", "question": "34 + 10 = ?", "choix": ["44", "35", "134"], "niveau": 2, "indice": "J'ajoute 1 barre : 3 dizaines deviennent 4 dizaines.", "dire": "trente-quatre plus dix ?"},
+        {"type": "qcm", "question": "50 + 40 = ?", "choix": ["90", "54", "80"], "niveau": 2, "indice": "5 barres + 4 barres.", "dire": "cinquante plus quarante ?"},
+        {"type": "qcm", "question": "Combien de barres de 10 en tout dans 20 + 30 ?", "choix": ["5", "2", "3"], "niveau": 3, "indice": "Compte les barres de 20, puis celles de 30.", "dire": "Dans vingt plus trente, combien de barres de dix en tout ?"}
+      ]
+    },
+
+    {
+      "id": "malo-dizaines-3-additions",
+      "pour": ["malo"],
+      "matiere": "Maths",
+      "parcours": "Les dizaines",
+      "etape": 3,
+      "titre": "Dizaines + unités",
+      "emoji": "🧮",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Les dizaines avec les dizaines, les unités avec les unités",
+        "Appuie sur **▶ Et après ?** : on range d'abord les **barres**, puis les **cubes**.",
+        {"visuel": "dizaines", "exemples": ["23 + 14", "32 + 5", "41 + 26", "12 + 7"]},
+        {"visuel": "encadre", "style": "retenir", "texte": ["1. J'ajoute les **dizaines** ensemble.", "2. J'ajoute les **unités** ensemble.", "23 + 14 → 2 + 1 = **3** dizaines, 3 + 4 = **7** unités → **37**"]},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Calcule et tire au but !", "tirs": [{"texte": "21 + 13 = ?", "choix": ["34", "33"], "dire": "vingt et un plus treize ?"}, {"texte": "32 + 5 = ?", "choix": ["37", "82"], "dire": "trente-deux plus cinq ?"}, {"texte": "12 + 7 = ?", "choix": ["19", "17"], "dire": "douze plus sept ?"}, {"texte": "40 + 6 = ?", "choix": ["46", "64"], "dire": "quarante plus six ?"}, {"texte": "25 + 12 = ?", "choix": ["37", "47"], "dire": "vingt-cinq plus douze ?"}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "12 + 5 = ?", "choix": ["17", "62", "15"], "niveau": 1, "indice": "La barre reste, j'ajoute les cubes : 2 + 5.", "dire": "douze plus cinq ?"},
+        {"type": "qcm", "question": "30 + 8 = ?", "choix": ["38", "83", "11"], "niveau": 1, "indice": "3 barres et 8 cubes.", "dire": "trente plus huit ?"},
+        {"type": "qcm", "question": "23 + 14 = ?", "choix": ["37", "73", "36"], "niveau": 2, "indice": "Dizaines : 2 + 1. Unités : 3 + 4.", "dire": "vingt-trois plus quatorze ?"},
+        {"type": "vraifaux", "affirmation": "52 + 25 = 77", "reponse": true, "niveau": 2, "indice": "Dizaines : 5 + 2. Unités : 2 + 5.", "dire": "Vrai ou faux : cinquante-deux plus vingt-cinq égale soixante-dix-sept."},
+        {"type": "qcm", "question": "Dans 34 + 12, combien de dizaines en tout ?", "choix": ["4", "6", "5"], "niveau": 3, "indice": "3 dizaines + 1 dizaine.", "dire": "Dans trente-quatre plus douze, combien de dizaines en tout ?"},
+        {"type": "qcm", "question": "41 + 26 = ?", "choix": ["67", "76", "65"], "niveau": 3, "indice": "Dizaines : 4 + 2. Unités : 1 + 6.", "dire": "quarante et un plus vingt-six ?"}
+      ]
+    },
+
+    {
+      "id": "elouan-dinos-1-imagier",
+      "pour": ["elouan"],
+      "matiere": "Langage",
+      "parcours": "Les dinosaures",
+      "etape": 1,
+      "titre": "Les mots des dinosaures",
+      "emoji": "🦕",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Mon imagier des dinosaures",
+        {"visuel": "imagier", "mots": [{"emoji": "🦕", "mot": "le diplodocus", "phrase": "Il a un très long cou.", "syllabes": ["di", "plo", "do", "cus"]}, {"emoji": "🦖", "mot": "le tyrannosaure", "phrase": "Il a de grandes dents.", "syllabes": ["ti", "ra", "no", "saure"]}, {"emoji": "🥚", "mot": "un œuf", "phrase": "Le bébé dinosaure sort de l'œuf."}, {"emoji": "🌋", "mot": "un volcan", "phrase": "Le volcan crache du feu.", "syllabes": ["vol", "can"]}, {"emoji": "🦴", "mot": "un os", "phrase": "C'est un os de dinosaure."}, {"emoji": "🐾", "mot": "une empreinte", "phrase": "C'est la trace du pied dans la boue.", "syllabes": ["an", "prin", "te"]}, {"emoji": "🌿", "mot": "une feuille", "phrase": "Le diplodocus mange des feuilles."}]},
+        {"visuel": "encadre", "style": "astuce", "texte": ["Pour les parents : touchez une image, écoutez, puis répétez le mot ensemble. « 👏 En morceaux » découpe les mots longs en syllabes : on tape dans les mains à chaque morceau."]},
+        "# 🥚 À toi de jouer !",
+        {"visuel": "tirs", "theme": "dino", "titre": "Sauve les œufs du T-rex !", "tirs": [{"texte": "Où est le volcan ?", "choix": ["🌋", "🥚"]}, {"texte": "Où est l'œuf ?", "choix": ["🥚", "🦴"]}, {"texte": "Où est le diplodocus ?", "choix": ["🦕", "🦖"]}, {"texte": "Où est l'empreinte ?", "choix": ["🐾", "🌿"]}, {"texte": "Où est le tyrannosaure ?", "choix": ["🦖", "🦕"]}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Où est l'œuf ?", "choix": ["🥚", "🌋", "🌿"], "niveau": 1, "indice": "Le bébé dino sort de là !", "lireChoix": false},
+        {"type": "qcm", "question": "Où est le volcan ?", "choix": ["🌋", "🦴", "🥚"], "niveau": 1, "indice": "Il crache du feu !", "lireChoix": false},
+        {"type": "qcm", "question": "Qui a un très long cou ?", "choix": ["🦕", "🦖", "🥚"], "niveau": 2, "indice": "C'est le diplodocus.", "lireChoix": false},
+        {"type": "qcm", "question": "Qui a de grandes dents ?", "choix": ["🦖", "🦕", "🌿"], "niveau": 2, "indice": "C'est le tyrannosaure.", "lireChoix": false},
+        {"type": "qcm", "question": "Que mange le diplodocus ?", "choix": ["🌿", "🦴", "🌋"], "niveau": 2, "indice": "Il mange des choses vertes.", "lireChoix": false},
+        {"type": "vraifaux", "affirmation": "Le bébé dinosaure sort d'un œuf.", "reponse": true, "niveau": 1, "dire": "Le bébé dinosaure sort d'un œuf. Si c'est vrai, touche le pouce en l'air."},
+        {"type": "qcm", "question": "Où est l'empreinte ?", "choix": ["🐾", "🌋", "🦕"], "niveau": 3, "indice": "C'est la trace du pied.", "lireChoix": false}
+      ]
+    },
+
+    {
+      "id": "elouan-dinos-2-corps",
+      "pour": ["elouan"],
+      "matiere": "Langage",
+      "parcours": "Les dinosaures",
+      "etape": 2,
+      "titre": "Le corps du dinosaure",
+      "emoji": "🦖",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Touche le dinosaure !",
+        {"visuel": "corpsdino"},
+        {"visuel": "encadre", "style": "astuce", "texte": ["Pour les parents : touchez une partie, le dinosaure dit son nom. Ensuite, « 🎯 Jeu » : la voix demande une partie, Elouan la cherche."]},
+        "# Moi aussi, j'ai…",
+        {"visuel": "imagier", "mots": [{"emoji": "👀", "mot": "les yeux", "phrase": "Avec mes yeux, je regarde."}, {"emoji": "👄", "mot": "la bouche", "phrase": "Avec ma bouche, je mange."}, {"emoji": "🦷", "mot": "les dents", "phrase": "Avec mes dents, je croque."}, {"emoji": "👃", "mot": "le nez", "phrase": "Avec mon nez, je sens les fleurs."}, {"emoji": "🦶", "mot": "le pied", "phrase": "Avec mes pieds, je marche."}, {"emoji": "✋", "mot": "la main", "phrase": "Avec ma main, je fais coucou."}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Avec quoi on regarde ?", "choix": ["👀", "👄", "🦶"], "niveau": 1, "indice": "Ouvre grand tes yeux !", "lireChoix": false},
+        {"type": "qcm", "question": "Avec quoi on marche ?", "choix": ["🦶", "👀", "👃"], "niveau": 1, "indice": "Tape des pieds !", "lireChoix": false},
+        {"type": "qcm", "question": "Avec quoi le dinosaure croque ?", "choix": ["🦷", "👀", "✋"], "niveau": 2, "indice": "Le tyrannosaure en a des très grandes !", "lireChoix": false},
+        {"type": "qcm", "question": "Avec quoi on sent les fleurs ?", "choix": ["👃", "🦶", "🦷"], "niveau": 2, "indice": "Il est au milieu de ta figure.", "lireChoix": false},
+        {"type": "qcm", "question": "Avec quoi on fait coucou ?", "choix": ["✋", "👃", "🦷"], "niveau": 2, "indice": "Fais coucou !", "lireChoix": false},
+        {"type": "qcm", "question": "Avec quoi on mange ?", "choix": ["👄", "👀", "🦶"], "niveau": 3, "indice": "Miam miam !", "lireChoix": false}
+      ]
+    },
+
+    {
+      "id": "elouan-dinos-3-morceaux",
+      "pour": ["elouan"],
+      "matiere": "Langage",
+      "parcours": "Les dinosaures",
+      "etape": 3,
+      "titre": "Dire les mots en morceaux",
+      "emoji": "👏",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Un mot, c'est un petit train de morceaux",
+        {"visuel": "encadre", "style": "astuce", "texte": ["On dit le mot doucement et on tape dans les mains à chaque morceau : **di** 👏 **no** 👏 **saure** 👏"]},
+        {"visuel": "imagier", "mots": [{"emoji": "🦕", "mot": "un dinosaure", "syllabes": ["di", "no", "saure"]}, {"emoji": "🌋", "mot": "un volcan", "syllabes": ["vol", "can"]}, {"emoji": "🐊", "mot": "un crocodile", "syllabes": ["cro", "co", "di", "le"]}, {"emoji": "🐢", "mot": "une tortue", "syllabes": ["tor", "tue"]}, {"emoji": "🌴", "mot": "un palmier", "syllabes": ["pal", "mier"]}, {"emoji": "🦎", "mot": "un lézard", "syllabes": ["lé", "zard"]}, {"emoji": "🦖", "mot": "le tyrannosaure", "syllabes": ["ti", "ra", "no", "saure"]}]},
+        "# 🥚 À toi de jouer !",
+        {"visuel": "tirs", "theme": "dino", "titre": "Sauve les œufs du T-rex !", "tirs": [{"texte": "vol – can : combien de morceaux ?", "choix": ["👏👏", "👏👏👏👏"], "dire": "Tape dans tes mains : vol. can. Combien de fois ?"}, {"texte": "tor – tue : combien de morceaux ?", "choix": ["👏👏", "👏"], "dire": "Tape dans tes mains : tor. tue. Combien de fois ?"}, {"texte": "Le mot le plus long ?", "choix": ["🐊", "🥚"], "dire": "Quel mot est le plus long : crocodile, ou œuf ?"}, {"texte": "Le mot le plus long ?", "choix": ["🦕", "🦴"], "dire": "Quel mot est le plus long : diplodocus, ou os ?"}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "tor – tue : combien de morceaux ?", "choix": ["👏👏", "👏", "👏👏👏👏"], "niveau": 1, "indice": "Tape avec moi : tor, tue.", "dire": "Dis avec moi : tor. tue. Combien de fois tu tapes dans tes mains ?"},
+        {"type": "qcm", "question": "Quel mot est le plus long ?", "choix": ["🐊", "🥚"], "niveau": 1, "indice": "Dis les deux mots doucement.", "dire": "Quel mot est le plus long : crocodile, ou œuf ?"},
+        {"type": "qcm", "question": "di – no – saure : combien de morceaux ?", "choix": ["👏👏👏", "👏", "👏👏👏👏👏"], "niveau": 2, "indice": "Tape avec moi : di, no, saure.", "dire": "Dis avec moi : di. no. saure. Combien de fois tu tapes dans tes mains ?"},
+        {"type": "qcm", "question": "Quel mot est le plus long ?", "choix": ["🦕", "🦴"], "niveau": 2, "indice": "Dis les deux mots doucement.", "dire": "Quel mot est le plus long : diplodocus, ou os ?"},
+        {"type": "qcm", "question": "cro – co – di – le : combien de morceaux ?", "choix": ["👏👏👏👏", "👏👏", "👏"], "niveau": 3, "indice": "Tape avec moi : cro, co, di, le.", "dire": "Dis avec moi : cro. co. di. le. Combien de fois tu tapes dans tes mains ?"}
+      ]
+    },
+
+    {
+      "id": "elouan-compter-dinos",
+      "pour": ["elouan"],
+      "matiere": "Maths",
+      "titre": "Je compte les dinosaures",
+      "emoji": "🔢",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Je compte avec mon doigt",
+        {"visuel": "dizaine", "objet": "🦕"},
+        "# Combien de dinosaures ?",
+        {"visuel": "calcul", "exemples": [{"calcul": "2", "emoji": "🦖", "histoire": "Deux tyrannosaures."}, {"calcul": "3", "emoji": "🦕", "histoire": "Trois diplodocus."}, {"calcul": "2 + 1", "emoji": "🥚", "histoire": "Deux œufs. Puis un autre œuf arrive."}]},
+        "# 🥚 À toi de jouer !",
+        {"visuel": "tirs", "theme": "dino", "titre": "Sauve les œufs du T-rex !", "tirs": [{"texte": "🦕🦕", "choix": ["2", "3"], "dire": "Combien de dinosaures ?"}, {"texte": "🥚🥚🥚", "choix": ["3", "1"], "dire": "Combien d'œufs ?"}, {"texte": "🦖", "choix": ["1", "4"], "dire": "Combien de dinosaures ?"}, {"texte": "🦴🦴🦴🦴", "choix": ["4", "2"], "dire": "Combien d'os ?"}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Combien de dinosaures ? 🦕", "choix": ["1", "2", "3"], "niveau": 1, "indice": "Touche-le avec ton doigt : un !"},
+        {"type": "qcm", "question": "Combien d'œufs ? 🥚🥚", "choix": ["2", "1", "4"], "niveau": 1, "indice": "Compte avec ton doigt."},
+        {"type": "qcm", "question": "Combien de dinosaures ? 🦖🦖🦖", "choix": ["3", "2", "5"], "niveau": 2, "indice": "Un, deux…"},
+        {"type": "qcm", "question": "Combien d'os ? 🦴🦴🦴🦴", "choix": ["4", "3", "5"], "niveau": 2, "indice": "Un, deux, trois…"},
+        {"type": "qcm", "question": "Combien de dinosaures ? 🦕🦕🦕🦕🦕", "choix": ["5", "4", "3"], "niveau": 3, "indice": "Autant que les doigts d'une main !"}
       ]
     }
   ]

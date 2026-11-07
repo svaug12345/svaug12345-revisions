@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Avatar d'Elouan : une tête de petit dinosaure tout rond. Dessin original. -->
+  <!-- Plaques sur le dessus de la tête (orange) -->
+  <path d="M30 26l6-14 8 12zM44 20l8-14 7 14zM58 22l9-12 4 15z" fill="#f97316"/>
+  <!-- Tête -->
+  <ellipse cx="50" cy="56" rx="36" ry="32" fill="#4ade80"/>
+  <!-- Ventre / museau plus clair -->
+  <ellipse cx="50" cy="72" rx="24" ry="14" fill="#bbf7d0"/>
+  <!-- Taches sur la tête -->
+  <circle cx="26" cy="44" r="4" fill="#22c55e"/>
+  <circle cx="74" cy="42" r="5" fill="#22c55e"/>
+  <circle cx="68" cy="32" r="3" fill="#22c55e"/>
+  <!-- Yeux -->
+  <ellipse cx="37" cy="52" rx="7" ry="8.5" fill="#fff"/>
+  <ellipse cx="63" cy="52" rx="7" ry="8.5" fill="#fff"/>
+  <circle cx="38" cy="54" r="4.5" fill="#1e293b"/>
+  <circle cx="62" cy="54" r="4.5" fill="#1e293b"/>
+  <circle cx="39.5" cy="52" r="1.6" fill="#fff"/>
+  <circle cx="63.5" cy="52" r="1.6" fill="#fff"/>
+  <!-- Narines -->
+  <circle cx="44" cy="66" r="1.8" fill="#15803d"/>
+  <circle cx="56" cy="66" r="1.8" fill="#15803d"/>
+  <!-- Grand sourire avec deux petites dents -->
+  <path d="M34 74q16 12 32 0" stroke="#15803d" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M41 77.5l2.5 4 2.5-3zM54 78.5l2.5 3 2.5-4z" fill="#fff"/>
+  <!-- Joues roses -->
+  <circle cx="24" cy="66" r="4.5" fill="#f9a8d4" opacity=".7"/>
+  <circle cx="76" cy="66" r="4.5" fill="#f9a8d4" opacity=".7"/>
+</svg>

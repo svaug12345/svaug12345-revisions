@@ -100,7 +100,7 @@ Tous acceptent `"titre"` et `"legende"`, et leurs textes acceptent le **gras** e
 | `droite` | Droite graduée : on touche un objet, il tombe à sa place et on explique la lecture | `{"visuel":"droite","debut":500000,"fin":800000,"grande":100000,"petites":10,"points":[{"valeur":530000,"emoji":"⚽","nom":"Le ballon"}]}` |
 | `posee` | Multiplication posée pas à pas (ordre de grandeur, retenues, 0 de décalage, addition) | `{"visuel":"posee","a":579,"b":64}` |
 | `rangs` | Rappel : rang de chaque chiffre (classe des mille / des unités), on touche un chiffre | `{"visuel":"rangs","nombre":"658 741"}` |
-| `tirs` | Mini-jeu « Tirs au but » (`"theme":"chat"` : pelote 🧶 et souris 🐭 ; `"attache":true` sur un tir : réponses en écriture attachée ; `"dire"` : ce que la voix lit) : bonne réponse = BUT ⚽, mauvaise = arrêt du gardien 🧤, score comme au stade (1re proposition = la bonne) | `{"visuel":"tirs","tirs":[{"texte":"4 682 à la centaine ?","choix":["4 700","4 600"]}]}` |
+| `tirs` | Mini-jeu « Tirs au but » (`"theme":"chat"` : pelote 🧶 et souris 🐭 ; `"theme":"dino"` : œuf 🥚 à sauver du T-rex 🦖 ; `"attache":true` sur un tir : réponses en écriture attachée ; `"dire"` : ce que la voix lit) : bonne réponse = BUT ⚽, mauvaise = arrêt du gardien 🧤, score comme au stade (1re proposition = la bonne) | `{"visuel":"tirs","tirs":[{"texte":"4 682 à la centaine ?","choix":["4 700","4 600"]}]}` |
 | `position` | CP : « Où est le chat ? » sur / sous / devant / derrière / à côté / au-dessus / dans / entre | `{"visuel":"position","objet":"🐱","nom":"Le chat"}` |
 | `gauchedroite` | CP : le chat court à gauche ou à droite | `{"visuel":"gauchedroite"}` |
 | `dizaine` | CP : boîte de 10 cases à remplir, « 10 = dix = 1 dizaine » | `{"visuel":"dizaine","objet":"🐱"}` |
@@ -110,6 +110,9 @@ Tous acceptent `"titre"` et `"legende"`, et leurs textes acceptent le **gras** e
 | `syllabes` | CP : f + a = fa, on touche pour entendre | `{"visuel":"syllabes","consonnes":["f","n"],"voyelles":["a","i","o"]}` |
 | `alphabet` | CP : lettres script → attachées | `{"visuel":"alphabet"}` |
 | `croquis` | Géo : croquis d'une aire urbaine (taches de couleur du centre vers l'extérieur, grosses flèches = étalement, flèches à 2 pointes = mobilités) ; on touche une zone pour son explication, « 🙈 Cacher la légende » pour réciter | `{"visuel":"croquis","zones":[{"nom":"ville-centre","couleur":"#f4a3b4","texte":"…"}],"etalement":"…","mobilites":"…"}` |
+| `dizaines` | CP (Malo) : nombres en barres de 10 + cubes ; additions étape par étape (dizaines ensemble, puis unités), voix en lettres | `{"visuel":"dizaines","exemples":["34","23 + 14"]}` |
+| `imagier` | Maternelle (Elouan) : grandes images à toucher, mot + petite phrase lus ; « 👏 En morceaux » dit les syllabes | `{"visuel":"imagier","mots":[{"emoji":"🦕","mot":"le diplodocus","phrase":"…","syllabes":["di","plo","do","cus"]}]}` |
+| `corpsdino` | Maternelle : dinosaure dessiné, on touche une partie (tête, cou, queue…) pour entendre son nom ; « 🎯 Jeu » : la voix demande une partie à trouver | `{"visuel":"corpsdino"}` |
 
 Le code de chaque visuel est dans `visuels.js` (une fonction par visuel, bien commentée).
 
@@ -120,7 +123,7 @@ et c'est toujours une **voix ElevenLabs** enregistrée à l'avance en MP3 (dossi
 - **langues** : les mots étrangers (🔊 / 🐢 dans la bulle du mot) — voir plus bas ;
 - **dictées** : le visuel `{"visuel": "dictee", "phrases": ["morceau 1", "morceau 2", …]}` dicte le texte morceau par
   morceau (🐢 lent = × 0,72 / 🐇 normal = × 0,9 : la voix ElevenLabs parle vite, ⏭ suivant, 🔁 tout réécouter) ;
-- **CP** (profil `"lectureAuto": true`, Ava) : la question est lue toute seule (+ un seul 🔊 pour la réécouter),
+- **CP et maternelle** (profil `"lectureAuto": true`, Ava, Malo, Elouan) : la question est lue toute seule (+ un seul 🔊 pour la réécouter),
   et les activités des sons et des nombres parlent quand on les touche.
 
 Nom d'un MP3 français : empreinte FNV-1a de `fr|<texte lu>` (le texte après `pourLaVoix()`), comme `en|…` pour l'anglais.
@@ -177,7 +180,7 @@ et propose de revoir celles qui restent.
 ## 🧒 Avatars
 
 Dans `lecons.json`, `"avatar"` accepte un emoji (`"🦄"`) **ou** une image du dossier `avatars/`
-(`"avatars/gaby.svg"` : guerrière ninja, `tom.svg` : sabre laser, `nanon.svg` : fusée).
+(`"avatars/gaby.svg"` : guerrière ninja, `tom.svg` : sabre laser, `nanon.svg` : fusée, `malo.svg` : petit robot, `elouan.svg` : bébé dinosaure).
 
 ## 💻 Sur ordinateur
 

@@ -1223,3 +1223,60 @@ body.lecture-facile .carte-info b { letter-spacing: 0; overflow-wrap: anywhere; 
 .info-maj .emoji { font-size: 1.4rem; line-height: 1.2; }
 .info-maj p { margin: 0; }
 .envoi-reussi .info-maj { text-align: left; max-width: 480px; margin: 14px auto; }
+
+/* =============================================================
+   DEPUIS LA v1.17.0 : visuels de Malo (CP) et d'Elouan (maternelle)
+   ============================================================= */
+
+/* Thème « dino » du mini-jeu : un nid de feuilles au milieu de la jungle */
+.tirs-scene.theme-dino { background: repeating-linear-gradient(90deg, #bbf7d0 0 30px, #86efac 30px 60px); }
+.tirs-scene.theme-dino .tirs-but { border-color: #78350f; border-radius: 0 0 40px 40px; border-bottom: 6px solid #78350f; border-top: 0; top: 18px; height: 56px;
+  background: repeating-linear-gradient(30deg, rgba(120,53,15,.4) 0 3px, transparent 3px 9px), repeating-linear-gradient(-30deg, rgba(120,53,15,.4) 0 3px, transparent 3px 9px); }
+
+/* DIZAINES ET UNITÉS : barres de 10 (bleues pour le 1er nombre, vertes pour le 2e) et cubes */
+.dz-vue { display: flex; align-items: flex-end; justify-content: center; flex-wrap: wrap; gap: 10px; min-height: 200px; margin: 10px 0; }
+.dz-paquet { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px; border-radius: 14px; background: #fff; transition: transform .3s; }
+.dz-paquet.nouveau { animation: apparait .5s backwards; }
+.dz-dizaines, .dz-unites { display: flex; align-items: flex-end; gap: 4px; flex-wrap: wrap; justify-content: center; }
+.dz-dizaines .nb-barre { animation: pop .3s backwards; animation-delay: calc(var(--i, 0) * .1s); }
+.dz-unites { max-width: 110px; }
+.dz-paquet.b .nb-barre { background: #14532d; }
+.dz-paquet.b .nb-barre i { background: #22c55e; }
+.dz-paquet.b .nb-cube { background: #f472b6; border-color: #be185d; }
+.dz-nombre { font-size: 1.8rem; color: var(--fonce); }
+.dz-plus { font-size: 2rem; font-weight: 900; color: var(--fonce); align-self: center; }
+/* étape « on compte les dizaines » : les cubes s'effacent, les barres grossissent (et l'inverse) */
+.dz-vue.voir-dizaines .dz-unites, .dz-vue.voir-unites .dz-dizaines { opacity: .2; }
+.dz-vue.voir-dizaines .dz-dizaines, .dz-vue.voir-unites .dz-unites { animation: pulse .6s 2; }
+
+/* IMAGIER : grandes images à toucher, le mot en gros, la phrase et les syllabes qu'on tape */
+.img-grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 8px; }
+.img-carte { aspect-ratio: 1; border: 3px solid var(--clair); border-radius: 18px; background: #fff; font: inherit; animation: apparait .4s backwards; animation-delay: calc(var(--i, 0) * .06s); }
+.img-carte.actif { border-color: var(--fonce); box-shadow: 0 0 0 3px var(--clair); }
+.img-emoji { font-size: 2.6rem; line-height: 1; }
+.img-zoom { text-align: center; margin-top: 12px; min-height: 120px; }
+.img-grand { font-size: 5rem; line-height: 1.1; animation: pop .4s; }
+.img-mot { font-size: 1.6rem; font-weight: 900; color: var(--fonce); margin: 4px 0; }
+.img-phrase { font-weight: 700; margin: 0 0 6px; }
+.img-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.img-a-toi { font-weight: 800; color: var(--doux); margin: 8px 0 0; }
+.img-syllabes { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin: 6px 0; }
+.img-syl { padding: 6px 12px; border-radius: 999px; background: #fef3c7; font-size: 1.4rem; font-weight: 900; color: #92400e;
+  animation: allume .7s backwards; animation-delay: calc(var(--i, 0) * .8s); }
+
+/* LE CORPS DU DINOSAURE : chaque partie s'allume quand on la touche */
+.dino { text-align: center; }
+.dino-svg { width: 100%; max-width: 420px; display: block; margin: 0 auto; background: linear-gradient(#e0f2fe 78%, #d9f99d 78%); border-radius: 16px; }
+.dino-partie { cursor: pointer; transition: filter .2s; }
+.dino-partie > * { fill: #4ade80; stroke: #166534; stroke-width: 2.5; stroke-linejoin: round; transition: fill .2s; }
+.dino-dos > * { fill: #fb923c; stroke: #9a3412; }
+.dino-corps > * { fill: #4ade80; }
+.dino-bouche > path:first-child { fill: #be123c; stroke: #881337; }
+.dino-bouche .dino-dents { fill: none; stroke: #fff; stroke-width: 2; }
+.dino-oeil > circle { fill: #fff; stroke: #1e293b; }
+.dino-oeil .dino-pupille { fill: #1e293b; stroke: none; }
+.dino-griffes > * { fill: none; stroke: #f8fafc; stroke-width: 3; stroke-linecap: round; }
+.dino-partie.actif > *:not(.dino-dents):not(.dino-pupille) { fill: #facc15; }
+.dino-partie.trouve > *:not(.dino-dents):not(.dino-pupille) { fill: #a3e635; }
+.dino-griffes.actif > *, .dino-griffes.trouve > * { fill: none; stroke: #facc15; stroke-width: 4; }
+.dino-partie.actif, .dino-partie.trouve { filter: drop-shadow(0 0 6px #facc15); }

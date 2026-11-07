@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Avatar de Malo : un petit robot rigolo. Dessin original. -->
+  <!-- Antenne avec sa boule lumineuse -->
+  <path d="M50 22V10" stroke="#475569" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="50" cy="9" r="5.5" fill="#facc15"/>
+  <!-- Oreilles (boulons) -->
+  <rect x="9" y="44" width="10" height="20" rx="4" fill="#0891b2"/>
+  <rect x="81" y="44" width="10" height="20" rx="4" fill="#0891b2"/>
+  <!-- Tête -->
+  <rect x="17" y="22" width="66" height="62" rx="18" fill="#22d3ee"/>
+  <!-- Écran du visage -->
+  <rect x="25" y="32" width="50" height="40" rx="12" fill="#164e63"/>
+  <!-- Yeux qui brillent -->
+  <circle cx="39" cy="48" r="6.5" fill="#a5f3fc"/>
+  <circle cx="61" cy="48" r="6.5" fill="#a5f3fc"/>
+  <circle cx="40.5" cy="46.5" r="2.2" fill="#fff"/>
+  <circle cx="62.5" cy="46.5" r="2.2" fill="#fff"/>
+  <!-- Sourire -->
+  <path d="M40 60q10 8 20 0" stroke="#a5f3fc" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <!-- Boutons sur le menton -->
+  <circle cx="40" cy="78" r="2.5" fill="#f43f5e"/>
+  <circle cx="50" cy="78" r="2.5" fill="#facc15"/>
+  <circle cx="60" cy="78" r="2.5" fill="#22c55e"/>
+</svg>

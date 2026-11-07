@@ -47,6 +47,24 @@ const nombreFr = (n) => Number(n).toLocaleString('fr-FR', { maximumFractionDigit
 // Texte -> nombre ("2,5" -> 2.5)
 const lireNombre = (t) => Number(String(t).replace(/\s/g, '').replace(',', '.'));
 
+/** Nombre de 0 à 100 -> en toutes lettres : 34 -> "trente-quatre", 71 -> "soixante et onze", 80 -> "quatre-vingts".
+    Sert à ce que la voix lit : écrit en chiffres, ElevenLabs lit parfois les nombres en anglais. */
+function nomNombre(n) {
+  const U = ['zéro', 'un', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf', 'dix',
+    'onze', 'douze', 'treize', 'quatorze', 'quinze', 'seize', 'dix-sept', 'dix-huit', 'dix-neuf'];
+  const D = { 2: 'vingt', 3: 'trente', 4: 'quarante', 5: 'cinquante', 6: 'soixante' };
+  if (n < 20) return U[n];
+  if (n === 100) return 'cent';
+  const d = Math.floor(n / 10), u = n % 10;
+  if (d === 7 || d === 9) {                     // 70-79 = soixante + 10..19, 90-99 = quatre-vingt + 10..19
+    const base = d === 7 ? 'soixante' : 'quatre-vingt';
+    return base + (d === 7 && u === 1 ? ' et ' : '-') + U[10 + u];
+  }
+  if (d === 8) return u === 0 ? 'quatre-vingts' : 'quatre-vingt-' + U[u];
+  if (u === 0) return D[d];
+  return D[d] + (u === 1 ? ' et un' : '-' + U[u]);
+}
+
 // Déclenche les animations quand le visuel devient visible (au moins 30 %)
 const observateur = 'IntersectionObserver' in window
   ? new IntersectionObserver((entrees) => {
@@ -717,11 +735,16 @@ const VISUELS = {
      Bonne réponse = BUT ⚽ (le ballon file dans le filet) ; mauvaise = le gardien arrête 🧤.
      Le score s'affiche comme au stade, puis on peut rejouer (les tirs sont remélangés). */
   tirs(v) {
-    // Thèmes : "foot" (par défaut) ou "chat" (la pelote 🧶 à lancer dans le panier, la souris 🐭 essaie de la voler)
-    const T = v.theme === 'chat'
-      ? { balle: '🧶', gardien: '🐭', toi: '🐱 Toi', autre: 'Souris 🐭', jouer: 'pelotes à lancer', bravo: ['Dans le panier ! 🧶', 'Miaou, bravo ! 🐱', 'Super lancer ! ⭐'], rate: 'La souris a pris la pelote 🐭 La bonne réponse : ' }
-      : { balle: '⚽', gardien: '🧤', toi: '⚽ Toi', autre: 'Gardien 🧤', jouer: 'tirs au but', bravo: ['BUUUT ! ⚽', 'Quel tir ! 🔥', 'Lucarne ! 🎯', 'Imparable ! 💥'], rate: 'Arrêté par le gardien 🧤 La bonne réponse : ' };
-    const scene = el('div', { class: 'tirs-scene' + (v.theme === 'chat' ? ' theme-chat' : '') });
+    // Thèmes : "foot" (par défaut), "chat" (la pelote 🧶 à lancer dans le panier, la souris 🐭 essaie de la voler)
+    // ou "dino" (depuis la v1.17.0, pour Elouan : l'œuf 🥚 à ramener au nid, le T-rex 🦖 essaie de l'attraper)
+    const THEMES = {
+      chat: { balle: '🧶', gardien: '🐭', toi: '🐱 Toi', autre: 'Souris 🐭', jouer: 'pelotes à lancer', bravo: ['Dans le panier ! 🧶', 'Miaou, bravo ! 🐱', 'Super lancer ! ⭐'], rate: 'La souris a pris la pelote 🐭 La bonne réponse : ' },
+      dino: { balle: '🥚', gardien: '🦖', toi: '🦕 Toi', autre: 'T-rex 🦖', jouer: 'œufs à sauver', bravo: ['Dans le nid ! 🥚', 'Bravo, petit dino ! 🦕', 'Super ! ⭐'], rate: 'Le T-rex a attrapé l’œuf 🦖 La bonne réponse : ' },
+      foot: { balle: '⚽', gardien: '🧤', toi: '⚽ Toi', autre: 'Gardien 🧤', jouer: 'tirs au but', bravo: ['BUUUT ! ⚽', 'Quel tir ! 🔥', 'Lucarne ! 🎯', 'Imparable ! 💥'], rate: 'Arrêté par le gardien 🧤 La bonne réponse : ' },
+    };
+    const T = THEMES[v.theme] || THEMES.foot;
+    // la classe "theme-chat" / "theme-dino" change les couleurs du terrain (style.css)
+    const scene = el('div', { class: 'tirs-scene' + (THEMES[v.theme] && v.theme !== 'foot' ? ' theme-' + v.theme : '') });
     const tableau = el('div', { class: 'tirs-score' });
     const zone = el('div', { class: 'tirs-zone' });
     let liste = [], k = 0, buts = 0;
@@ -945,8 +968,11 @@ const VISUELS = {
       vue.replaceChildren(el('div', { class: 'calc-objets' }, objets.map((o, i) => el('span', {
         class: 'calc-objet' + (o.barre ? ' barre' : '') + (o.nouveau ? ' nouveau' : ''), style: cascade(o.nouveau ? i % 5 : 0),
       }, ex.emoji || '🐱'))));
-      texte.replaceChildren(el('b', {}, ecrit.join(' ') + (fini ? ` = ${total}` : '')), fini && etapes.length > 1 ? ' 🎉' : '');
+      // un nombre seul (« 3 », pour compter) : pas de « = 3 » ni de bouton « Et après ? » (depuis la v1.17.0)
+      const seul = etapes.length === 1;
+      texte.replaceChildren(el('b', {}, ecrit.join(' ') + (fini && !seul ? ` = ${total}` : '')), fini && !seul ? ' 🎉' : '');
       suivant.disabled = fini;
+      suivant.hidden = seul;
       if (fini && k > 0) lireAVoixHaute(`${ecrit.join(' ')} égale ${total}`);
     }
     const suivant = el('button', { class: 'btn-visuel', onclick: () => { k++; dessiner(); } }, '▶ Et après ?');
@@ -981,7 +1007,10 @@ const VISUELS = {
      On choisit une consonne : « f + a = fa ». On touche une syllabe pour l'entendre. */
   syllabes(v) {
     // Ce que la voix doit dire pour bien prononcer chaque syllabe (« fe » se dit « feu »)
-    const DIRE_V = { a: 'a', i: 'i', o: 'o', u: 'u', é: 'é', è: 'è', e: 'eu', y: 'i' };
+    // Depuis la v1.17.0 (Malo) : aussi les sons à 2 lettres. « ai » et « ei » se disent « è » (« mai » serait lu
+    // comme le mois), « en » se dit « an ».
+    const DIRE_V = { a: 'a', i: 'i', o: 'o', u: 'u', é: 'é', è: 'è', e: 'eu', y: 'i',
+      ou: 'ou', on: 'on', an: 'an', en: 'an', ai: 'è', ei: 'è', oi: 'oi', in: 'in' };
     const grille = el('div', { class: 'syl-grille' });
     const boutons = el('div', { class: 'arrondi-rangs' });
     function montrer(c) {
@@ -1002,6 +1031,177 @@ const VISUELS = {
     return el('div', { class: 'alpha-grille' }, lettres.map((l, i) => el('button', {
       class: 'alpha-case', style: cascade(i % 8), onclick: () => lireAVoixHaute(l),
     }, el('span', {}, l), el('i', {}, '→'), el('span', { class: 'attache' }, l))));
+  },
+
+  /* ===================== DEPUIS LA v1.17.0 : MALO (CP) ET ELOUAN (MATERNELLE) ===================== */
+
+  /* DIZAINES ET UNITÉS (Malo) : { exemples: ["34", "20 + 30", "23 + 14"] }
+     - un nombre seul ("34") : 3 barres de 10 + 4 cubes, « trente-quatre : 3 dizaines et 4 unités » ;
+     - une addition ("23 + 14") : étape par étape avec « ▶ Et après ? » :
+         1) le 1er nombre (barres bleues)   2) le 2e nombre arrive (barres vertes)
+         3) on compte les dizaines ensemble 4) puis les unités   5) le résultat.
+     Ce qui est lu est écrit EN LETTRES (« vingt-trois ») : la voix ElevenLabs lit « 10 » en anglais. */
+  dizaines(v) {
+    const vue = el('div', { class: 'dz-vue' });
+    const texte = el('p', { class: 'calc-texte' });
+    const choix = el('div', { class: 'conversion-choix' });
+    const suivant = el('button', { class: 'btn-visuel' }, '▶ Et après ?');
+    const pluriel = (n, mot) => `${n} ${mot}${n > 1 ? 's' : ''}`;            // 1 dizaine, 2 dizaines
+    const enLettres = (n, mot) => `${n === 1 ? 'une' : nomNombre(n)} ${mot}${n > 1 ? 's' : ''}`; // « une dizaine », « deux dizaines »
+    // Barres de 10 et cubes d'un nombre ; "b" = 2e nombre (autre couleur), "nouveau" = animation d'arrivée
+    const paquet = (n, b, nouveau) => el('div', { class: 'dz-paquet' + (b ? ' b' : '') + (nouveau ? ' nouveau' : '') },
+      el('div', { class: 'dz-dizaines' }, Array.from({ length: Math.floor(n / 10) }, (_, i) =>
+        el('span', { class: 'nb-barre', style: cascade(i) }, Array.from({ length: 10 }, () => el('i'))))),
+      el('div', { class: 'dz-unites' }, Array.from({ length: n % 10 }, (_, i) => el('span', { class: 'nb-cube', style: cascade(i) }))),
+      el('b', { class: 'dz-nombre' }, String(n)));
+    let etapes = [], k = 0;
+
+    function preparer(i, parler = true) {
+      const ex = String(v.exemples[i]);
+      [...choix.children].forEach((b, j) => b.classList.toggle('actif', j === i));
+      const [a, b] = ex.split('+').map((x) => Number(x.trim()));
+      const da = Math.floor(a / 10), ua = a % 10;
+      if (b === undefined) {
+        // Un nombre seul : une seule étape
+        etapes = [{
+          dessin: () => [paquet(a)],
+          ecrit: [el('b', {}, `${a} = ${pluriel(da, 'dizaine')} et ${pluriel(ua, 'unité')}`)],
+          dit: `${nomNombre(a)} : ${enLettres(da, 'dizaine')} et ${enLettres(ua, 'unité')}`,
+        }];
+      } else {
+        const db = Math.floor(b / 10), ub = b % 10, total = a + b;
+        etapes = [
+          { dessin: () => [paquet(a)], ecrit: [el('b', {}, `${a}`), ` : ${pluriel(da, 'dizaine')} et ${pluriel(ua, 'unité')}`],
+            dit: `${nomNombre(a)} : ${enLettres(da, 'dizaine')} et ${enLettres(ua, 'unité')}` },
+          { dessin: () => [paquet(a), el('span', { class: 'dz-plus' }, '+'), paquet(b, true, true)],
+            ecrit: [el('b', {}, `+ ${b}`), ` : ${pluriel(db, 'dizaine')} et ${pluriel(ub, 'unité')}`],
+            dit: `plus ${nomNombre(b)} : ${enLettres(db, 'dizaine')} et ${enLettres(ub, 'unité')}` },
+          { dessin: () => [paquet(a), el('span', { class: 'dz-plus' }, '+'), paquet(b, true)], classe: 'voir-dizaines',
+            ecrit: ['Les dizaines : ', el('b', {}, `${da} + ${db} = ${pluriel(da + db, 'dizaine')}`)],
+            dit: `Les dizaines : ${nomNombre(da)} plus ${nomNombre(db)}, ça fait ${enLettres(da + db, 'dizaine')}` },
+          { dessin: () => [paquet(a), el('span', { class: 'dz-plus' }, '+'), paquet(b, true)], classe: 'voir-unites',
+            ecrit: ['Les unités : ', el('b', {}, `${ua} + ${ub} = ${pluriel(ua + ub, 'unité')}`)],
+            dit: `Les unités : ${nomNombre(ua)} plus ${nomNombre(ub)}, ça fait ${enLettres(ua + ub, 'unité')}` },
+          { dessin: () => [paquet(total, false, true)], fini: true,
+            ecrit: [el('b', {}, `${a} + ${b} = ${total}`), ' 🎉'],
+            dit: `${nomNombre(a)} plus ${nomNombre(b)} égale ${nomNombre(total)}` },
+        ];
+      }
+      k = 0;
+      dessiner(parler);
+    }
+    function dessiner(parler = true) {
+      const e = etapes[k];
+      vue.className = 'dz-vue ' + (e.classe || '');
+      vue.replaceChildren(...e.dessin());
+      texte.replaceChildren(...e.ecrit);
+      suivant.hidden = etapes.length === 1;
+      suivant.disabled = k === etapes.length - 1;
+      if (e.fini) eclats(vue, ['⭐', '🎉']);
+      if (parler) lireAVoixHaute(e.dit);
+    }
+    suivant.addEventListener('click', () => { k++; dessiner(); });
+    v.exemples.forEach((e, i) => choix.append(el('button', { onclick: () => preparer(i) }, String(e))));
+    preparer(0, false); // premier exemple affiché sans voix (la page vient de s'ouvrir)
+    return el('div', {}, choix, vue, texte, suivant);
+  },
+
+  /* IMAGIER (Elouan, maternelle) : { mots: [{ emoji: "🦕", mot: "le diplodocus", phrase: "Il a un très long cou.",
+                                            syllabes: ["di", "plo", "do", "cus"] }] }
+     On touche une image : elle grossit, le mot puis la petite phrase sont lus. « 🗣️ À toi ! » invite à répéter.
+     Avec "syllabes" : « 👏 En morceaux » dit le mot syllabe par syllabe (on tape dans ses mains à chaque morceau),
+     pour travailler la prononciation des mots longs. "dit" (facultatif) = ce que la voix lit à la place du mot. */
+  imagier(v) {
+    const zoom = el('div', { class: 'img-zoom' });
+    const grille = el('div', { class: 'img-grille' });
+    function montrer(m, i, parler = true) {
+      [...grille.children].forEach((b, j) => b.classList.toggle('actif', j === i));
+      const dire = () => lireAVoixHaute([m.dit || m.mot, m.phrase].filter(Boolean));
+      const morceaux = el('div', { class: 'img-syllabes' });
+      const enMorceaux = () => {
+        // les bulles s'allument l'une après l'autre (CSS : délai --i), à peu près au rythme de la voix
+        morceaux.replaceChildren(...m.syllabes.map((s, j) => el('span', { class: 'img-syl', style: cascade(j) }, '👏 ', s)));
+        lireAVoixHaute([...m.syllabes, m.dit || m.mot]);
+      };
+      zoom.replaceChildren(
+        el('div', { class: 'img-grand pop' }, m.emoji),
+        el('p', { class: 'img-mot' }, m.mot),
+        m.phrase ? el('p', { class: 'img-phrase' }, m.phrase) : null,
+        morceaux,
+        el('div', { class: 'img-actions' },
+          el('button', { class: 'btn-visuel secondaire', onclick: dire }, '🔊 Encore'),
+          m.syllabes ? el('button', { class: 'btn-visuel secondaire', onclick: enMorceaux }, '👏 En morceaux') : null),
+        el('p', { class: 'img-a-toi' }, '🗣️ À toi : dis-le avec moi !'));
+      if (parler) dire();
+    }
+    v.mots.forEach((m, i) => grille.append(el('button', { class: 'img-carte', style: cascade(i), onclick: () => montrer(m, i) },
+      el('span', { class: 'img-emoji' }, m.emoji))));
+    zoom.append(el('p', { class: 'pos-consigne' }, '👆 Touche une image pour entendre son nom.'));
+    return el('div', {}, grille, zoom);
+  },
+
+  /* LE CORPS DU DINOSAURE (Elouan) : { visuel: "corpsdino" } (option "parties": liste des clés à garder)
+     Un dinosaure dessiné en SVG. Mode « découvrir » : on touche une partie, elle s'allume et son nom est lu.
+     Mode « 🎯 Jeu » : la voix demande « Montre-moi la queue ! », l'enfant touche ; s'il se trompe,
+     la voix dit ce qu'il a touché (« Ça, c'est le cou. ») puis redemande. */
+  corpsdino(v) {
+    const NS = 'http://www.w3.org/2000/svg';
+    const svg = (tag, attrs) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); return n; };
+    // [clé, nom lu, formes SVG]  — l'ordre compte : ce qui est dessiné après passe au-dessus
+    const PARTIES = [
+      ['queue', 'la queue', [['path', { d: 'M232 96 Q290 100 314 150 Q282 128 236 132 Z' }]]],
+      ['pattes', 'les pattes', [['rect', { x: 128, y: 132, width: 22, height: 46, rx: 9 }], ['rect', { x: 158, y: 136, width: 22, height: 42, rx: 9 }],
+        ['rect', { x: 200, y: 134, width: 24, height: 44, rx: 9 }], ['rect', { x: 228, y: 128, width: 22, height: 48, rx: 9 }]]],
+      ['dos', 'le dos', [['path', { d: 'M126 82 L138 52 L152 74 L166 44 L182 70 L198 46 L212 74 L226 58 L234 92 Z' }]]],
+      ['corps', 'le ventre', [['ellipse', { cx: 182, cy: 108, rx: 62, ry: 36 }]]],
+      ['cou', 'le cou', [['path', { d: 'M86 66 Q112 64 136 86 L134 122 Q100 104 74 84 Z' }]]],
+      ['tete', 'la tête', [['ellipse', { cx: 62, cy: 60, rx: 34, ry: 23 }]]],
+      ['bouche', 'la bouche', [['path', { d: 'M30 66 Q52 82 78 72 Q56 76 32 62 Z' }], ['path', { d: 'M40 69 l3 6 l3 -5 M52 73 l3 6 l3 -6', class: 'dino-dents' }]]],
+      ['oeil', 'l’œil', [['circle', { cx: 60, cy: 52, r: 8 }]]],
+      ['griffes', 'les griffes', [['path', { d: 'M128 178 l4 8 l4 -8 l4 8 l4 -8 M200 178 l4 8 l4 -8 l4 8 l4 -8 M228 176 l4 8 l4 -8 l4 8 l4 -8 M158 178 l4 8 l4 -8 l4 8 l4 -8' }]]],
+    ].filter(([cle]) => !v.parties || v.parties.includes(cle));
+    const dessin = svg('svg', { viewBox: '0 0 320 196', class: 'dino-svg', role: 'img', 'aria-label': 'Un dinosaure' });
+    const groupes = {};
+    for (const [cle, , formes] of PARTIES) {
+      const g = svg('g', { class: 'dino-partie dino-' + cle });
+      formes.forEach(([tag, attrs]) => g.append(svg(tag, attrs)));
+      if (cle === 'oeil') g.append(svg('circle', { cx: 62, cy: 51, r: 3.5, class: 'dino-pupille' }));
+      g.addEventListener('click', () => toucher(cle));
+      groupes[cle] = g;
+      dessin.append(g);
+    }
+    const nom = Object.fromEntries(PARTIES.map(([cle, n]) => [cle, n]));
+    const phrase = el('p', { class: 'pos-phrase' }, el('b', {}, '👆 Touche le dinosaure !'));
+    const bouton = el('button', { class: 'btn-visuel' }, '🎯 Jeu : trouve la partie !');
+    let jeu = null; // { reste: [clés à trouver], cible: clé demandée } quand on joue
+    const allumer = (cle, classe = 'actif') => {
+      Object.values(groupes).forEach((g) => g.classList.remove('actif', 'trouve'));
+      if (cle) groupes[cle].classList.add(classe);
+    };
+    const ecrire = (t) => { phrase.replaceChildren(el('b', {}, t)); phrase.classList.remove('pop'); void phrase.offsetWidth; phrase.classList.add('pop'); };
+    function demander() {
+      if (!jeu.reste.length) {
+        ecrire('🏆 Bravo ! Tu as tout trouvé !'); lireAVoixHaute('Bravo ! Tu as trouvé toutes les parties du dinosaure !');
+        eclats(dessin, ['🦕', '⭐', '🎉']); jeu = null; bouton.textContent = '🔁 Rejouer'; return;
+      }
+      jeu.cible = jeu.reste[0];
+      allumer(null);
+      ecrire(`Montre-moi ${nom[jeu.cible]} !`); lireAVoixHaute(`Montre-moi ${nom[jeu.cible]} !`);
+    }
+    function toucher(cle) {
+      if (!jeu) { allumer(cle); ecrire(nom[cle]); lireAVoixHaute(nom[cle]); return; }  // mode découvrir
+      if (cle === jeu.cible) {
+        allumer(cle, 'trouve'); son('bon'); ecrire('Bravo ! ⭐'); lireAVoixHaute('Bravo !');
+        jeu.reste.shift(); setTimeout(demander, 1600);
+      } else {
+        // On ne dit pas « non » : on nomme ce qu'il a touché, puis on redemande (c'est aussi du vocabulaire)
+        const ca = `Ça, ${nom[cle].startsWith('les ') ? 'ce sont' : 'c’est'} ${nom[cle]}.`; // « ce sont les pattes »
+        allumer(cle); ecrire(`${ca} Cherche ${nom[jeu.cible]} !`);
+        lireAVoixHaute([ca, `Montre-moi ${nom[jeu.cible]} !`]);
+      }
+    }
+    bouton.addEventListener('click', () => { jeu = { reste: melanger(Object.keys(nom)) }; bouton.textContent = '🎯 Jeu en cours…'; demander(); });
+    return el('div', { class: 'dino' }, dessin, phrase, bouton);
   },
 
   /* CROQUIS D'UNE AIRE URBAINE (géographie, depuis la v1.16.0) :

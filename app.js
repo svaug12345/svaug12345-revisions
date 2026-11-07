@@ -761,7 +761,8 @@ function afficherAccueil() {
 // --- Liste des leçons de l'enfant, rangées par matière ---
 function afficherLecons() {
   const enfant = etat.enfant;
-  entete(`Leçons de ${enfant.nom}`);
+  // « de » devient « d' » devant une voyelle : « Leçons d'Elouan », « Leçons d'Ava »
+  entete(`Leçons ${/^[aeiouyéèêàâîôû]/i.test(enfant.nom) ? 'd’' : 'de '}${enfant.nom}`);
   const toutes = leconsDe(enfant.id);
   const lecons = toutes.filter((l) => !estArchivee(enfant.id, l));
   const archivees = toutes.filter((l) => estArchivee(enfant.id, l));
