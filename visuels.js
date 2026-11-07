@@ -873,7 +873,9 @@ const VISUELS = {
     const phrase = el('p', { class: 'pos-phrase' }, el('b', {}, 'Touche GAUCHE ou DROITE 👇'));
     const aller = (cote) => {
       bete.className = 'gd-objet ' + cote;
-      const p = cote === 'gauche' ? 'Le chat court vers la gauche !' : 'Le chat court vers la droite !';
+      // "nom" (depuis la v1.18.0) : « La voiture » au lieu du chat (Ava garde ses phrases et ses MP3)
+      const qui = v.nom || 'Le chat', verbe = v.verbe || 'court';
+      const p = `${qui} ${verbe} vers la ${cote} !`;
       phrase.replaceChildren(el('b', {}, p)); lireAVoixHaute(p);
     };
     return el('div', {},
@@ -1202,6 +1204,80 @@ const VISUELS = {
     }
     bouton.addEventListener('click', () => { jeu = { reste: melanger(Object.keys(nom)) }; bouton.textContent = '🎯 Jeu en cours…'; demander(); });
     return el('div', { class: 'dino' }, dessin, phrase, bouton);
+  },
+
+  /* CODER UN DÉPLACEMENT SUR UN QUADRILLAGE (CP, depuis la v1.18.0) :
+       { colonnes: 6, lignes: 5, depart: [0, 4], objet: "🐝",       // case = [colonne, ligne], [0, 0] = en haut à gauche
+         arrivee: { case: [4, 1], emoji: "🌸" }, code: ["↑", "↑", "→"],
+         decors: [{ case: [2, 2], emoji: "🐞" }] }                    // facultatif
+     « ▶ Lancer le code » : l'objet suit les flèches une par une (la flèche en cours s'allume).
+     « 🎮 À moi ! » : l'enfant pilote avec 4 boutons flèches ; son code s'écrit au fur et à mesure,
+     et c'est gagné quand il arrive sur la case d'arrivée. */
+  codage(v) {
+    const C = v.colonnes || 6, L = v.lignes || 5;
+    const PAS = { '↑': [0, -1], '↓': [0, 1], '←': [-1, 0], '→': [1, 0] };
+    const grille = el('div', { class: 'cod-grille', style: `grid-template-columns:repeat(${C},1fr)` });
+    const bande = el('div', { class: 'cod-code' });
+    const info = el('p', { class: 'pos-phrase' });
+    let pos, minuterie = null, monCode = [];
+    const egal = (a, b) => a[0] === b[0] && a[1] === b[1];
+    function dessiner() {
+      grille.replaceChildren(...Array.from({ length: C * L }, (_, i) => {
+        const c = [i % C, Math.floor(i / C)];
+        const deco = (v.decors || []).find((d) => egal(d.case, c));
+        const contenu = egal(c, pos) ? v.objet || '🐝'
+          : v.arrivee && egal(c, v.arrivee.case) ? v.arrivee.emoji : deco ? deco.emoji : '';
+        return el('span', { class: 'cod-case' + (egal(c, pos) ? ' ici' : '') }, contenu);
+      }));
+    }
+    // la bande de flèches : celle d'indice "actif" s'allume
+    const montrerCode = (code, actif = -1) => bande.replaceChildren(
+      el('span', { class: 'cod-fleche depart' }, v.objet || '🐝'),
+      ...code.map((f, i) => el('span', { class: 'cod-fleche' + (i === actif ? ' actif' : i < actif ? ' fait' : '') }, f)),
+      v.arrivee ? el('span', { class: 'cod-fleche depart' }, v.arrivee.emoji) : null);
+    const ecrire = (t) => info.replaceChildren(el('b', {}, t));
+    // un pas : on ne sort jamais du quadrillage
+    const bouger = (f) => {
+      const [dx, dy] = PAS[f];
+      pos = [Math.min(C - 1, Math.max(0, pos[0] + dx)), Math.min(L - 1, Math.max(0, pos[1] + dy))];
+      dessiner();
+    };
+    const arrive = () => v.arrivee && egal(pos, v.arrivee.case);
+    function remettre() {
+      clearInterval(minuterie); pos = [...v.depart]; monCode = []; dessiner();
+    }
+    function lancer() {
+      remettre(); manette.hidden = true;
+      let k = 0;
+      montrerCode(v.code, 0); ecrire('Le robot lit le code…');
+      minuterie = setInterval(() => {
+        if (k >= v.code.length) {
+          clearInterval(minuterie); montrerCode(v.code, v.code.length);
+          ecrire(arrive() ? 'Arrivé ! 🎉' : 'Fin du code.');
+          if (arrive()) eclats(grille, ['⭐', '🎉']);
+          return;
+        }
+        montrerCode(v.code, k); bouger(v.code[k]); k++;
+      }, 700);
+    }
+    // mode « à moi » : 4 boutons flèches
+    const manette = el('div', { class: 'cod-manette', hidden: true },
+      ['↑', '←', '↓', '→'].map((f) => el('button', { class: 'cod-btn', onclick: () => {
+        if (arrive()) return;
+        monCode.push(f); bouger(f); montrerCode(monCode, monCode.length);
+        if (arrive()) { ecrire(`Bravo ! Ton code a ${monCode.length} flèches. 🎉`); son('bon'); eclats(grille, ['⭐', '🎉']); }
+      } }, f)),
+      el('button', { class: 'cod-btn efface', onclick: () => { remettre(); montrerCode([]); ecrire('On recommence !'); } }, '↺'));
+    const aMoi = () => {
+      remettre(); manette.hidden = false; montrerCode([]);
+      ecrire(v.arrivee ? `À toi ! Amène ${v.objet || '🐝'} jusqu'à ${v.arrivee.emoji}` : 'À toi ! Déplace le robot.');
+    };
+    remettre(); montrerCode(v.code || []);
+    ecrire('👆 Lance le code, ou pilote toi-même !');
+    return el('div', { class: 'cod' }, bande, grille, info, manette,
+      el('div', { class: 'img-actions' },
+        v.code ? el('button', { class: 'btn-visuel', onclick: lancer }, '▶ Lancer le code') : null,
+        el('button', { class: 'btn-visuel secondaire', onclick: aMoi }, '🎮 À moi !')));
   },
 
   /* CROQUIS D'UNE AIRE URBAINE (géographie, depuis la v1.16.0) :

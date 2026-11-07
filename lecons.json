@@ -1,6 +1,6 @@
 {
   "maj": "07/11/2026",
-  "versionApp": "1.17.1",
+  "versionApp": "1.18.0",
 
   "enfants": [
     {"id": "tom", "nom": "Tom", "avatar": "avatars/tom.svg", "couleur": "#22c55e", "age": 6},
@@ -1907,6 +1907,304 @@
         {"type": "qcm", "question": "Combien de dinosaures ? 🦖🦖🦖", "choix": ["3", "2", "5"], "niveau": 2, "indice": "Un, deux…"},
         {"type": "qcm", "question": "Combien d'os ? 🦴🦴🦴🦴", "choix": ["4", "3", "5"], "niveau": 2, "indice": "Un, deux, trois…"},
         {"type": "qcm", "question": "Combien de dinosaures ? 🦕🦕🦕🦕🦕", "choix": ["5", "4", "3"], "niveau": 3, "indice": "Autant que les doigts d'une main !"}
+      ]
+    },
+
+    {
+      "id": "malo-reperer-1-droite-gauche",
+      "pour": ["malo"],
+      "matiere": "Maths",
+      "parcours": "Se repérer",
+      "etape": 1,
+      "titre": "Droite et gauche",
+      "emoji": "✋",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Ma droite, ma gauche",
+        {"visuel": "gauchedroite", "objet": "🚗", "nom": "La voiture", "verbe": "tourne"},
+        {"visuel": "encadre", "style": "astuce", "texte": ["Pour savoir quelle main un enfant **dessiné** utilise, je me mets **à sa place** : je me tourne comme lui, et je regarde de quel côté est son crayon."]},
+        {"visuel": "encadre", "style": "attention", "texte": ["Quand quelqu'un est **face à moi**, sa main droite est **en face de ma main gauche** !"]},
+        "# Les voitures qui tournent",
+        {"visuel": "cartes", "elements": [{"emoji": "↱", "titre": "Je tourne à droite", "texte": "Je vais tout droit, puis vers la droite."}, {"emoji": "↰", "titre": "Je tourne à gauche", "texte": "Je vais tout droit, puis vers la gauche."}]},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Tire au but !", "tirs": [{"texte": "Quelle flèche va à droite ?", "choix": ["➡️", "⬅️"]}, {"texte": "Quelle flèche va à gauche ?", "choix": ["⬅️", "➡️"]}, {"texte": "La voiture tourne à droite", "choix": ["↱", "↰"], "dire": "Quelle flèche montre une voiture qui tourne à droite ?"}, {"texte": "La voiture tourne à gauche", "choix": ["↰", "↱"], "dire": "Quelle flèche montre une voiture qui tourne à gauche ?"}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Quelle flèche va vers la droite ?", "choix": ["➡️", "⬅️", "⬆️"], "niveau": 1, "indice": "Pense à ta main droite.", "lireChoix": false},
+        {"type": "qcm", "question": "Quelle flèche va vers la gauche ?", "choix": ["⬅️", "➡️", "⬇️"], "niveau": 1, "lireChoix": false},
+        {"type": "qcm", "question": "La voiture va tout droit puis tourne à droite. Quelle flèche ?", "choix": ["↱", "↰"], "niveau": 2, "indice": "Elle monte, puis part vers la droite.", "lireChoix": false},
+        {"type": "qcm", "question": "La voiture va tout droit puis tourne à gauche. Quelle flèche ?", "choix": ["↰", "↱"], "niveau": 2, "lireChoix": false},
+        {"type": "vraifaux", "affirmation": "Quand un ami est face à moi, sa main droite est en face de ma main gauche.", "reponse": true, "niveau": 3, "indice": "Mets-toi face à quelqu'un et lève la main droite tous les deux !"},
+        {"type": "qcm", "question": "Pour savoir avec quelle main un enfant dessiné tient son crayon, je…", "choix": ["me mets à sa place", "regarde ma main", "ferme les yeux"], "niveau": 3, "indice": "Tourne-toi comme lui."}
+      ]
+    },
+
+    {
+      "id": "malo-reperer-2-quadrillage",
+      "pour": ["malo"],
+      "matiere": "Maths",
+      "parcours": "Se repérer",
+      "etape": 2,
+      "titre": "Coder un déplacement",
+      "emoji": "🐝",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Les flèches du code",
+        {"visuel": "cartes", "elements": [{"emoji": "↑", "titre": "monter", "texte": "1 case vers le haut"}, {"emoji": "↓", "titre": "descendre", "texte": "1 case vers le bas"}, {"emoji": "→", "titre": "à droite", "texte": "1 case vers la droite"}, {"emoji": "←", "titre": "à gauche", "texte": "1 case vers la gauche"}]},
+        {"visuel": "encadre", "style": "retenir", "texte": ["**1 flèche = 1 case.** Pour avancer de 3 cases, j'écris 3 flèches : → → →"]},
+        "# Le chemin de la souris",
+        {"visuel": "codage", "colonnes": 7, "lignes": 4, "depart": [6, 0], "objet": "🐭", "arrivee": {"case": [1, 1], "emoji": "🧀"}, "code": ["←", "↓", "↓", "←", "←", "↑", "←", "←"]},
+        "# Le robot-abeille rentre à la ruche",
+        {"visuel": "codage", "colonnes": 6, "lignes": 6, "depart": [4, 2], "objet": "🐝", "arrivee": {"case": [4, 4], "emoji": "🏠"}, "code": ["←", "←", "←", "↓", "↓", "→", "→", "→"], "decors": [{"case": [3, 0], "emoji": "🌼"}, {"case": [0, 2], "emoji": "🌼"}, {"case": [0, 4], "emoji": "🌼"}]},
+        "# 🎮 Pilote le lapin jusqu'à la carotte",
+        {"visuel": "codage", "colonnes": 6, "lignes": 5, "depart": [5, 4], "objet": "🐰", "arrivee": {"case": [1, 1], "emoji": "🥕"}}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "La flèche ↑ veut dire…", "choix": ["monter d'une case", "descendre d'une case", "aller à droite"], "niveau": 1, "dire": "La flèche qui monte veut dire…"},
+        {"type": "qcm", "question": "Pour descendre d'une case, j'écris…", "choix": ["↓", "↑", "→"], "niveau": 1, "lireChoix": false, "dire": "Pour descendre d'une case, quelle flèche j'écris ?"},
+        {"type": "qcm", "question": "Le robot fait → → →. Il avance de…", "choix": ["3 cases à droite", "3 cases à gauche", "1 case à droite"], "niveau": 2, "indice": "1 flèche = 1 case.", "dire": "Le robot fait trois flèches vers la droite. Il avance de combien ?"},
+        {"type": "vraifaux", "affirmation": "↑ ↑ ← : je monte de 2 cases, puis je vais 1 case à gauche.", "reponse": true, "niveau": 2, "dire": "Vrai ou faux : deux flèches vers le haut, puis une vers la gauche, c'est monter de deux cases puis aller une case à gauche."},
+        {"type": "qcm", "question": "Le fromage est juste au-dessus de la souris. Quel code ?", "choix": ["↑", "↓", "←"], "niveau": 2, "indice": "Au-dessus = en haut.", "lireChoix": false, "dire": "Le fromage est juste au-dessus de la souris. Quelle flèche ?"},
+        {"type": "qcm", "question": "L'abeille doit aller 2 cases à gauche. Quel code ?", "choix": ["← ←", "→ →", "←"], "niveau": 3, "indice": "Une flèche par case.", "lireChoix": false, "dire": "L'abeille doit aller deux cases à gauche. Quel code ?"}
+      ]
+    },
+
+    {
+      "id": "malo-reperer-3-formes",
+      "pour": ["malo"],
+      "matiere": "Maths",
+      "parcours": "Se repérer",
+      "etape": 3,
+      "titre": "Carrés, rectangles et règle",
+      "emoji": "📏",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Le carré et le rectangle",
+        {"visuel": "cartes", "elements": [{"emoji": "🟥", "titre": "Le carré", "texte": "4 côtés **de la même longueur** et 4 coins bien droits."}, {"emoji": "▬", "titre": "Le rectangle", "texte": "2 grands côtés, 2 petits côtés, et 4 coins bien droits."}]},
+        {"visuel": "encadre", "style": "attention", "texte": ["Un carré **penché** reste un carré ! Je compte les carreaux de chaque côté pour vérifier."]},
+        "# Mesurer avec la règle",
+        {"visuel": "encadre", "style": "retenir", "texte": ["Je place le début du trait sur le **0** de la règle, puis je lis le nombre au bout du trait : c'est sa longueur en **cm**."]},
+        {"visuel": "encadre", "style": "exemple", "texte": ["Un trait du **0** au **3** mesure **3 cm**.", "Un trait du **1** au **7** mesure **6 cm** (7 − 1) : mieux vaut partir du 0 !"]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Un carré a combien de côtés ?", "choix": ["4", "3", "5"], "niveau": 1},
+        {"type": "qcm", "question": "Les côtés d'un carré sont…", "choix": ["tous de la même longueur", "tous différents", "2 grands et 2 petits"], "niveau": 1},
+        {"type": "qcm", "question": "Un rectangle a…", "choix": ["2 grands côtés et 2 petits côtés", "3 côtés", "4 côtés pareils"], "niveau": 2},
+        {"type": "vraifaux", "affirmation": "Un carré penché reste un carré.", "reponse": true, "niveau": 2},
+        {"type": "qcm", "question": "Pour mesurer un trait, je commence au…", "choix": ["0 de la règle", "1 de la règle", "bout de la règle"], "niveau": 2, "dire": "Pour mesurer un trait, je commence à quel nombre de la règle ?"},
+        {"type": "qcm", "question": "Le trait va du 0 au 3. Il mesure…", "choix": ["3 cm", "4 cm", "0 cm"], "niveau": 2},
+        {"type": "qcm", "question": "Le trait va du 1 au 7. Il mesure…", "choix": ["6 cm", "7 cm", "8 cm"], "niveau": 3, "indice": "Compte les centimètres entre 1 et 7."}
+      ]
+    },
+
+    {
+      "id": "malo-problemes-1-ajouter-enlever",
+      "pour": ["malo"],
+      "matiere": "Maths",
+      "parcours": "Problèmes et calculs",
+      "etape": 1,
+      "titre": "Problèmes : j'ajoute, j'enlève",
+      "emoji": "🚌",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Le bus",
+        "Il y avait **20** enfants dans un bus. Au premier arrêt, **10** enfants sont montés. Au deuxième arrêt, **7** enfants sont descendus.",
+        {"visuel": "machine", "depart": 20, "operations": ["+ 10", "− 7"]},
+        {"visuel": "encadre", "style": "retenir", "texte": ["Des enfants **montent** → j'**ajoute** (+).", "Des enfants **descendent** → j'**enlève** (−)."]},
+        "# Les achats de Jules",
+        "Jules voudrait un livre à **18 €** et une trousse à **5 €**. Il a **20 €**.",
+        {"visuel": "encadre", "style": "exemple", "texte": ["Prix des deux : 18 + 5 = **23 €**.", "Il a 20 € : de 20 pour aller à 23, il manque **3 €**."]},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Calcule et tire au but !", "tirs": [{"texte": "8 enfants, 5 montent", "choix": ["13", "3"], "dire": "Il y a huit enfants dans le bus. Cinq montent. Combien sont-ils ?"}, {"texte": "12 enfants, 2 descendent", "choix": ["10", "14"], "dire": "Il y a douze enfants. Deux descendent. Combien en reste-t-il ?"}, {"texte": "20 + 10 = ?", "choix": ["30", "21"]}, {"texte": "30 − 7 = ?", "choix": ["23", "37"]}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Des enfants montent dans le bus. Je fais…", "choix": ["une addition (+)", "une soustraction (−)"], "niveau": 1},
+        {"type": "qcm", "question": "Il y a 10 enfants. 5 montent. Combien sont-ils ?", "choix": ["15", "5", "10"], "niveau": 1, "indice": "10, et encore 5."},
+        {"type": "qcm", "question": "Il y a 9 enfants. 3 descendent. Combien en reste-t-il ?", "choix": ["6", "12", "3"], "niveau": 2, "indice": "9 doigts, j'en baisse 3."},
+        {"type": "qcm", "question": "20 enfants, 10 montent, puis 7 descendent. Combien maintenant ?", "choix": ["23", "37", "13"], "niveau": 3, "indice": "D'abord 20 + 10 = 30, puis 30 − 7."},
+        {"type": "qcm", "question": "Un livre à 18 € et une trousse à 5 €. Ça coûte…", "choix": ["23 €", "13 €", "25 €"], "niveau": 2, "indice": "18 + 5 : 18 + 2 = 20, puis encore 3."},
+        {"type": "qcm", "question": "Jules a 20 €. Il lui faut 23 €. Il manque…", "choix": ["3 €", "43 €", "5 €"], "niveau": 3, "indice": "De 20, combien pour aller à 23 ?"}
+      ]
+    },
+
+    {
+      "id": "malo-problemes-2-paquets",
+      "pour": ["malo"],
+      "matiere": "Maths",
+      "parcours": "Problèmes et calculs",
+      "etape": 2,
+      "titre": "Problèmes : des paquets pareils",
+      "emoji": "🍪",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Plusieurs fois le même nombre",
+        {"visuel": "calcul", "exemples": [{"calcul": "4 + 4 + 4", "emoji": "🪙", "histoire": "Madame Tatin achète 3 parts de pizza à 4 euros l'une."}, {"calcul": "5 + 5 + 5 + 5", "emoji": "🍪", "histoire": "Sara a 4 paquets de biscuits. Il y a 5 biscuits dans chaque paquet."}]},
+        {"visuel": "encadre", "style": "astuce", "texte": ["3 parts à 4 € → j'écris **4** trois fois : 4 + 4 + 4 = **12 €**."]},
+        "# Partager en parts égales",
+        {"visuel": "encadre", "style": "exemple", "texte": ["3 enfants se partagent 18 images. Je distribue 1 image chacun, puis encore 1… → chacun en a **6** (6 + 6 + 6 = 18).", "20 élèves en équipes de 5 : 5 + 5 + 5 + 5 = 20 → **4 équipes**."]},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Calcule et tire au but !", "tirs": [{"texte": "2 paquets de 5 = ?", "choix": ["10", "7"], "dire": "Deux paquets de cinq biscuits, ça fait combien ?"}, {"texte": "3 parts à 4 € = ?", "choix": ["12 €", "7 €"], "dire": "Trois parts à quatre euros, ça fait combien ?"}, {"texte": "20 € = combien de mangas à 5 € ?", "choix": ["4", "5"], "dire": "Avec vingt euros, combien de mangas à cinq euros ?"}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "3 parts de pizza à 4 € l'une. Combien ça coûte ?", "choix": ["12 €", "7 €", "4 €"], "niveau": 1, "indice": "4 + 4 + 4"},
+        {"type": "qcm", "question": "4 paquets de 5 biscuits. Combien de biscuits ?", "choix": ["20", "9", "15"], "niveau": 2, "indice": "5 + 5 + 5 + 5"},
+        {"type": "qcm", "question": "3 colliers de 6 perles. Combien de perles ?", "choix": ["18", "9", "12"], "niveau": 2, "indice": "6 + 6 + 6"},
+        {"type": "qcm", "question": "Un manga coûte 5 €. Ali a 20 €. Combien de mangas ?", "choix": ["4", "5", "15"], "niveau": 3, "indice": "5, 10, 15, 20 : compte les mangas."},
+        {"type": "qcm", "question": "3 enfants se partagent 18 images. Chacun en aura…", "choix": ["6", "3", "15"], "niveau": 3, "indice": "6 + 6 + 6 = ?"},
+        {"type": "qcm", "question": "20 élèves, des équipes de 5. Combien d'équipes ?", "choix": ["4", "5", "15"], "niveau": 3, "indice": "5, 10, 15, 20 : compte les équipes."}
+      ]
+    },
+
+    {
+      "id": "malo-calcul-chrono-1",
+      "pour": ["malo"],
+      "matiere": "Maths",
+      "parcours": "Problèmes et calculs",
+      "etape": 3,
+      "titre": "Calcul chrono : les petits nombres",
+      "emoji": "⏱️",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Les calculs à connaître par cœur",
+        {"visuel": "tuiles", "elements": ["7 + 1 = **8**", "8 + 2 = **10**", "9 + 1 = **10**", "6 + 4 = **10**", "7 + 7 = **14**", "9 + 9 = **18**", "9 + 5 = **14**", "8 + 7 = **15**", "8 + 9 = **17**"]},
+        {"visuel": "encadre", "style": "astuce", "texte": ["Pour **8 + 5** : je fais d'abord 8 + 2 = 10, puis encore 3 → **13**.", "Pour **8 + ? = 13** : je compte de 8 jusqu'à 13 → **5**."]},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Calcule vite !", "tirs": [{"texte": "5 + 3 = ?", "choix": ["8", "9"]}, {"texte": "9 − 5 = ?", "choix": ["4", "14"]}, {"texte": "7 + 7 = ?", "choix": ["14", "12"]}, {"texte": "8 + ? = 13", "choix": ["5", "6"]}, {"texte": "? + 9 = 12", "choix": ["3", "21"]}, {"texte": "8 − 3 = ?", "choix": ["5", "11"]}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "8 + 2 = ?", "choix": ["10", "6", "9"], "niveau": 1},
+        {"type": "qcm", "question": "5 + 3 = ?", "choix": ["8", "2", "7"], "niveau": 1},
+        {"type": "qcm", "question": "9 + 5 = ?", "choix": ["14", "4", "13"], "niveau": 2, "indice": "9 + 1 = 10, puis encore 4."},
+        {"type": "qcm", "question": "8 + 9 = ?", "choix": ["17", "16", "1"], "niveau": 2, "indice": "8 + 2 = 10, puis encore 7."},
+        {"type": "qcm", "question": "7 + ? = 11", "choix": ["4", "18", "3"], "niveau": 3, "indice": "Compte de 7 jusqu'à 11 sur tes doigts."},
+        {"type": "qcm", "question": "? + 8 = 16", "choix": ["8", "24", "9"], "niveau": 3, "indice": "C'est un double !"}
+      ]
+    },
+
+    {
+      "id": "malo-calcul-chrono-2",
+      "pour": ["malo"],
+      "matiere": "Maths",
+      "parcours": "Problèmes et calculs",
+      "etape": 4,
+      "titre": "Calcul chrono : les grands nombres",
+      "emoji": "🚀",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# J'ajoute un petit nombre à un grand",
+        {"visuel": "dizaines", "exemples": ["42 + 5", "60 + 4", "62 + 10", "21 + 43"]},
+        {"visuel": "encadre", "style": "astuce", "texte": ["**42 + 5** : les dizaines ne bougent pas, j'ajoute les unités : 2 + 5 = 7 → **47**.", "**3 + 58** = **58 + 3** : je commence par le plus grand nombre !"]},
+        {"visuel": "encadre", "style": "attention", "texte": ["**25 + 7** : 5 + 7 = 12, ça dépasse 10 → une dizaine de plus : **32**."]},
+        "# ⚽ À toi de jouer !",
+        {"visuel": "tirs", "titre": "Calcule vite !", "tirs": [{"texte": "60 + 4 = ?", "choix": ["64", "10"]}, {"texte": "75 + 3 = ?", "choix": ["78", "105"]}, {"texte": "50 + 30 = ?", "choix": ["80", "53"]}, {"texte": "40 + 7 = ?", "choix": ["47", "11"]}, {"texte": "? + 1 = 80", "choix": ["79", "81"]}, {"texte": "55 + ? = 65", "choix": ["10", "1"]}]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "10 + 7 = ?", "choix": ["17", "70", "3"], "niveau": 1},
+        {"type": "qcm", "question": "30 + 30 = ?", "choix": ["60", "33", "90"], "niveau": 1, "indice": "3 barres + 3 barres."},
+        {"type": "qcm", "question": "42 + 5 = ?", "choix": ["47", "92", "45"], "niveau": 2, "indice": "J'ajoute aux unités : 2 + 5."},
+        {"type": "qcm", "question": "3 + 58 = ?", "choix": ["61", "88", "51"], "niveau": 2, "indice": "Commence par 58, puis avance de 3."},
+        {"type": "qcm", "question": "21 + 43 = ?", "choix": ["64", "46", "63"], "niveau": 3, "indice": "Dizaines : 2 + 4. Unités : 1 + 4."},
+        {"type": "qcm", "question": "28 + ? = 38", "choix": ["10", "1", "18"], "niveau": 3, "indice": "Le chiffre des dizaines a avancé de 1."}
+      ]
+    },
+
+    {
+      "id": "malo-donnees-diagramme",
+      "pour": ["malo"],
+      "matiere": "Maths",
+      "parcours": "Problèmes et calculs",
+      "etape": 5,
+      "titre": "Tableaux et diagrammes",
+      "emoji": "📊",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# Lire un diagramme en barres",
+        "Une maîtresse a demandé à ses élèves leur **animal préféré**. Chaque barre montre **combien d'élèves** l'ont choisi.",
+        {"visuel": "barres", "elements": [{"label": "🐱 Chat", "valeur": 6}, {"label": "🐟 Poisson rouge", "valeur": 4}, {"label": "🐶 Chien", "valeur": 8}, {"label": "🐰 Lapin", "valeur": 9}]},
+        {"visuel": "encadre", "style": "retenir", "texte": ["La barre la **plus longue** = l'animal le **plus** aimé. La plus **courte** = le **moins** aimé.", "Pour savoir combien d'élèves en tout, j'**ajoute** toutes les barres : 6 + 4 + 8 + 9 = **27**."]},
+        "# Compter avec des bâtons",
+        {"visuel": "encadre", "style": "exemple", "texte": ["Chaque élève fait un bâton : **|||** = 3 élèves. Je compte les bâtons pour remplir le tableau."]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Combien d'élèves préfèrent le chat ?", "choix": ["6", "4", "8"], "niveau": 1, "indice": "Regarde le bout de la barre du chat."},
+        {"type": "qcm", "question": "Quel animal les élèves préfèrent-ils le plus ?", "choix": ["🐰 le lapin", "🐶 le chien", "🐱 le chat"], "niveau": 1, "indice": "Cherche la barre la plus longue."},
+        {"type": "qcm", "question": "Quel animal les élèves préfèrent-ils le moins ?", "choix": ["🐟 le poisson rouge", "🐱 le chat", "🐰 le lapin"], "niveau": 2, "indice": "Cherche la barre la plus courte."},
+        {"type": "qcm", "question": "Combien d'élèves préfèrent le chien ?", "choix": ["8", "9", "6"], "niveau": 2},
+        {"type": "qcm", "question": "|||| : combien de bâtons ?", "choix": ["4", "3", "5"], "niveau": 2, "dire": "Compte les bâtons. Combien y en a-t-il ?"},
+        {"type": "qcm", "question": "Combien y a-t-il d'élèves dans la classe ? (6 + 4 + 8 + 9)", "choix": ["27", "26", "17"], "niveau": 3, "indice": "6 + 4 = 10, 8 + 9 = 17, puis 10 + 17."}
+      ]
+    },
+
+    {
+      "id": "malo-masses-balance",
+      "pour": ["malo"],
+      "matiere": "Maths",
+      "parcours": "Problèmes et calculs",
+      "etape": 6,
+      "titre": "Plus lourd, plus léger",
+      "emoji": "⚖️",
+      "ajoutee": "2026-11-07",
+      "assistant": true,
+      "melanger": false,
+      "fiche": [
+        "# La balance",
+        {"visuel": "balance", "gauche": {"label": "dinosaure", "emoji": "🦖", "masse": 300}, "droite": {"label": "voiture", "emoji": "🚗", "masse": 150}, "unite": "g"},
+        {"visuel": "encadre", "style": "retenir", "texte": ["Le plateau qui **descend** porte l'objet le **plus lourd**.", "Si la balance est **bien droite**, les deux objets ont **la même masse**."]},
+        "# Ranger des légumes",
+        {"visuel": "encadre", "style": "exemple", "texte": ["Le chou-fleur A est plus lourd que l'artichaut B. Le potiron C est plus lourd que le chou-fleur A.", "Du plus léger au plus lourd : **B, A, C**."]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "Le plateau qui descend porte l'objet le plus…", "choix": ["lourd", "léger"], "niveau": 1, "indice": "Ce qui est lourd tire vers le bas."},
+        {"type": "vraifaux", "affirmation": "Si la balance est bien droite, les deux objets ont la même masse.", "reponse": true, "niveau": 1},
+        {"type": "qcm", "question": "La poupée fait descendre son plateau. Elle est…", "choix": ["plus lourde", "plus légère", "pareille"], "niveau": 2},
+        {"type": "qcm", "question": "Le camion monte, la chenille descend. Le plus lourd, c'est…", "choix": ["la chenille", "le camion"], "niveau": 2, "indice": "Qui fait descendre son plateau ?"},
+        {"type": "ordre", "consigne": "A est plus lourd que B, C est plus lourd que A. Range du plus léger au plus lourd.", "elements": ["B", "A", "C"], "niveau": 3, "dire": "A est plus lourd que B. C est plus lourd que A. Range-les du plus léger au plus lourd."}
+      ]
+    },
+
+    {
+      "id": "tom-repertoire-additif",
+      "pour": ["tom"],
+      "matiere": "Maths",
+      "titre": "Le répertoire additif",
+      "emoji": "➕",
+      "ajoutee": "2026-11-07",
+      "fiche": [
+        "# Les résultats à connaître par cœur",
+        "Toutes les additions de deux nombres de 0 à 9 : celles qui font 10, 11, 12… Avec ce répertoire, tu peux **additionner**, **décomposer**, trouver un **complément** et **soustraire**.",
+        {"visuel": "tuiles", "titre": "Les doubles", "elements": ["1 + 1 = **2**", "2 + 2 = **4**", "3 + 3 = **6**", "4 + 4 = **8**", "5 + 5 = **10**", "6 + 6 = **12**", "7 + 7 = **14**", "8 + 8 = **16**", "9 + 9 = **18**"]},
+        {"visuel": "tuiles", "titre": "Les façons de faire 10", "elements": ["1 + 9", "2 + 8", "3 + 7", "4 + 6", "5 + 5", "6 + 4", "7 + 3", "8 + 2", "9 + 1"]},
+        "# Ce que le répertoire permet",
+        {"visuel": "cartes", "elements": [{"emoji": "➕", "titre": "Additionner", "texte": "8 + 5 = **13** ; 5 + 9 = **14**"}, {"emoji": "✂️", "titre": "Décomposer", "texte": "10 = 2 + 8 = 1 + 9 = 3 + 7"}, {"emoji": "🧩", "titre": "Trouver un complément", "texte": "8 + … = 13 → **5** (de 8 à 13, il y a 5)"}, {"emoji": "➖", "titre": "Soustraire", "texte": "8 + 5 = 13, donc **13 − 5 = 8**"}]},
+        {"visuel": "encadre", "style": "astuce", "texte": ["Pour avoir moins de résultats à apprendre : **5 + 9, c'est comme 9 + 5**. L'ordre ne change pas le résultat !"]}
+      ],
+      "activites": [
+        {"type": "qcm", "question": "8 + 5 = ?", "choix": ["13", "12", "14", "3"]},
+        {"type": "saisie", "question": "5 + 9 = ?", "reponse": "14", "explication": "5 + 9 = 9 + 5 = 14 : 9 + 1 = 10, puis encore 4."},
+        {"type": "vraifaux", "affirmation": "5 + 9 donne le même résultat que 9 + 5.", "reponse": true, "explication": "L'ordre ne change pas le résultat d'une addition."},
+        {"type": "trous", "texte": "10 = 2 + [8] = 3 + [7] = 1 + [9]", "intrus": ["6", "10"]},
+        {"type": "saisie", "question": "8 + … = 13", "reponse": "5", "explication": "De 8 à 13, il y a 5 : 8 + 5 = 13."},
+        {"type": "qcm", "question": "8 + 5 = 13, donc 13 − 5 = ?", "choix": ["8", "18", "5", "7"], "explication": "La soustraction « défait » l'addition : 13 − 5 = 8."},
+        {"type": "paires", "consigne": "Relie chaque double à son résultat", "paires": [["6 + 6", "12"], ["7 + 7", "14"], ["8 + 8", "16"], ["9 + 9", "18"]]},
+        {"type": "qcm", "question": "Quelle addition fait 11 ?", "choix": ["4 + 7", "4 + 6", "5 + 5", "3 + 9"]},
+        {"type": "vraifaux", "affirmation": "6 + 7 = 12", "reponse": false, "explication": "6 + 7 = 13 (6 + 6 = 12, plus 1)."},
+        {"type": "carte", "recto": "9 + 7", "verso": "16"}
       ]
     }
   ]

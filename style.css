@@ -1280,3 +1280,18 @@ body.lecture-facile .carte-info b { letter-spacing: 0; overflow-wrap: anywhere; 
 .dino-partie.trouve > *:not(.dino-dents):not(.dino-pupille) { fill: #a3e635; }
 .dino-griffes.actif > *, .dino-griffes.trouve > * { fill: none; stroke: #facc15; stroke-width: 4; }
 .dino-partie.actif, .dino-partie.trouve { filter: drop-shadow(0 0 6px #facc15); }
+
+/* CODER UN DÉPLACEMENT (v1.18.0) : quadrillage, bande de flèches, manette */
+.cod { text-align: center; }
+.cod-grille { display: grid; gap: 2px; width: 100%; box-sizing: border-box; max-width: 360px; margin: 10px auto; padding: 2px; background: #94a3b8; border-radius: 8px; }
+.cod-case { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; background: #fff; font-size: 1.6rem; border-radius: 3px; }
+.cod-case.ici { background: #fef3c7; animation: pop .3s; }
+.cod-code { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; min-height: 40px; }
+.cod-fleche { min-width: 34px; height: 36px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--clair); border-radius: 8px; background: #fff; font-size: 1.3rem; font-weight: 900; color: var(--fonce); }
+.cod-fleche.depart { border-color: transparent; background: none; }
+.cod-fleche.actif { background: #facc15; transform: scale(1.12); }
+.cod-fleche.fait { background: #dcfce7; }
+.cod-manette { display: grid; grid-template-columns: repeat(5, 54px); justify-content: center; gap: 6px; margin: 8px 0; }
+.cod-manette[hidden] { display: none; }
+.cod-btn { height: 54px; font-size: 1.6rem; font-weight: 900; border: 3px solid var(--clair); border-radius: 14px; background: #fff; color: var(--fonce); }
+.cod-btn.efface { color: var(--doux); }

@@ -1,0 +1,675 @@
+{
+ "lots": [
+  {
+   "nom": "malo-maths-lot0",
+   "prises": [
+    "https://elevenlabsusercontent.com/database/workspace/0f93a4757fe54cd7b9d7d5acd191952b/content_generation/Y9beX8DAh0JBpMZ5vEW3/i1tgf5FZkLaANAc0rCPb/content.mp3?Expires=1794063600&KeyName=assets-cdn-key-1&Signature=6RPshuUpiht4bua9BZ1i9_TeGu0=",
+    "https://elevenlabsusercontent.com/database/workspace/0f93a4757fe54cd7b9d7d5acd191952b/content_generation/Ssnplt316slVess95m9L/tJMZ2pQUb9GHXkNgBAzs/content.mp3?Expires=1794063600&KeyName=assets-cdn-key-1&Signature=_2x0oKVDdimKBr2dtisNbxel_E8="
+   ],
+   "phrases": [
+    {
+     "texte": "La voiture tourne vers la gauche !",
+     "h": "4ea2503e"
+    },
+    {
+     "texte": "La voiture tourne vers la droite !",
+     "h": "8676386c"
+    },
+    {
+     "texte": "Quelle flèche va à droite ?",
+     "h": "ae79baae"
+    },
+    {
+     "texte": "Quelle flèche va à gauche ?",
+     "h": "eaa6891c"
+    },
+    {
+     "texte": "Quelle flèche montre une voiture qui tourne à droite ?",
+     "h": "1f4c544c"
+    },
+    {
+     "texte": "Quelle flèche montre une voiture qui tourne à gauche ?",
+     "h": "c161732a"
+    },
+    {
+     "texte": "Quelle flèche va vers la droite ?",
+     "h": "1e6fd082"
+    },
+    {
+     "texte": "Quelle flèche va vers la gauche ?",
+     "h": "288fcbe8"
+    },
+    {
+     "texte": "La voiture va tout droit puis tourne à droite. Quelle flèche ?",
+     "h": "c29cbe49"
+    },
+    {
+     "texte": "La voiture va tout droit puis tourne à gauche. Quelle flèche ?",
+     "h": "384b8807"
+    },
+    {
+     "texte": "Quand un ami est face à moi, sa main droite est en face de ma main gauche.",
+     "h": "8f890ad0"
+    },
+    {
+     "texte": "Pour savoir avec quelle main un enfant dessiné tient son crayon, je...",
+     "h": "e5d2e15b"
+    },
+    {
+     "texte": "me mets à sa place",
+     "h": "0065e5f6"
+    },
+    {
+     "texte": "regarde ma main",
+     "h": "a2c1429c"
+    },
+    {
+     "texte": "ferme les yeux",
+     "h": "a8c7ead5"
+    },
+    {
+     "texte": "La flèche qui monte veut dire...",
+     "h": "a03434cf"
+    },
+    {
+     "texte": "Pour descendre d'une case, quelle flèche j'écris ?",
+     "h": "d14d917f"
+    },
+    {
+     "texte": "Le robot fait trois flèches vers la droite. Il avance de combien ?",
+     "h": "136ef395"
+    },
+    {
+     "texte": "Vrai ou faux : deux flèches vers le haut, puis une vers la gauche, c'est monter de deux cases puis aller une case à gauche.",
+     "h": "aca4e5b7"
+    },
+    {
+     "texte": "Le fromage est juste au-dessus de la souris. Quelle flèche ?",
+     "h": "9460173b"
+    },
+    {
+     "texte": "L'abeille doit aller deux cases à gauche. Quel code ?",
+     "h": "8ac6e9a2"
+    },
+    {
+     "texte": "Un carré a combien de côtés ?",
+     "h": "9d773891"
+    },
+    {
+     "texte": "Les côtés d'un carré sont...",
+     "h": "a8f436f2"
+    },
+    {
+     "texte": "tous de la même longueur",
+     "h": "80fca1a7"
+    },
+    {
+     "texte": "tous différents",
+     "h": "a2686a87"
+    },
+    {
+     "texte": "2 grands et 2 petits",
+     "h": "a5b3e42e"
+    },
+    {
+     "texte": "Un rectangle a...",
+     "h": "a8a4a9c0"
+    },
+    {
+     "texte": "2 grands côtés et 2 petits côtés",
+     "h": "47502c06"
+    },
+    {
+     "texte": "3 côtés",
+     "h": "7acae717"
+    },
+    {
+     "texte": "4 côtés pareils",
+     "h": "79b2ee76"
+    },
+    {
+     "texte": "Un carré penché reste un carré.",
+     "h": "44d3b616"
+    },
+    {
+     "texte": "Pour mesurer un trait, je commence à quel nombre de la règle ?",
+     "h": "849334c8"
+    },
+    {
+     "texte": "Le trait va du 0 au 3. Il mesure...",
+     "h": "7d605a63"
+    },
+    {
+     "texte": "3 cm",
+     "h": "c5c2f118"
+    },
+    {
+     "texte": "4 cm",
+     "h": "d3182bdf"
+    },
+    {
+     "texte": "0 cm",
+     "h": "139b66fb"
+    },
+    {
+     "texte": "Le trait va du 1 au 7. Il mesure...",
+     "h": "799e844a"
+    },
+    {
+     "texte": "6 cm",
+     "h": "bc76c249"
+    },
+    {
+     "texte": "7 cm",
+     "h": "fdb0827c"
+    },
+    {
+     "texte": "8 cm",
+     "h": "c59b7bd3"
+    },
+    {
+     "texte": "Il y a huit enfants dans le bus. Cinq montent. Combien sont-ils ?",
+     "h": "d7038c31"
+    },
+    {
+     "texte": "Il y a douze enfants. Deux descendent. Combien en reste-t-il ?",
+     "h": "087ae07c"
+    },
+    {
+     "texte": "20 plus 10 égale ?",
+     "h": "bbd51bc6"
+    },
+    {
+     "texte": "30 moins 7 égale ?",
+     "h": "9d0c027d"
+    },
+    {
+     "texte": "Des enfants montent dans le bus. Je fais...",
+     "h": "dc200adc"
+    },
+    {
+     "texte": "une addition (+)",
+     "h": "8798c9cd"
+    },
+    {
+     "texte": "une soustraction (−)",
+     "h": "dd48d6b8"
+    },
+    {
+     "texte": "Il y a 10 enfants. 5 montent. Combien sont-ils ?",
+     "h": "d3bfa81d"
+    },
+    {
+     "texte": "Il y a 9 enfants. 3 descendent. Combien en reste-t-il ?",
+     "h": "26581b99"
+    },
+    {
+     "texte": "20 enfants, 10 montent, puis 7 descendent. Combien maintenant ?",
+     "h": "60a27f04"
+    },
+    {
+     "texte": "23",
+     "h": "6c6b9e44"
+    },
+    {
+     "texte": "37",
+     "h": "68695961"
+    },
+    {
+     "texte": "13",
+     "h": "546db713"
+    },
+    {
+     "texte": "Un livre à 18 € et une trousse à 5 €. Ça coûte...",
+     "h": "7065728a"
+    },
+    {
+     "texte": "23 €",
+     "h": "d1b129dc"
+    }
+   ]
+  },
+  {
+   "nom": "malo-maths-lot1",
+   "prises": [
+    "https://elevenlabsusercontent.com/database/workspace/0f93a4757fe54cd7b9d7d5acd191952b/content_generation/yGyKVXj4lnKA4tM3fTZy/DIf5pnGMC0jhXCrEr5qE/content.mp3?Expires=1794063600&KeyName=assets-cdn-key-1&Signature=mkMOc6UcMg1Yp5kTGC72t14CofM=",
+    "https://elevenlabsusercontent.com/database/workspace/0f93a4757fe54cd7b9d7d5acd191952b/content_generation/zmAkNSJjYIe0Uan9hb2u/cNCp4g9MXpHZxV9cS8lq/content.mp3?Expires=1794063600&KeyName=assets-cdn-key-1&Signature=EDiqTF_TIwWn7gIU5N6u0xwJrXo="
+   ],
+   "phrases": [
+    {
+     "texte": "13 €",
+     "h": "05b4e5ff"
+    },
+    {
+     "texte": "25 €",
+     "h": "1f24d776"
+    },
+    {
+     "texte": "Jules a 20 €. Il lui faut 23 €. Il manque...",
+     "h": "fbcda7c9"
+    },
+    {
+     "texte": "3 €",
+     "h": "a54495d4"
+    },
+    {
+     "texte": "43 €",
+     "h": "95a9b816"
+    },
+    {
+     "texte": "5 €",
+     "h": "442fd8ae"
+    },
+    {
+     "texte": "Madame Tatin achète 3 parts de pizza à 4 euros l'une.",
+     "h": "fa6e888c"
+    },
+    {
+     "texte": "4 plus 4 plus 4 égale 12",
+     "h": "e2f9a09b"
+    },
+    {
+     "texte": "Sara a 4 paquets de biscuits. Il y a 5 biscuits dans chaque paquet.",
+     "h": "c947411a"
+    },
+    {
+     "texte": "5 plus 5 plus 5 plus 5 égale 20",
+     "h": "72ea7d2c"
+    },
+    {
+     "texte": "Deux paquets de cinq biscuits, ça fait combien ?",
+     "h": "f4741d15"
+    },
+    {
+     "texte": "Trois parts à quatre euros, ça fait combien ?",
+     "h": "d0a6df58"
+    },
+    {
+     "texte": "Avec vingt euros, combien de mangas à cinq euros ?",
+     "h": "eea535e8"
+    },
+    {
+     "texte": "3 parts de pizza à 4 € l'une. Combien ça coûte ?",
+     "h": "e0cd7b91"
+    },
+    {
+     "texte": "12 €",
+     "h": "3ea4b880"
+    },
+    {
+     "texte": "7 €",
+     "h": "1581d7c0"
+    },
+    {
+     "texte": "4 €",
+     "h": "bdc6b1f5"
+    },
+    {
+     "texte": "4 paquets de 5 biscuits. Combien de biscuits ?",
+     "h": "a94ca919"
+    },
+    {
+     "texte": "20",
+     "h": "6f6ba2fd"
+    },
+    {
+     "texte": "9",
+     "h": "c9a2f14a"
+    },
+    {
+     "texte": "3 colliers de 6 perles. Combien de perles ?",
+     "h": "3e6fcd7b"
+    },
+    {
+     "texte": "Un manga coûte 5 €. Ali a 20 €. Combien de mangas ?",
+     "h": "22225b2f"
+    },
+    {
+     "texte": "3 enfants se partagent 18 images. Chacun en aura...",
+     "h": "49ac17e2"
+    },
+    {
+     "texte": "20 élèves, des équipes de 5. Combien d'équipes ?",
+     "h": "24dc53fd"
+    },
+    {
+     "texte": "5 plus 3 égale ?",
+     "h": "d4b50d63"
+    },
+    {
+     "texte": "9 moins 5 égale ?",
+     "h": "83eea229"
+    },
+    {
+     "texte": "7 plus 7 égale ?",
+     "h": "34836fc5"
+    },
+    {
+     "texte": "8 plus ? égale 13",
+     "h": "b06641f3"
+    },
+    {
+     "texte": "? plus 9 égale 12",
+     "h": "dd93a0bd"
+    },
+    {
+     "texte": "8 moins 3 égale ?",
+     "h": "f568a49e"
+    },
+    {
+     "texte": "8 plus 2 égale ?",
+     "h": "06986d61"
+    },
+    {
+     "texte": "8",
+     "h": "caa2f2dd"
+    },
+    {
+     "texte": "7",
+     "h": "bba2db40"
+    },
+    {
+     "texte": "9 plus 5 égale ?",
+     "h": "669a58e1"
+    },
+    {
+     "texte": "14",
+     "h": "596dbef2"
+    },
+    {
+     "texte": "8 plus 9 égale ?",
+     "h": "7893adce"
+    },
+    {
+     "texte": "16",
+     "h": "576dbbcc"
+    },
+    {
+     "texte": "7 plus ? égale 11",
+     "h": "b8ce0f66"
+    },
+    {
+     "texte": "? plus 8 égale 16",
+     "h": "8f8433c6"
+    },
+    {
+     "texte": "24",
+     "h": "6b6b9cb1"
+    },
+    {
+     "texte": "quarante-deux : quatre dizaines et deux unités",
+     "h": "0d30b2d4"
+    },
+    {
+     "texte": "Les dizaines : quatre plus zéro, ça fait quatre dizaines",
+     "h": "a806dc23"
+    },
+    {
+     "texte": "quarante-deux plus cinq égale quarante-sept",
+     "h": "a00ef1cd"
+    },
+    {
+     "texte": "soixante : six dizaines et zéro unité",
+     "h": "af24115d"
+    },
+    {
+     "texte": "plus quatre : zéro dizaine et quatre unités",
+     "h": "dea9f8a6"
+    },
+    {
+     "texte": "Les dizaines : six plus zéro, ça fait six dizaines",
+     "h": "d0da5f0f"
+    },
+    {
+     "texte": "Les unités : zéro plus quatre, ça fait quatre unités",
+     "h": "d3a7523d"
+    },
+    {
+     "texte": "soixante plus quatre égale soixante-quatre",
+     "h": "4da4f62d"
+    },
+    {
+     "texte": "soixante-deux : six dizaines et deux unités",
+     "h": "4da95402"
+    },
+    {
+     "texte": "Les dizaines : six plus un, ça fait sept dizaines",
+     "h": "c43a9fed"
+    },
+    {
+     "texte": "Les unités : deux plus zéro, ça fait deux unités",
+     "h": "d3569a31"
+    },
+    {
+     "texte": "soixante-deux plus dix égale soixante-douze",
+     "h": "212c3138"
+    },
+    {
+     "texte": "vingt et un : deux dizaines et une unité",
+     "h": "7bc7538d"
+    },
+    {
+     "texte": "plus quarante-trois : quatre dizaines et trois unités",
+     "h": "bd2baaa8"
+    },
+    {
+     "texte": "Les dizaines : deux plus quatre, ça fait six dizaines",
+     "h": "7ac41f04"
+    }
+   ]
+  },
+  {
+   "nom": "malo-maths-lot2",
+   "prises": [
+    "https://elevenlabsusercontent.com/database/workspace/0f93a4757fe54cd7b9d7d5acd191952b/content_generation/cAZSKIEHegfH1CTnzksI/78efD2gkf80tcmarg1Mv/content.mp3?Expires=1794063600&KeyName=assets-cdn-key-1&Signature=U6neuqYjSqmX021h5oVn3qqytqQ=",
+    "https://elevenlabsusercontent.com/database/workspace/0f93a4757fe54cd7b9d7d5acd191952b/content_generation/cesrned0jKO6n71x8Rt8/82WNYzBNKtQoHyUdtQsB/content.mp3?Expires=1794063600&KeyName=assets-cdn-key-1&Signature=QBU4EqwQbuGbZz6RzqqVVDO8rlo="
+   ],
+   "phrases": [
+    {
+     "texte": "Les unités : un plus trois, ça fait quatre unités",
+     "h": "c75aa496"
+    },
+    {
+     "texte": "vingt et un plus quarante-trois égale soixante-quatre",
+     "h": "524cb7cf"
+    },
+    {
+     "texte": "60 plus 4 égale ?",
+     "h": "42e7778b"
+    },
+    {
+     "texte": "75 plus 3 égale ?",
+     "h": "79b326da"
+    },
+    {
+     "texte": "50 plus 30 égale ?",
+     "h": "73c9d445"
+    },
+    {
+     "texte": "40 plus 7 égale ?",
+     "h": "f5b9990a"
+    },
+    {
+     "texte": "? plus 1 égale 80",
+     "h": "b1a3d9ce"
+    },
+    {
+     "texte": "55 plus ? égale 65",
+     "h": "9a57e406"
+    },
+    {
+     "texte": "10 plus 7 égale ?",
+     "h": "f1fc3687"
+    },
+    {
+     "texte": "70",
+     "h": "d15f7150"
+    },
+    {
+     "texte": "30 plus 30 égale ?",
+     "h": "bfde55e7"
+    },
+    {
+     "texte": "60",
+     "h": "d761b959"
+    },
+    {
+     "texte": "33",
+     "h": "6c695fad"
+    },
+    {
+     "texte": "90",
+     "h": "e582230e"
+    },
+    {
+     "texte": "42 plus 5 égale ?",
+     "h": "3cde48e6"
+    },
+    {
+     "texte": "47",
+     "h": "e866514a"
+    },
+    {
+     "texte": "92",
+     "h": "e3821fe8"
+    },
+    {
+     "texte": "45",
+     "h": "e6664e24"
+    },
+    {
+     "texte": "3 plus 58 égale ?",
+     "h": "fe471651"
+    },
+    {
+     "texte": "61",
+     "h": "d661b7c6"
+    },
+    {
+     "texte": "88",
+     "h": "e3845e7f"
+    },
+    {
+     "texte": "51",
+     "h": "de6402f5"
+    },
+    {
+     "texte": "21 plus 43 égale ?",
+     "h": "54793247"
+    },
+    {
+     "texte": "64",
+     "h": "db61bfa5"
+    },
+    {
+     "texte": "46",
+     "h": "e96652dd"
+    },
+    {
+     "texte": "63",
+     "h": "d461b4a0"
+    },
+    {
+     "texte": "28 plus ? égale 38",
+     "h": "71bad284"
+    },
+    {
+     "texte": "Combien d'élèves préfèrent le chat ?",
+     "h": "d2e2197a"
+    },
+    {
+     "texte": "Quel animal les élèves préfèrent-ils le plus ?",
+     "h": "c0f7db88"
+    },
+    {
+     "texte": "le lapin",
+     "h": "907d7cf2"
+    },
+    {
+     "texte": "le chien",
+     "h": "14143639"
+    },
+    {
+     "texte": "le chat",
+     "h": "3d4c3d42"
+    },
+    {
+     "texte": "Quel animal les élèves préfèrent-ils le moins ?",
+     "h": "8e78cc66"
+    },
+    {
+     "texte": "le poisson rouge",
+     "h": "9306be35"
+    },
+    {
+     "texte": "Combien d'élèves préfèrent le chien ?",
+     "h": "031b5fe3"
+    },
+    {
+     "texte": "Compte les bâtons. Combien y en a-t-il ?",
+     "h": "2fa040e0"
+    },
+    {
+     "texte": "Combien y a-t-il d'élèves dans la classe ? (6 plus 4 plus 8 plus 9)",
+     "h": "e6af5d22"
+    },
+    {
+     "texte": "27",
+     "h": "686b97f8"
+    },
+    {
+     "texte": "26",
+     "h": "696b998b"
+    },
+    {
+     "texte": "Le plateau qui descend porte l'objet le plus...",
+     "h": "68c16d49"
+    },
+    {
+     "texte": "lourd",
+     "h": "b44bce2b"
+    },
+    {
+     "texte": "léger",
+     "h": "9290bf79"
+    },
+    {
+     "texte": "Si la balance est bien droite, les deux objets ont la même masse.",
+     "h": "6202da49"
+    },
+    {
+     "texte": "La poupée fait descendre son plateau. Elle est...",
+     "h": "537d00d6"
+    },
+    {
+     "texte": "plus lourde",
+     "h": "646a1dac"
+    },
+    {
+     "texte": "plus légère",
+     "h": "54fcbdaa"
+    },
+    {
+     "texte": "pareille",
+     "h": "5c751db3"
+    },
+    {
+     "texte": "Le camion monte, la chenille descend. Le plus lourd, c'est...",
+     "h": "e058dcb8"
+    },
+    {
+     "texte": "la chenille",
+     "h": "482dcc66"
+    },
+    {
+     "texte": "le camion",
+     "h": "83ed8fa7"
+    },
+    {
+     "texte": "A est plus lourd que B. C est plus lourd que A. Range-les du plus léger au plus lourd.",
+     "h": "9df60135"
+    }
+   ]
+  }
+ ]
+}
