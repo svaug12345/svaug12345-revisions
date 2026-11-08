@@ -114,6 +114,8 @@ Tous acceptent `"titre"` et `"legende"`, et leurs textes acceptent le **gras** e
 | `dizaines` | CP (Malo) : nombres en barres de 10 + cubes ; additions étape par étape (dizaines ensemble, puis unités), voix en lettres | `{"visuel":"dizaines","exemples":["34","23 + 14"]}` |
 | `imagier` | Maternelle (Elouan) : grandes images à toucher, mot + petite phrase lus ; « 👏 En morceaux » dit les syllabes | `{"visuel":"imagier","mots":[{"emoji":"🦕","mot":"le diplodocus","phrase":"…","syllabes":["di","plo","do","cus"]}]}` |
 | `corpsdino` | Maternelle : dinosaure dessiné, on touche une partie (tête, cou, queue…) pour entendre son nom ; « 🎯 Jeu » : la voix demande une partie à trouver | `{"visuel":"corpsdino"}` |
+| `fraction` | Fractions (Titouan) : unité en barre ou en pizza 🍕, boutons « en combien de parts ? », on touche les parts pour les colorier ; fraction écrite en étage (numérateur orange, dénominateur violet) et lue en lettres | `{"visuel":"fraction","forme":"barre","parts":5,"grisees":1,"choix":[2,3,4,5,6,10]}` |
+| `droites` | Géométrie : deux droites dessinées, l'enfant devine (perpendiculaires / parallèles / ni l'un ni l'autre), puis l'équerre vérifie (petit carré d'angle droit, codage ⊥ ou //) ; « 🔄 Autre exemple » | `{"visuel":"droites","exemples":[{"type":"paralleles","noms":["m","n"],"angle":70}]}` |
 
 Le code de chaque visuel est dans `visuels.js` (une fonction par visuel, bien commentée).
 

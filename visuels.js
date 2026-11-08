@@ -1378,4 +1378,189 @@ const VISUELS = {
 
     return el('div', { class: 'croquis' }, dessin, legende, explication, basculer);
   },
+
+  /* FRACTIONS (depuis la v1.20.0, leçon de Titouan) :
+       { forme: "barre" | "disque", parts: 5, grisees: 1, choix: [2, 3, 4, 5, 6, 10] }
+     L'unité (une barre ou une pizza 🍕) est partagée en parts ÉGALES.
+     - les boutons du haut choisissent en combien de parts on partage (le dénominateur) ;
+     - on touche une part pour la colorier (ou l'effacer) : c'est le numérateur ;
+     - à côté, la fraction s'écrit en grand et se lit en toutes lettres (« trois cinquièmes »). */
+  fraction(v) {
+    const NS = 'http://www.w3.org/2000/svg';
+    const svg = (tag, attrs) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); return n; };
+    const choix = v.choix || [2, 3, 4, 5, 6, 10];
+    let n = v.parts || 5;                       // nombre de parts égales (dénominateur)
+    let forme = v.forme || 'barre';
+    // les parts coloriées : au départ, les « grisees » premières
+    let coloriees = new Set(Array.from({ length: Math.min(v.grisees ?? 1, n) }, (_, i) => i));
+
+    // Nom d'une fraction en toutes lettres : (3, 5) -> « trois cinquièmes »
+    const nomFraction = (k, d) => {
+      const SPECIAUX = { 2: ['demi', 'demis'], 3: ['tiers', 'tiers'], 4: ['quart', 'quarts'] };
+      let nom;
+      if (SPECIAUX[d]) nom = SPECIAUX[d][k > 1 ? 1 : 0];
+      else {
+        // cinq -> cinquième, neuf -> neuvième, six -> sixième (on enlève le « e » final)
+        const base = nomNombre(d).replace(/e$/, '').replace(/q$/, 'qu').replace(/f$/, 'v');
+        nom = base + 'ième' + (k > 1 ? 's' : '');
+      }
+      return `${k === 1 ? 'un' : nomNombre(k)} ${nom}`;
+    };
+
+    const dessin = el('div', { class: 'frac-dessin' });
+    const ecriture = el('div', { class: 'frac-ecriture' });
+    const phrase = el('p', { class: 'frac-phrase' });
+
+    function dessiner() {
+      const k = coloriees.size;
+      let image;
+      if (forme === 'disque') {
+        // une « pizza » : n parts en éventail, en partant de midi
+        image = svg('svg', { viewBox: '0 0 200 200', class: 'frac-svg disque', role: 'img' });
+        for (let i = 0; i < n; i++) {
+          const a0 = -Math.PI / 2 + (2 * Math.PI * i) / n, a1 = a0 + (2 * Math.PI) / n;
+          const p = (a) => `${(100 + 90 * Math.cos(a)).toFixed(2)} ${(100 + 90 * Math.sin(a)).toFixed(2)}`;
+          const part = svg('path', { d: `M100 100 L${p(a0)} A90 90 0 ${1 / n > 0.5 ? 1 : 0} 1 ${p(a1)} Z` });
+          part.setAttribute('class', 'frac-part' + (coloriees.has(i) ? ' pleine' : ''));
+          part.addEventListener('click', () => basculer(i));
+          image.append(part);
+        }
+      } else {
+        // une barre partagée en n rectangles
+        image = svg('svg', { viewBox: '0 0 304 64', class: 'frac-svg barre', role: 'img' });
+        const l = 300 / n;
+        for (let i = 0; i < n; i++) {
+          const part = svg('rect', { x: (2 + i * l).toFixed(2), y: 2, width: l.toFixed(2), height: 60 });
+          part.setAttribute('class', 'frac-part' + (coloriees.has(i) ? ' pleine' : ''));
+          part.addEventListener('click', () => basculer(i));
+          image.append(part);
+        }
+      }
+      dessin.replaceChildren(image);
+      // la fraction écrite « en étage » : numérateur / trait / dénominateur
+      ecriture.replaceChildren(
+        el('div', { class: 'frac-grande' }, el('span', { class: 'frac-num' }, String(k)), el('span', { class: 'frac-den' }, String(n))),
+        el('div', { class: 'frac-nom' }, k === 0 ? 'rien de colorié' : nomFraction(k, n)));
+      phrase.replaceChildren(
+        'L\'unité est partagée en ', el('b', { class: 'frac-coul-den' }, `${n} parts égales`), ' (le dénominateur) ; ',
+        'on en colorie ', el('b', { class: 'frac-coul-num' }, String(k)), ' (le numérateur).',
+        // (replaceChildren écrirait « null » : on n'ajoute la ligne que si tout est colorié)
+        ...(k === n ? [el('span', { class: 'frac-entier' }, `🎉 Tout est colorié : ${k}/${n} = 1 unité entière !`)] : []));
+      [...boutons.children].forEach((b) => b.classList.toggle('actif', Number(b.textContent) === n));
+    }
+    function basculer(i) {
+      if (coloriees.has(i)) coloriees.delete(i); else coloriees.add(i);
+      dessiner();
+    }
+    // les boutons « en combien de parts ? »
+    const boutons = el('div', { class: 'nb-boutons' }, choix.map((d) => el('button', { onclick: () => {
+      n = d; coloriees = new Set([0]); dessiner();
+    } }, String(d))));
+    // changer la forme de l'unité : même fraction, autre dessin
+    const changerForme = el('button', { class: 'btn-visuel secondaire', onclick: () => {
+      forme = forme === 'disque' ? 'barre' : 'disque';
+      changerForme.textContent = forme === 'disque' ? '▭ En barre' : '🍕 En pizza';
+      dessiner();
+    } }, forme === 'disque' ? '▭ En barre' : '🍕 En pizza');
+    dessiner();
+    return el('div', { class: 'frac' },
+      el('p', { class: 'pos-consigne' }, 'En combien de parts égales ?'), boutons,
+      el('div', { class: 'frac-vue' }, dessin, ecriture), phrase,
+      el('p', { class: 'pos-consigne' }, '👆 Touche les parts pour les colorier'),
+      el('div', { class: 'img-actions' }, changerForme));
+  },
+
+  /* DROITES PERPENDICULAIRES OU PARALLÈLES (depuis la v1.20.0, leçon de Titouan) :
+       { exemples: [{ type: "perpendiculaires" | "paralleles" | "secantes", noms: ["d", "f"], angle: 20 }, …] }
+     Deux droites sont dessinées. L'enfant devine (3 boutons), puis l'équerre 📐 vient vérifier :
+     - perpendiculaires : le petit carré de l'angle droit se pose au croisement -> codage (d) ⊥ (f) ;
+     - parallèles : une 3e droite (en pointillés) les coupe toutes les deux à angle droit -> codage (m) // (n) ;
+     - sécantes : l'équerre ne colle pas, l'angle n'est pas droit.
+     « Autre exemple » passe au dessin suivant de la liste. */
+  droites(v) {
+    const NS = 'http://www.w3.org/2000/svg';
+    const svg = (tag, attrs, texte) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (texte) n.textContent = texte; return n; };
+    const exemples = v.exemples && v.exemples.length ? v.exemples
+      : [{ type: 'perpendiculaires', noms: ['d', 'f'] }, { type: 'paralleles', noms: ['m', 'n'] }, { type: 'secantes', noms: ['a', 'b'] }];
+    const NOMS_TYPES = { perpendiculaires: 'Perpendiculaires', paralleles: 'Parallèles', secantes: 'Ni l\'un ni l\'autre' };
+    let rang = 0;
+    const dessin = el('div', { class: 'dr-dessin' });
+    const message = el('p', { class: 'pos-phrase' });
+    const boutons = el('div', { class: 'pos-boutons' });
+
+    // outils de géométrie : vecteur unitaire d'angle a (en degrés), point + t × vecteur
+    const dir = (a) => [Math.cos((a * Math.PI) / 180), Math.sin((a * Math.PI) / 180)];
+    const plus = (p, u, t) => [p[0] + u[0] * t, p[1] + u[1] * t];
+    const C = [160, 105];
+    // une droite qui traverse tout le dessin, avec son nom « (d) » près d'un bout
+    const droite = (p, u, nom, classe = 'dr-ligne') => {
+      const a = plus(p, u, -220), b = plus(p, u, 220);
+      const g = svg('g', {});
+      g.append(svg('line', { x1: a[0], y1: a[1], x2: b[0], y2: b[1], class: classe }));
+      if (nom) {
+        const t = plus(p, u, 85);
+        g.append(svg('text', { x: t[0] + 8, y: t[1] - 8, class: 'dr-nom' }, `(${nom})`));
+      }
+      return g;
+    };
+    // le codage de l'angle droit : petit carré au point I, le long des directions u et w
+    const angleDroit = (I, u, w, classe = 'dr-carre') => {
+      const s = 16, a = plus(I, u, s), b = plus(a, w, s), c = plus(I, w, s);
+      return svg('path', { d: `M${a[0]} ${a[1]} L${b[0]} ${b[1]} L${c[0]} ${c[1]}`, class: classe });
+    };
+
+    function montrer(verifier = false) {
+      const ex = exemples[rang];
+      const [n1, n2] = ex.noms || ['d', 'f'];
+      const a = ex.angle ?? 15;
+      const u = dir(a), w = dir(a + 90);
+      const image = svg('svg', { viewBox: '0 0 320 210', class: 'dr-svg', role: 'img' });
+      if (ex.type === 'paralleles') {
+        // deux droites de même direction, décalées de 46 de part et d'autre du centre
+        const p1 = plus(C, w, -46), p2 = plus(C, w, 46);
+        image.append(droite(p1, u, n1), droite(p2, u, n2));
+        if (verifier) {
+          image.append(droite(C, w, null, 'dr-ligne verif'), angleDroit(p1, u, w), angleDroit(p2, u, w));
+        }
+      } else {
+        // deux droites qui se croisent au centre (à 90° si perpendiculaires, sinon à 55°)
+        const u2 = ex.type === 'perpendiculaires' ? w : dir(a + 55);
+        image.append(droite(C, u, n1), droite(C, u2, n2));
+        if (verifier) image.append(angleDroit(C, u, w, ex.type === 'perpendiculaires' ? 'dr-carre' : 'dr-carre rate'));
+      }
+      dessin.replaceChildren(image);
+      if (!verifier) message.replaceChildren('Perpendiculaires, parallèles… ou ni l\'un ni l\'autre ?');
+    }
+    // l'enfant choisit, puis l'équerre vérifie
+    function repondre(choixType) {
+      const ex = exemples[rang];
+      const [n1, n2] = ex.noms || ['d', 'f'];
+      montrer(true);
+      const bon = choixType === ex.type;
+      const explication = {
+        perpendiculaires: [`📐 L'équerre colle : angle droit ! On écrit `, el('b', {}, `(${n1}) ⊥ (${n2})`)],
+        paralleles: [`📐 Elles sont toutes les deux perpendiculaires à la même droite : elles ne se couperont jamais. On écrit `, el('b', {}, `(${n1}) // (${n2})`)],
+        secantes: ['📐 Elles se coupent, mais l\'équerre ne colle pas : l\'angle n\'est pas droit. Ni perpendiculaires, ni parallèles.'],
+      }[ex.type];
+      message.replaceChildren(el('b', {}, bon ? 'Bravo ! ' : 'Pas tout à fait… '), ...explication);
+      if (bon) { son('bon'); eclats(dessin, ['📐', '⭐']); }
+      [...boutons.children].forEach((b) => {
+        b.classList.toggle('actif', b.dataset.type === ex.type);
+        b.disabled = true;
+      });
+    }
+    function suivant() {
+      rang = (rang + 1) % exemples.length;
+      [...boutons.children].forEach((b) => { b.classList.remove('actif'); b.disabled = false; });
+      montrer();
+    }
+    Object.entries(NOMS_TYPES).forEach(([type, nom]) => {
+      const b = el('button', { onclick: () => repondre(type) }, nom);
+      b.dataset.type = type;
+      boutons.append(b);
+    });
+    montrer();
+    return el('div', { class: 'dr' }, dessin, boutons, message,
+      el('div', { class: 'img-actions' }, el('button', { class: 'btn-visuel secondaire', onclick: suivant }, '🔄 Autre exemple')));
+  },
 };

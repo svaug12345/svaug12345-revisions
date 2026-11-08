@@ -1317,3 +1317,34 @@ body.lecture-facile .carte-info b { letter-spacing: 0; overflow-wrap: anywhere; 
 .coach-langue[data-mode="parle"] small, .coach-langue[data-mode="ecoute"] small { color: #fff; }
 .coach-langue[data-mode="parle"] .coach-drapeau { animation: alex-onde .9s infinite alternate; }
 @media (prefers-reduced-motion: reduce) { .coach-langue .coach-drapeau { animation: none !important; } }
+
+/* FRACTIONS (visuel « fraction », v1.20.0)
+   Parts blanches cerclées de foncé ; une part coloriée = teal. Le numérateur est en orange,
+   le dénominateur en violet : les mêmes couleurs dans la phrase d'explication. */
+.frac-vue { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 14px; margin: 12px 0 4px; }
+.frac-dessin { flex: 1 1 220px; max-width: 320px; }
+.frac-svg { width: 100%; display: block; border-radius: 0; overflow: visible; }
+.frac-svg.disque { max-width: 200px; margin: 0 auto; }
+.frac-part { fill: #fff; stroke: #1f2937; stroke-width: 2; cursor: pointer; transition: fill .2s; }
+.frac-part.pleine { fill: var(--principal); }
+.frac-ecriture { text-align: center; min-width: 110px; }
+.frac-grande { display: inline-flex; flex-direction: column; align-items: center; font-size: 2.6rem; font-weight: 900; line-height: 1.05; }
+.frac-num { color: #d97706; padding: 0 10px; border-bottom: 4px solid var(--texte); }
+.frac-den { color: #7c3aed; padding: 0 10px; }
+.frac-nom { font-weight: 800; font-size: 1.15rem; margin-top: 4px; }
+.frac-phrase { text-align: center; margin: 6px 0; }
+.frac-coul-num { color: #d97706; }
+.frac-coul-den { color: #7c3aed; }
+.frac-entier { display: block; font-weight: 800; color: var(--fonce); margin-top: 4px; }
+
+/* DROITES PERPENDICULAIRES / PARALLÈLES (visuel « droites », v1.20.0)
+   Les deux droites en noir, la droite de vérification en pointillés, le codage de l'angle droit
+   en teal (ou en rouge quand l'équerre ne colle pas). */
+.dr-svg { width: 100%; max-width: 420px; display: block; margin: 0 auto 8px; background: #fff; border: 2px solid var(--clair); border-radius: 12px; }
+.dr-ligne { stroke: #1f2937; stroke-width: 3; stroke-linecap: round; }
+.dr-ligne.verif { stroke: var(--doux); stroke-width: 2; stroke-dasharray: 6 6; }
+.dr-nom { font: 800 15px 'Nunito', system-ui, sans-serif; fill: var(--fonce); }
+.dr-carre { fill: none; stroke: var(--principal); stroke-width: 3; animation: pop .4s; }
+.dr-carre.rate { stroke: var(--faux); }
+.dr .pos-boutons button:disabled { opacity: .55; }
+.dr .pos-boutons button.actif:disabled { opacity: 1; }
