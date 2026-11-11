@@ -1,17 +1,21 @@
 /* =====================================================================
    « BOÎTE AUX LETTRES » DE MES RÉVISIONS — Cloudflare Worker
    ---------------------------------------------------------------------
-   Rôle : recevoir (1) les photos de leçons envoyées depuis l'appli (bouton
-   « 📸 Envoyer une leçon ») et (2) les remarques 💬 sur une leçon, et les ranger dans le dépôt GitHub PRIVÉ
-   svaug12345/revisions-demandes, une demande = un dossier :
+   Rôle : recevoir depuis l'appli et ranger dans le dépôt GitHub PRIVÉ svaug12345/revisions-demandes :
+     (1) les demandes de leçon : photos ET/OU description du besoin (bouton « 📸 Ajouter une leçon ») ;
+     (2) les remarques 💬 sur une leçon            -> remarques/<date>/…json ;
+     (3) les demandes d'ajustement 🛠️ d'une leçon   -> ajustements/<enfant>/<date>.json (depuis la v1.22.0) ;
+     (4) les profils d'élèves créés dans l'appli ➕ -> eleves/<id>.json (depuis la v1.22.0),
+         et (5) les renvoyer pour retrouver un élève sur un autre téléphone (« retrouver-eleve »).
+   Une demande de leçon = un dossier :
 
      demandes/titouan/2026-11-03-1842-a1b2/
        ├── demande.json   (enfant, matière, petit mot, date, statut « à traiter »)
        ├── photo-1.jpg
        └── photo-2.jpg
 
-   Ensuite, Claude lit ces dossiers, fabrique les leçons dans lecons.json
-   et propose une « pull request » à Papa.
+   Ensuite, le robot « Leçon immédiate » du dépôt privé (Claude) lit ces dossiers
+   et publie les leçons dans lecons.json en quelques minutes.
 
    Pourquoi un Worker ? L'appli est un site statique (GitHub Pages) : elle ne
    peut pas garder de secret. Le jeton GitHub qui a le droit d'écrire dans le
@@ -28,6 +32,7 @@
 const MAX_PHOTOS = 8;
 const MAX_TAILLE_PHOTO = 3_000_000;   // caractères base64 (≈ 2,2 Mo) — l'appli envoie ≈ 300 Ko par photo
 const PREFIXE_JPEG = 'data:image/jpeg;base64,';
+const MIN_DESCRIPTION = 10;           // sans photo, la description du besoin doit faire au moins 10 caractères
 
 export default {
   async fetch(requete, env) {
@@ -64,15 +69,23 @@ export default {
 
     // --- 💬 Une REMARQUE sur une leçon (pas de photo) : un petit fichier JSON dans remarques/<date>/
     if (d.type === 'remarque') return recevoirRemarque(d, env, repondre);
+    if (d.type === 'ajustement') return recevoirAjustement(d, env, repondre);
+    if (d.type === 'eleve') return recevoirEleve(d, env, repondre);
+    if (d.type === 'retrouver-eleve') return retrouverEleve(d, env, repondre);
+
+    // --- 📸 Une DEMANDE DE LEÇON : des photos, ou seulement une description du besoin (dans « note »)
     const photos = Array.isArray(d.photos) ? d.photos : [];
-    if (!photos.length || photos.length > MAX_PHOTOS) return repondre({ ok: false, erreur: 'photos', message: `Entre 1 et ${MAX_PHOTOS} photos` }, 400);
+    const note = String(d.note || '').slice(0, 1500);
+    if (photos.length > MAX_PHOTOS) return repondre({ ok: false, erreur: 'photos', message: `${MAX_PHOTOS} photos au maximum` }, 400);
+    if (!photos.length && note.trim().length < MIN_DESCRIPTION) {
+      return repondre({ ok: false, erreur: 'vide', message: 'Ajoute une photo, ou décris ce qu’il faut réviser' }, 400);
+    }
     for (const p of photos) {
       if (typeof p !== 'string' || !p.startsWith(PREFIXE_JPEG) || p.length > MAX_TAILLE_PHOTO) {
         return repondre({ ok: false, erreur: 'photo', message: 'Photo trop lourde ou dans un format inattendu' }, 400);
       }
     }
     const matiere = String(d.matiere || 'Autre').slice(0, 40);
-    const note = String(d.note || '').slice(0, 500);
 
     // --- Nom du dossier : date et heure de Paris + 4 caractères au hasard (deux envois à la même minute)
     const maintenant = new Date();
@@ -84,9 +97,13 @@ export default {
       enfant: d.enfant, matiere, note,
       envoyeeLe: maintenant.toISOString(),
       photos: photos.map((_, i) => `photo-${i + 1}.jpg`),
+      source: photos.length ? 'photos' : 'description',   // sans photo : la leçon est fabriquée d'après « note »
       versionAppli: String(d.version || '').slice(0, 20),
       statut: 'à traiter',          // Claude passe ce champ à « traitée » (+ id des leçons créées)
     };
+    // Élève créé dans l'appli : son profil voyage avec la demande (au cas où eleves/<id>.json manquerait)
+    const eleve = profilPropre(d.eleve, d.enfant);
+    if (eleve) fiche.eleve = eleve;
     const fichiers = [
       { chemin: `${dossier}/demande.json`, base64: versBase64(JSON.stringify(fiche, null, 2) + '\n') },
       ...photos.map((p, i) => ({ chemin: `${dossier}/photo-${i + 1}.jpg`, base64: p.slice(PREFIXE_JPEG.length) })),
@@ -94,7 +111,8 @@ export default {
 
     // --- Écriture dans le dépôt privé, en UN seul commit
     try {
-      await commiter(env, fichiers, `📸 Demande de leçon : ${d.enfant} · ${matiere} (${photos.length} photo${photos.length > 1 ? 's' : ''})`);
+      await commiter(env, fichiers, `📸 Demande de leçon : ${d.enfant} · ${matiere} (${photos.length
+        ? `${photos.length} photo${photos.length > 1 ? 's' : ''}` : 'description'})`);
     } catch (e) {
       console.log('Échec GitHub :', e.message);   // visible dans le tableau de bord Cloudflare
       return repondre({ ok: false, erreur: 'github', message: 'La boîte aux lettres est momentanément indisponible' }, 502);
@@ -137,6 +155,82 @@ async function recevoirRemarque(d, env, repondre) {
       `💬 Remarque : ${d.enfant} · ${remarque.titreLecon || d.lecon}`);
   } catch (err) {
     console.log('Échec GitHub (remarque) :', err.message);
+    return repondre({ ok: false, erreur: 'github', message: 'Envoi momentanément impossible' }, 502);
+  }
+  return repondre({ ok: true, fichier: chemin });
+}
+
+/**
+ * Profil d'élève reçu de l'appli, nettoyé : seulement les champs attendus, textes raccourcis.
+ * Renvoie null s'il n'y a pas de profil (enfant de la famille, décrit dans lecons.json).
+ */
+function profilPropre(e, id) {
+  if (!e || typeof e !== 'object') return null;
+  const court = (x, n) => (x === undefined || x === null ? undefined : String(x).trim().slice(0, n) || undefined);
+  const age = Number(e.age);
+  return {
+    id, nom: court(e.nom, 40) || '?', age: age >= 2 && age <= 20 ? Math.round(age) : undefined,
+    classe: court(e.classe, 20), avatar: court(e.avatar, 8), couleur: /^#[0-9a-f]{6}$/i.test(e.couleur || '') ? e.couleur : undefined,
+    copains: court(e.copains, 600), passions: court(e.passions, 600), forces: court(e.forces, 600),
+    difficultes: court(e.difficultes, 600), envies: court(e.envies, 600),
+  };
+}
+
+/** ➕ Profil d'élève créé ou modifié dans l'appli -> eleves/<id>.json (remplace l'ancien) */
+async function recevoirEleve(d, env, repondre) {
+  const eleve = profilPropre(d.eleve, d.enfant);
+  if (!eleve || eleve.nom === '?') return repondre({ ok: false, erreur: 'eleve', message: 'Profil incomplet' }, 400);
+  eleve.misAJourLe = new Date().toISOString();
+  try {
+    await commiter(env, [{ chemin: `eleves/${d.enfant}.json`, base64: versBase64(JSON.stringify(eleve, null, 2) + '\n') }],
+      `➕ Profil d'élève : ${eleve.nom} (${d.enfant})`);
+  } catch (err) {
+    console.log('Échec GitHub (élève) :', err.message);
+    return repondre({ ok: false, erreur: 'github', message: 'Enregistrement momentanément impossible' }, 502);
+  }
+  return repondre({ ok: true, id: d.enfant });
+}
+
+/** 📲 Retrouver un élève sur un autre téléphone : on relit eleves/<id>.json dans le dépôt privé */
+async function retrouverEleve(d, env, repondre) {
+  try {
+    const f = await github(env, 'GET', `/contents/eleves/${d.enfant}.json?ref=${env.BRANCHE || 'main'}`);
+    const octets = Uint8Array.from(atob(f.content.replace(/\n/g, '')), (c) => c.charCodeAt(0));
+    const eleve = profilPropre(JSON.parse(new TextDecoder().decode(octets)), d.enfant);
+    return repondre({ ok: true, eleve });
+  } catch (err) {
+    if (err.statut === 404) return repondre({ ok: false, erreur: 'inconnu', message: 'Aucun élève avec ce code 🤔' }, 404);
+    console.log('Échec GitHub (retrouver) :', err.message);
+    return repondre({ ok: false, erreur: 'github', message: 'Recherche momentanément impossible' }, 502);
+  }
+}
+
+/**
+ * 🛠️ Demande d'ajustement d'une leçon (« plus facile », « une erreur »…) -> ajustements/<enfant>/<date>.json.
+ * Contrairement aux remarques, le robot « Leçon immédiate » l'applique tout de suite.
+ */
+async function recevoirAjustement(d, env, repondre) {
+  const court = (x, n) => String(x ?? '').slice(0, n);
+  if (!/^[a-z0-9-]{1,100}$/.test(d.lecon || '')) return repondre({ ok: false, erreur: 'lecon' }, 400);
+  const choix = (Array.isArray(d.choix) ? d.choix : []).slice(0, 8).map((m) => court(m, 50));
+  const texte = court(d.texte, 1000).trim();
+  if (!choix.length && texte.length < 5) return repondre({ ok: false, erreur: 'vide', message: 'Dis ce qu’il faut changer' }, 400);
+  const ajustement = {
+    enfant: d.enfant, lecon: d.lecon, titreLecon: court(d.titreLecon, 120),
+    choix, texte,
+    envoyeeLe: new Date().toISOString(),
+    versionAppli: court(d.version, 20),
+    statut: 'à traiter',          // le robot passe ce champ à « traité » (+ ce qui a été changé)
+  };
+  const eleve = profilPropre(d.eleve, d.enfant);
+  if (eleve) ajustement.eleve = eleve;
+  const p = heureDeParis(new Date());
+  const chemin = `ajustements/${d.enfant}/${p.year}-${p.month}-${p.day}-${p.hour}${p.minute}-${crypto.randomUUID().slice(0, 4)}.json`;
+  try {
+    await commiter(env, [{ chemin, base64: versBase64(JSON.stringify(ajustement, null, 2) + '\n') }],
+      `🛠️ Ajustement : ${d.enfant} · ${ajustement.titreLecon || d.lecon}`);
+  } catch (err) {
+    console.log('Échec GitHub (ajustement) :', err.message);
     return repondre({ ok: false, erreur: 'github', message: 'Envoi momentanément impossible' }, 502);
   }
   return repondre({ ok: true, fichier: chemin });

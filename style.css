@@ -1348,3 +1348,33 @@ body.lecture-facile .carte-info b { letter-spacing: 0; overflow-wrap: anywhere; 
 .dr-carre.rate { stroke: var(--faux); }
 .dr .pos-boutons button:disabled { opacity: .55; }
 .dr .pos-boutons button.actif:disabled { opacity: 1; }
+
+/* ---------- v1.22.0 : parcours de 4 étapes max, élèves ajoutés depuis l'appli, ajustements ---------- */
+/* Parcours : plusieurs lignes de 4 étapes possibles (filet de sécurité), bouton 📦 pour archiver tout le parcours */
+.parcours-chemin + .parcours-chemin { margin-top: 12px; }
+.parcours-tete b { flex: 1; }
+.parcours-archiver { border: 0; background: none; font-size: 1rem; cursor: pointer; opacity: .45; padding: 0 2px; }
+.parcours-archiver:hover, .parcours-archiver:focus-visible { opacity: 1; }
+
+/* Carte « ➕ Ajouter un élève » sur l'accueil : en pointillés, comme le bouton d'envoi */
+.carte-enfant.carte-ajout { border: 2px dashed var(--principal); background: color-mix(in srgb, var(--clair) 45%, transparent); box-shadow: none; }
+.carte-ajout .avatar { background: var(--carte); color: var(--fonce); }
+
+/* Écran « Nouvel élève » */
+.page-envoi h3 small { font-weight: 600; color: var(--doux); }
+.page-profil .champ-age { max-width: 140px; }
+.puces-avatar .puce { font-size: 1.5rem; padding: 4px 10px; }
+.puces-couleur .puce { width: 38px; height: 38px; padding: 0; background: var(--c); border-color: var(--c); }
+.puces-couleur .puce.choisie { background: var(--c); border-color: var(--fonce); box-shadow: 0 0 0 3px var(--carte), 0 0 0 5px var(--fonce); }
+.page-profil .info-maj { margin-top: 18px; }
+.code-eleve { text-align: center; color: var(--doux); font-size: .9rem; margin: 16px 0 0; }
+.code-eleve b { color: var(--fonce); user-select: all; }
+.btn-retirer { margin-top: 12px; font-size: .95rem; }
+.retrouver { margin-top: 22px; background: var(--carte); border-radius: var(--rayon); padding: 12px 14px; box-shadow: var(--ombre); }
+.retrouver summary { font-weight: 800; cursor: pointer; color: var(--fonce); }
+.retrouver .btn-secondaire { margin-top: 10px; }
+.btn-profil { display: block; margin: 14px auto 0; padding: 8px 14px; }
+
+/* Bouton « 🛠️ Demander un ajustement » sur la page d'une leçon (juste après « Archiver ») */
+.btn-ajuster { margin-top: 10px; font-size: .95rem; }
+.page-lecon .btn-ajuster { order: 6; }

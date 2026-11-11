@@ -191,6 +191,7 @@ et propose de revoir celles qui restent.
 
 ## 📦 Archiver une leçon
 
+- Sur un **parcours**, la petite boîte 📦 à droite du titre archive **tout le parcours** d'un coup (depuis la v1.22.0).
 - Sur la fiche d'une leçon : bouton **« 📦 Archiver cette leçon »**. Elle disparaît de la liste et va dans
   **« 📦 Leçons archivées »** (en bas, replié), d'où on peut la **ressortir** 📤.
 - Ce choix est gardé **dans l'appareil** (le téléphone et le PC ont chacun le leur).
@@ -296,6 +297,9 @@ Pour un enfant qui a besoin d'enchaîner les réussites (aujourd'hui : Titouan).
 
 ## 🧩 Parcours : une leçon en petits modules (depuis la v1.11.0)
 
+**4 étapes au maximum par parcours** (depuis la v1.22.0) : au-delà, faire un 2e parcours (« Les sons » puis
+« Encore des sons »). Si un parcours en a quand même plus, l'appli l'affiche sur plusieurs lignes de 4.
+
 Une grosse leçon peut être découpée en **modules** courts (5 à 8 questions) : ce sont des leçons normales avec en plus
 `"parcours": "Arrondir et encadrer"` et `"etape": 1, 2, 3…`. La liste les montre comme un **chemin d'étapes** (⚽ 1 → 2 → 3 → 🏆) :
 étape réussie en vert ✔, prochaine étape qui clignote, trophée allumé quand tout est fini. En fin de quiz, un bouton
@@ -349,6 +353,30 @@ Les photos sont réduites dans le téléphone (≈ 400 Ko chacune) puis envoyée
 `demande.json` au statut « à traiter », lire les photos, créer les leçons (modules courts, `"ajoutee"` = date
 d'envoi, réglages de l'enfant : coup de pouce, lecture facile, passions…), puis dans le dépôt privé passer
 le statut à « traitée » avec les `id` des leçons créées et supprimer les photos.
+
+**Sans photo** (depuis la v1.22.0) : on peut aussi simplement **décrire le besoin** (« la table de 7 pour jeudi,
+il confond 7 × 6 et 7 × 8 », au moins 10 caractères) ; Claude crée alors la leçon de toutes pièces
+(`"source": "description"` dans `demande.json`).
+
+## ➕ Ajouter un élève depuis l'appli (depuis la v1.22.0)
+Sur l'accueil, la carte **« ➕ Ajouter un élève »** ouvre un formulaire : prénom, âge, classe, avatar, couleur,
+passions, copains, points forts, difficultés, et ce que le parent aimerait.
+- Le profil est gardé **dans l'appareil** (`localStorage`, clé `revisions-eleves`) et envoyé à la boîte aux lettres,
+  qui le range dans le dépôt **privé** : `eleves/<id>.json` (id = prénom + 4 caractères, ex. `lea-7k2f`).
+  Ces infos ne vont **jamais** dans `lecons.json` (public).
+- Ses leçons sont des leçons normales avec `"pour": ["lea-7k2f"]`. Claude lit le profil pour les personnaliser
+  (exemples tirés des passions, prénoms des copains dans les problèmes, niveau de la classe, coup de pouce).
+- Réglages déduits de la classe : maternelle et CP -> questions lues à voix haute, manches courtes, 2e essai ;
+  consignes pour Alex fabriquées à partir du profil.
+- « ✏️ Modifier le profil » en bas de sa page ; son **code** y est affiché pour le **retrouver sur un autre
+  téléphone** (« 📲 Déjà créé sur un autre téléphone ? » dans le formulaire). Papa reçoit une notif à chaque nouvel élève.
+
+## 🛠️ Demander un ajustement (depuis la v1.22.0)
+Sur la fiche d'une leçon, **« 🛠️ Demander un ajustement »** : plus facile, plus difficile, plus de questions,
+plus court, plus d'exemples, avec ses passions, corriger une erreur, et/ou un texte libre.
+La demande va dans `ajustements/<enfant>/…json` du dépôt privé et le robot « Leçon immédiate » **modifie la leçon
+tout de suite** (même `id` : les étoiles sont gardées), puis notif 🛠️ à Papa. À la différence des remarques 💬,
+qui restent un simple signalement pour le récap du soir.
 
 ## 💬 Remarques sur une leçon (depuis la v1.14.0)
 Une petite bulle 💬 en bas de chaque bloc de fiche et en haut de chaque question. On la touche, on choisit un

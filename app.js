@@ -907,7 +907,7 @@ function afficherAccueil() {
   afficher(
     el('p', { class: 'intro' }, 'Choisis ton profil pour commencer 👇'),
     el('div', { class: 'grille-enfants' },
-      d.enfants.map((enfant) => {
+      tousLesEnfants().map((enfant) => {
         const lecons = leconsDe(enfant.id).filter((l) => !estArchivee(enfant.id, l));
         const total = lecons.reduce((s, l) => s + etoilesDe(enfant.id, l.id), 0);
         return el('button', {
@@ -920,6 +920,11 @@ function afficherAccueil() {
           el('span', { class: 'mini' }, `${pluriel(lecons.length, 'leçon')} · ⭐ ${total}`),
         );
       }),
+      // ➕ Carte pour créer un nouvel élève (voir « ÉLÈVES AJOUTÉS DEPUIS L'APPLI »)
+      el('button', { class: 'carte-enfant carte-ajout', onclick: () => aller(afficherProfilEleve, null) },
+        el('span', { class: 'avatar' }, '➕'),
+        el('span', { class: 'nom' }, 'Ajouter'),
+        el('span', { class: 'mini' }, 'un élève')),
     ),
     d.maj ? el('p', { class: 'maj' }, `Leçons mises à jour le ${d.maj}`) : null,
   );
@@ -947,11 +952,17 @@ function afficherLecons() {
           onclick: () => { changerArchive(enfant.id, l, false); afficherLecons(); },
         }, '📤 Ressortir')))))) : null;
 
+  // Élève ajouté depuis l'appli : petit bouton pour modifier son profil
+  const btnProfil = enfant.perso ? el('button', { class: 'btn-petit btn-profil', onclick: () => aller(afficherProfilEleve, enfant) },
+    '✏️ Modifier le profil de ', enfant.nom) : null;
+
   if (!lecons.length) {
     afficher(el('div', { class: 'vide' },
       el('div', { class: 'gros-emoji' }, '📭'),
-      el('p', {}, archivees.length ? 'Toutes tes leçons sont archivées 📦' : 'Pas encore de leçon ici. Demande à Papa d’en ajouter 😉')),
-      blocCoachLangues(), boutonEnvoi(), blocArchives);
+      el('p', {}, archivees.length ? 'Toutes tes leçons sont archivées 📦'
+        : enfant.perso ? 'Pas encore de leçon : envoie la première en photo, ou décris ce qu’il faut réviser 👇'
+          : 'Pas encore de leçon ici. Demande à Papa d’en ajouter 😉')),
+      blocCoachLangues(), boutonEnvoi(), btnProfil, blocArchives);
     return;
   }
 
@@ -959,7 +970,203 @@ function afficherLecons() {
     el('section', { class: 'groupe' },
       el('h2', {}, matiere),
       cartesDe(liste),
-    )), boutonEnvoi(), blocArchives);
+    )), boutonEnvoi(), btnProfil, blocArchives);
+}
+
+/* ---- ÉLÈVES AJOUTÉS DEPUIS L'APPLI ➕ ----
+   Les profils de la famille sont dans lecons.json (public). Un utilisateur peut aussi créer
+   un élève lui-même : prénom, âge, classe, copains, passions, difficultés, forces, envies.
+   - Le profil est gardé DANS L'APPAREIL (localStorage), comme les étoiles.
+   - Il est aussi envoyé à la boîte aux lettres, qui le range dans le dépôt PRIVÉ
+     (eleves/<id>.json) : Claude le lit pour fabriquer des leçons sur mesure (exemples tirés
+     de ses passions, prénoms des copains dans les problèmes, niveau adapté…).
+     Ces infos personnelles ne vont JAMAIS dans lecons.json, qui est public.
+   - Ses leçons sont des leçons normales de lecons.json avec "pour": ["<id>"].
+   - Sur un autre téléphone, on le retrouve avec son code (= son identifiant, ex. « lea-7k2f »). */
+
+const CLE_ELEVES = 'revisions-eleves';
+const CLASSES = ['Maternelle', 'CP', 'CE1', 'CE2', 'CM1', 'CM2', '6e', '5e', '4e', '3e', 'Lycée'];
+const AVATARS = ['🦊', '🐼', '🦄', '🐯', '🐸', '🐙', '🦖', '🐱', '🐶', '🚀', '⚽', '🎨'];
+const COULEURS = ['#14b8a6', '#6366f1', '#f59e0b', '#ec4899', '#22c55e', '#0ea5e9', '#a855f7', '#ef4444'];
+
+function lireEleves() { try { return JSON.parse(localStorage.getItem(CLE_ELEVES)) || []; } catch { return []; } }
+function ecrireEleves(liste) { try { localStorage.setItem(CLE_ELEVES, JSON.stringify(liste)); } catch { /* rien */ } }
+
+/** Tous les profils : ceux de lecons.json + ceux créés sur cet appareil (sans doublon d'id) */
+function tousLesEnfants() {
+  const famille = etat.donnees.enfants;
+  return [...famille, ...lireEleves().filter((e) => !famille.some((f) => f.id === e.id))];
+}
+
+/** Identifiant d'un nouvel élève : prénom sans accents + 4 caractères au hasard (« Léa » -> « lea-7k2f ») */
+function nouvelId(prenom) {
+  const base = normaliser(prenom).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 20) || 'eleve';
+  return `${base}-${Math.random().toString(36).slice(2, 6)}`;
+}
+
+/**
+ * Complète un profil avec les réglages de l'appli, déduits de sa classe :
+ * maternelle et CP -> questions lues à voix haute, manches courtes et 2e essai (comme Ava, Malo, Elouan).
+ * Fabrique aussi les consignes pour Alex (le coach vocal), à partir de ce qu'on a décrit.
+ */
+function reglagesDuProfil(p) {
+  const petit = ['Maternelle', 'CP'].includes(p.classe);
+  const phrases = [`${p.nom}${p.age ? ` a ${p.age} ans` : ''}${p.classe ? `, en ${p.classe}` : ''}.`];
+  if (p.passions) phrases.push(`Ses passions : ${p.passions} (prends tes exemples dedans).`);
+  if (p.forces) phrases.push(`Ses points forts : ${p.forces}.`);
+  if (p.difficultes) phrases.push(`Ce qui est plus difficile pour lui ou elle : ${p.difficultes}. Avance par petites étapes et encourage.`);
+  if (p.copains) phrases.push(`Ses copains : ${p.copains}.`);
+  if (p.envies) phrases.push(`Ce que ses parents souhaitent : ${p.envies}.`);
+  return {
+    ...p,
+    perso: true,
+    lectureAuto: petit || undefined,
+    coupDePouce: petit || !!p.difficultes || undefined,
+    questionsParManche: p.classe === 'Maternelle' ? 5 : petit ? 6 : p.difficultes ? 10 : undefined,
+    conseilsAlex: phrases.join(' '),
+  };
+}
+
+/** Le profil tel qu'il part vers le dépôt privé (sans les réglages calculés) */
+const profilAEnvoyer = (p) => ({
+  id: p.id, nom: p.nom, age: p.age, classe: p.classe, avatar: p.avatar, couleur: p.couleur,
+  copains: p.copains, passions: p.passions, difficultes: p.difficultes, forces: p.forces, envies: p.envies,
+});
+
+/** Envoi à la boîte aux lettres (code famille compris). Renvoie la réponse, ou lève une erreur lisible. */
+async function posterBoite(corps, code) {
+  const rep = await fetch(etat.donnees.envoi.url, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...corps, code, version: VERSION }),
+  }).catch(() => { throw new Error('📶 Envoi impossible : vérifie internet et réessaie.'); });
+  const r = await rep.json().catch(() => ({}));
+  if (r.erreur === 'code') { memoriserCode(''); throw Object.assign(new Error('Ce code famille n’est pas le bon 🔑'), { code: true }); }
+  if (!rep.ok || !r.ok) throw new Error(r.message || `Envoi refusé (erreur ${rep.status})`);
+  memoriserCode(code);
+  return r;
+}
+
+/** Champ « code famille » réutilisable : caché s'il est déjà connu dans l'appareil */
+function champCodeFamille() {
+  const champ = el('input', { class: 'code-envoi', type: 'password', autocomplete: 'off', placeholder: 'Code famille' });
+  const bloc = el('div', { class: 'bloc-code' }, el('label', {}, '🔑 Code famille (demandé une seule fois)'), champ);
+  bloc.hidden = !!codeFamille();
+  return {
+    bloc,
+    valeur: () => champ.value.trim() || codeFamille(),
+    demander: () => { bloc.hidden = false; champ.value = ''; champ.focus(); },
+  };
+}
+
+// --- L'écran « Nouvel élève » / « Modifier le profil » (eleve = null pour un nouveau) ---
+function afficherProfilEleve(eleve) {
+  etat.enfant = eleve;
+  entete(eleve ? `Profil de ${eleve.nom}` : 'Nouvel élève');
+  const p = { avatar: AVATARS[0], couleur: COULEURS[Math.floor(Math.random() * COULEURS.length)], ...(eleve || {}) };
+
+  const champ = (cle, label, placeholder, lignes = 2) => {
+    const c = lignes > 1
+      ? el('textarea', { class: 'note-envoi', rows: String(lignes), maxlength: '600', placeholder })
+      : el('input', { class: 'code-envoi', maxlength: '40', placeholder });
+    c.value = p[cle] ?? '';
+    c.addEventListener('input', () => { p[cle] = c.value; });
+    return [el('h3', {}, label), c];
+  };
+  // Rangée de puces à choix unique (classe, avatar, couleur)
+  const puces = (cle, valeurs, dessin = (v) => v, classe = '') => {
+    const rangee = el('div', { class: 'puces-matiere ' + classe }, valeurs.map((v) => el('button', {
+      class: 'puce' + (p[cle] === v ? ' choisie' : ''), style: cle === 'couleur' ? `--c:${v}` : '',
+      onclick: (e) => {
+        p[cle] = v;
+        rangee.querySelectorAll('.puce').forEach((x) => x.classList.toggle('choisie', x === e.currentTarget));
+      },
+    }, dessin(v))));
+    return rangee;
+  };
+
+  const champAge = el('input', { class: 'code-envoi champ-age', type: 'number', min: '2', max: '20', inputmode: 'numeric', placeholder: 'Âge' });
+  champAge.value = p.age ?? '';
+  champAge.addEventListener('input', () => { p.age = Number(champAge.value) || undefined; });
+  const code = champCodeFamille();
+  const message = el('p', { class: 'message-envoi' });
+  const btn = el('button', { class: 'btn-principal', onclick: enregistrer }, eleve ? '✅ Enregistrer' : '✅ Créer le profil');
+
+  async function enregistrer() {
+    p.nom = String(p.nom || '').trim();
+    if (!p.nom) { message.textContent = 'Il faut au moins un prénom 🙂'; return; }
+    const profil = reglagesDuProfil({ ...p, id: p.id || nouvelId(p.nom) });
+    // 1. Gardé dans l'appareil tout de suite (l'élève apparaît même sans internet)
+    ecrireEleves([...lireEleves().filter((e) => e.id !== profil.id), profil]);
+    // 2. Envoyé au dépôt privé, pour que Claude personnalise les leçons
+    if (etat.donnees.envoi?.url) {
+      const c = code.valeur();
+      if (!c) { code.demander(); message.textContent = 'Tape le code famille 🔑 (sinon le profil reste seulement sur ce téléphone)'; return; }
+      btn.disabled = true; btn.textContent = '⏳ Enregistrement…';
+      try {
+        await posterBoite({ type: 'eleve', enfant: profil.id, eleve: profilAEnvoyer(profil) }, c);
+      } catch (err) {
+        if (err.code) code.demander();
+        message.textContent = err.message + ' (le profil est gardé sur ce téléphone)';
+        btn.disabled = false; btn.textContent = '✅ Réessayer';
+        return;
+      }
+    }
+    son('fin');
+    toast(eleve ? '✅ Profil mis à jour' : `🎉 Bienvenue ${profil.nom} !`);
+    etat.enfant = profil;
+    if (eleve) history.back();             // retour à ses leçons
+    else remplacerEcran(afficherLecons);   // nouvel élève : on ouvre directement sa page
+  }
+
+  // Retrouver un élève créé sur un autre appareil, grâce à son code
+  const champRetrouver = el('input', { class: 'code-envoi', placeholder: 'Son code, ex. lea-7k2f', autocapitalize: 'off' });
+  async function retrouver() {
+    const id = champRetrouver.value.trim().toLowerCase();
+    if (!/^[a-z0-9-]{3,30}$/.test(id)) { message.textContent = 'Ce code ne ressemble pas à un code d’élève 🤔'; return; }
+    const c = code.valeur();
+    if (!c) { code.demander(); message.textContent = 'Tape le code famille 🔑'; return; }
+    try {
+      const r = await posterBoite({ type: 'retrouver-eleve', enfant: id }, c);
+      const profil = reglagesDuProfil(r.eleve);
+      ecrireEleves([...lireEleves().filter((e) => e.id !== profil.id), profil]);
+      toast(`🎉 ${profil.nom} est sur ce téléphone`);
+      etat.enfant = profil;
+      remplacerEcran(afficherLecons);
+    } catch (err) { if (err.code) code.demander(); message.textContent = err.message; }
+  }
+
+  afficher(el('div', { class: 'page-envoi page-profil' },
+    el('p', { class: 'intro' }, eleve
+      ? 'Plus on en dit, plus les leçons seront faites pour lui ou pour elle ✨'
+      : 'Décris un peu l’élève : ses leçons seront fabriquées sur mesure (exemples tirés de ses passions, bon niveau, encouragements) ✨'),
+    ...champ('nom', 'Prénom', 'Prénom', 1),
+    el('h3', {}, 'Âge'), champAge,
+    el('h3', {}, 'Classe'), puces('classe', CLASSES),
+    el('h3', {}, 'Avatar'), puces('avatar', AVATARS, (v) => v, 'puces-avatar'),
+    el('h3', {}, 'Couleur'), puces('couleur', COULEURS, () => '', 'puces-couleur'),
+    ...champ('passions', '💛 Ses passions', 'Les dinosaures, le foot, le dessin, Minecraft…'),
+    ...champ('copains', '👫 Ses copains', 'Les prénoms de ses copains (pour les histoires des problèmes)'),
+    ...champ('forces', '💪 Ses points forts', 'Il calcule vite de tête, elle adore lire…'),
+    ...champ('difficultes', '🧗 Ce qui est plus difficile', 'Il confond b et d, elle se décourage vite… (pas besoin de diagnostic : décris simplement)'),
+    ...champ('envies', '🎯 Ce que tu aimerais', 'Qu’il prenne confiance, réviser les tables avant le contrôle…', 3),
+    el('div', { class: 'info-maj' }, el('span', { class: 'emoji' }, '🔒'),
+      el('p', {}, 'Ces informations restent privées : elles servent seulement à fabriquer ses leçons. Elles ne sont jamais publiées dans l’appli.')),
+    code.bloc, message, btn,
+    eleve ? el('p', { class: 'code-eleve' }, 'Code de cet élève (pour le retrouver sur un autre téléphone) : ', el('b', {}, eleve.id)) : null,
+    eleve ? el('button', {
+      class: 'btn-secondaire btn-retirer', onclick: () => {
+        if (!confirm(`Retirer ${eleve.nom} de ce téléphone ? (ses leçons restent en ligne, on pourra le retrouver avec son code)`)) return;
+        ecrireEleves(lireEleves().filter((e) => e.id !== eleve.id));
+        // Retour direct à l'accueil : on recule de plusieurs écrans d'un coup. Le gestionnaire
+        // « popstate » ne dépile qu'UN écran : on ne garde donc que [accueil, cet écran] dans la pile.
+        const ecrans = pile.length - 1;
+        pile.length = 2;
+        history.go(-ecrans);
+      },
+    }, '🗑️ Retirer de ce téléphone') : el('details', { class: 'retrouver' },
+      el('summary', {}, '📲 Déjà créé sur un autre téléphone ?'),
+      el('p', {}, 'Tape son code (il est écrit en bas de sa page « Modifier le profil ») :'),
+      champRetrouver, el('button', { class: 'btn-secondaire', onclick: retrouver }, '🔎 Retrouver l’élève'))));
 }
 
 /* ---- ENVOYER UNE NOUVELLE LEÇON (photos) ----
@@ -979,7 +1186,7 @@ function boutonEnvoi() {
   if (!etat.donnees.envoi?.url) return null;
   return el('button', { class: 'btn-envoi', onclick: () => aller(afficherEnvoi) },
     el('span', { class: 'emoji' }, '📸'),
-    el('span', {}, el('b', {}, 'Envoyer une nouvelle leçon'), el('small', {}, 'Prends-la en photo, on en fait une leçon animée ✨')));
+    el('span', {}, el('b', {}, 'Ajouter une nouvelle leçon'), el('small', {}, 'Prends-la en photo ou décris ce qu’il faut réviser : on en fait une leçon animée ✨')));
 }
 
 /**
@@ -1028,8 +1235,10 @@ function afficherEnvoi() {
   const champCamera = el('input', { type: 'file', accept: 'image/*', capture: 'environment', hidden: '' });
   const champGalerie = el('input', { type: 'file', accept: 'image/*', multiple: '', hidden: '' });
   const vignettes = el('div', { class: 'vignettes' });
-  const note = el('textarea', { class: 'note-envoi', rows: '2', maxlength: '500',
-    placeholder: 'Un petit mot ? (pour quand, ce qui est difficile…)' });
+  // Sans photo, ce texte EST la demande (« la table de 7, il confond 7 × 6 et 7 × 8 ») : il faut au moins 10 caractères.
+  const note = el('textarea', { class: 'note-envoi', rows: '4', maxlength: '1500',
+    placeholder: 'Ex. : « La table de 7 pour jeudi, il confond 7 × 6 et 7 × 8 » ou « Les verbes du 1er groupe au futur ». Avec des photos : un petit mot (pour quand, ce qui est difficile…)' });
+  const assezDecrit = () => note.value.trim().length >= 10;
   const codeSauve = (() => { try { return localStorage.getItem(CLE_CODE_FAMILLE) || ''; } catch { return ''; } })();
   const champCode = el('input', { class: 'code-envoi', type: 'password', autocomplete: 'off', placeholder: 'Code famille' });
   const blocCode = el('div', { class: 'bloc-code' },
@@ -1051,10 +1260,12 @@ function afficherEnvoi() {
       el('span', { class: 'num' }, i + 1),
       el('button', { class: 'retirer', 'aria-label': 'Retirer cette photo',
         onclick: () => { choix.photos.splice(i, 1); majEcran(); } }, '✖'))));
-    btnEnvoyer.disabled = !choix.photos.length;
+    // On peut envoyer des photos, OU seulement une description du besoin
+    btnEnvoyer.disabled = !choix.photos.length && !assezDecrit();
     btnEnvoyer.textContent = choix.photos.length
-      ? `📤 Envoyer (${pluriel(choix.photos.length, 'photo')})` : '📤 Envoyer';
+      ? `📤 Envoyer (${pluriel(choix.photos.length, 'photo')})` : '📤 Envoyer la demande';
   }
+  note.addEventListener('input', majEcran);
 
   async function ajouter(e) {
     const fichiers = [...e.target.files].slice(0, 8 - choix.photos.length);
@@ -1082,7 +1293,9 @@ function afficherEnvoi() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, enfant: enfant.id, matiere: choix.matiere || 'Autre',
-          note: note.value.trim(), photos: choix.photos, version: VERSION }),
+          note: note.value.trim(), photos: choix.photos, version: VERSION,
+          // Élève ajouté depuis l'appli : son profil voyage avec la demande (Claude s'en sert pour personnaliser)
+          eleve: enfant.perso ? profilAEnvoyer(enfant) : undefined }),
       });
       const r = await rep.json().catch(() => ({}));
       if (r.erreur === 'code') {               // mauvais code : on l'oublie et on le redemande
@@ -1101,15 +1314,16 @@ function afficherEnvoi() {
   }
 
   afficher(el('div', { class: 'page-envoi' },
-    el('p', { class: 'intro' }, `Prends la leçon de ${enfant.nom} en photo : une photo par page, bien à plat et lisible. On en fera une leçon animée ✨`),
+    el('p', { class: 'intro' }, `Prends la leçon de ${enfant.nom} en photo (une photo par page, bien à plat et lisible), `
+      + 'ou décris simplement ce qu’il faut réviser. On en fera une leçon animée ✨'),
     infoMiseAJour(),
     el('h3', {}, '1. La matière'), puces,
-    el('h3', {}, '2. Les photos'),
+    el('h3', {}, '2. Les photos ', el('small', {}, '(facultatif si tu décris le besoin)')),
     el('div', { class: 'boutons-photo' },
       el('button', { class: 'btn-secondaire', onclick: () => champCamera.click() }, '📷 Prendre une photo'),
       el('button', { class: 'btn-secondaire', onclick: () => champGalerie.click() }, '🖼️ Galerie')),
     vignettes, champCamera, champGalerie,
-    el('h3', {}, '3. Un petit mot (facultatif)'), note,
+    el('h3', {}, '3. Décris le besoin ', el('small', {}, '(obligatoire sans photo)')), note,
     blocCode, message, btnEnvoyer));
   majEcran();
 }
@@ -1119,8 +1333,9 @@ function afficherEnvoiReussi(nb) {
   entete('C’est envoyé !');
   afficher(el('div', { class: 'vide envoi-reussi' },
     el('div', { class: 'gros-emoji' }, '📬'),
-    el('h2', {}, 'Leçon bien reçue !'),
-    el('p', {}, `${pluriel(nb, 'photo')} envoyée${nb > 1 ? 's' : ''}. La leçon animée arrivera bientôt dans l’appli ✨`),
+    el('h2', {}, 'Demande bien reçue !'),
+    el('p', {}, nb ? `${pluriel(nb, 'photo')} envoyée${nb > 1 ? 's' : ''}. ` : 'Ta description est envoyée. ',
+      'La leçon animée arrivera bientôt dans l’appli ✨'),
     infoMiseAJour(),
     el('button', { class: 'btn-principal', onclick: () => history.back() }, '← Retour à mes leçons')));
 }
@@ -1196,6 +1411,55 @@ function ouvrirRemarque(lecon, endroit) {
   document.body.append(fond);
 }
 
+/* ---- AJUSTER UNE LEÇON 🛠️ ----
+   Contrairement aux remarques 💬 (rassemblées pour Papa le soir, jamais corrigées toutes seules),
+   un AJUSTEMENT est une demande explicite de modifier la leçon : « plus facile », « plus court »,
+   « il y a une erreur »… Il part vers la boîte aux lettres (dépôt privé, ajustements/<enfant>/…)
+   et le robot « Leçon immédiate » modifie la leçon dans lecons.json en quelques minutes. */
+
+const CHOIX_AJUSTEMENT = ['🪶 Plus facile', '🧗 Plus difficile', '➕ Plus de questions', '✂️ Plus court',
+  '🖼️ Plus d’exemples et d’images', '🎯 Avec ses passions', '🐞 Corriger une erreur'];
+
+function ouvrirAjustement(lecon) {
+  document.querySelector('.feuille-fond')?.remove();
+  const choisis = new Set();
+  const texte = el('textarea', { class: 'note-envoi', rows: '3', maxlength: '1000',
+    placeholder: 'Précise si besoin : « la question sur 7 × 8 est fausse », « ajoute des problèmes avec des billes »…' });
+  const code = champCodeFamille();
+  const message = el('p', { class: 'message-envoi' });
+  const fermer = () => fond.remove();
+  const btn = el('button', { class: 'btn-principal', onclick: envoyer }, '📤 Demander l’ajustement');
+
+  async function envoyer() {
+    if (!choisis.size && texte.value.trim().length < 5) { message.textContent = 'Choisis ce qu’il faut changer, ou explique-le en quelques mots 🙂'; return; }
+    const c = code.valeur();
+    if (!c) { code.demander(); message.textContent = 'Tape le code famille 🔑'; return; }
+    btn.disabled = true; btn.textContent = '⏳ Envoi…'; message.textContent = '';
+    try {
+      await posterBoite({ type: 'ajustement', enfant: etat.enfant.id, lecon: lecon.id, titreLecon: lecon.titre,
+        choix: [...choisis], texte: texte.value.trim(),
+        eleve: etat.enfant.perso ? profilAEnvoyer(etat.enfant) : undefined }, c);
+      fermer(); son('petit');
+      toast('🛠️ Demande envoyée : la leçon sera retouchée dans quelques minutes');
+    } catch (err) {
+      if (err.code) code.demander();
+      message.textContent = err.message;
+      btn.disabled = false; btn.textContent = '📤 Demander l’ajustement';
+    }
+  }
+
+  const fond = el('div', { class: 'feuille-fond', onclick: (e) => { if (e.target === fond) fermer(); } },
+    el('div', { class: 'feuille', role: 'dialog', 'aria-label': 'Demander un ajustement' },
+      el('div', { class: 'feuille-tete' }, el('b', {}, '🛠️ Ajuster la leçon'),
+        el('button', { class: 'feuille-fermer', 'aria-label': 'Fermer', onclick: fermer }, '✖')),
+      el('p', { class: 'feuille-ou' }, `« ${lecon.titre} » — qu’est-ce qu’on change ?`),
+      el('div', { class: 'puces-matiere' }, CHOIX_AJUSTEMENT.map((m) => el('button', {
+        class: 'puce', onclick: (e) => { choisis.has(m) ? choisis.delete(m) : choisis.add(m); e.currentTarget.classList.toggle('choisie'); },
+      }, m))),
+      texte, code.bloc, message, btn));
+  document.body.append(fond);
+}
+
 /* ---- PARCOURS : une grosse leçon découpée en petits modules ----
    Dans lecons.json, chaque module est une leçon normale avec en plus
      "parcours": "Arrondir et encadrer", "etape": 2
@@ -1220,26 +1484,48 @@ function modulesDu(parcours) {
     .sort((a, b) => (a.etape || 0) - (b.etape || 0));
 }
 
+/* Un parcours compte au plus 4 étapes (au-delà, les noms deviennent illisibles sur téléphone).
+   Le robot qui fabrique les leçons respecte cette règle ; si un parcours en a quand même plus,
+   on l'affiche sur plusieurs lignes de 4 pour qu'il reste lisible. */
+const ETAPES_PAR_LIGNE = 4;
+
 function carteParcours(parcours, modules) {
   modules = [...modules].sort((a, b) => (a.etape || 0) - (b.etape || 0));
   const faits = modules.filter((m) => etoilesDe(etat.enfant.id, m.id) > 0).length;
   const prochain = modules.find((m) => etoilesDe(etat.enfant.id, m.id) === 0);
+  // Une étape = un bouton rond (✔ si réussie, sinon son emoji)
+  const etape = (m, i) => {
+    const etoiles = etoilesDe(etat.enfant.id, m.id);
+    return el('button', {
+      class: 'parcours-etape' + (etoiles ? ' faite' : '') + (m === prochain ? ' prochaine' : ''),
+      onclick: () => aller(afficherLecon, m),
+    },
+      el('span', { class: 'parcours-rond' }, etoiles ? '✔' : (m.emoji || String(i + 1))),
+      el('span', { class: 'parcours-nom' }, m.titre),
+      el('span', { class: 'parcours-etoiles' }, dessinEtoiles(etoiles)));
+  };
+  // Découpe en lignes de 4 étapes ; le trophée est au bout de la dernière ligne
+  const lignes = [];
+  for (let i = 0; i < modules.length; i += ETAPES_PAR_LIGNE) lignes.push(modules.slice(i, i + ETAPES_PAR_LIGNE));
   return el('div', { class: 'parcours' },
     el('div', { class: 'parcours-tete' },
       el('b', {}, parcours),
-      el('small', {}, faits === modules.length ? '🏆 Parcours terminé !' : `${faits} / ${modules.length} étapes`)),
-    el('div', { class: 'parcours-chemin' },
-      modules.map((m, i) => {
-        const etoiles = etoilesDe(etat.enfant.id, m.id);
-        return el('button', {
-          class: 'parcours-etape' + (etoiles ? ' faite' : '') + (m === prochain ? ' prochaine' : ''),
-          onclick: () => aller(afficherLecon, m),
+      el('small', {}, faits === modules.length ? '🏆 Parcours terminé !' : `${faits} / ${modules.length} étapes`),
+      // 📦 Archiver tout le parcours d'un coup (il va dans « Leçons archivées », d'où on peut le ressortir)
+      el('button', {
+        class: 'parcours-archiver', title: 'Archiver tout ce parcours', 'aria-label': 'Archiver tout ce parcours',
+        onclick: () => {
+          if (!confirm(`Archiver tout le parcours « ${parcours} » ? (on pourra le ressortir)`)) return;
+          modules.forEach((m) => changerArchive(etat.enfant.id, m, true));
+          afficherLecons();
+          toast('📦 Parcours archivé');
         },
-          el('span', { class: 'parcours-rond' }, etoiles ? '✔' : (m.emoji || String(i + 1))),
-          el('span', { class: 'parcours-nom' }, m.titre),
-          el('span', { class: 'parcours-etoiles' }, dessinEtoiles(etoiles)));
-      }),
-      el('span', { class: 'parcours-trophee' + (faits === modules.length ? ' gagne' : '') }, '🏆')));
+      }, '📦')),
+    lignes.map((ligne, n) => el('div', { class: 'parcours-chemin' },
+      ligne.map((m, i) => etape(m, n * ETAPES_PAR_LIGNE + i)),
+      // Trophée seulement au bout de la dernière ligne (case vide ailleurs, pour garder l'alignement)
+      el('span', { class: 'parcours-trophee' + (faits === modules.length ? ' gagne' : '') },
+        n === lignes.length - 1 ? '🏆' : ''))));
 }
 
 // Le module qui suit (ou null)
@@ -1310,6 +1596,10 @@ function afficherLecon(lecon) {
         toast(archiver ? '📦 Leçon archivée' : '📤 Leçon remise dans ta liste');
       },
     }, estArchivee(etat.enfant.id, lecon) ? '📤 Ressortir cette leçon des archives' : '📦 Archiver cette leçon (je la connais !)') : null,
+    // 🛠️ Demander à Claude de retoucher la leçon (plus facile, plus court, une erreur…)
+    etat.donnees.envoi?.url && etat.enfant ? el('button', {
+      class: 'btn-secondaire btn-ajuster', onclick: () => ouvrirAjustement(lecon),
+    }, '🛠️ Demander un ajustement') : null,
   )));
 }
 
