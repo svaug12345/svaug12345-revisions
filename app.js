@@ -157,7 +157,7 @@ function lireProgres() {
   catch { return {}; }
 }
 
-function enregistrerScore(idEnfant, idLecon, etoiles, pourcentage) {
+function enregistrerScore(idEnfant, idLecon, etoiles, pourcentage, ratees = []) {
   const p = lireProgres();
   p[idEnfant] ??= {};
   const ancien = p[idEnfant][idLecon] || { etoiles: 0, meilleur: 0, fois: 0 };
@@ -166,6 +166,7 @@ function enregistrerScore(idEnfant, idLecon, etoiles, pourcentage) {
     meilleur: Math.max(ancien.meilleur, pourcentage),
     fois: ancien.fois + 1,
     dernier: Date.now(),
+    ratees,   // n° des questions ratées au dernier quiz (le mode parent les montre : « ce qui a coincé »)
   };
   try { localStorage.setItem(CLE_PROGRES, JSON.stringify(p)); } catch { /* stockage plein ou bloqué */ }
 }
@@ -891,7 +892,17 @@ function remplacerEcran(fonctionEcran, ...args) {
 function entete(titre) {
   $('#titre').textContent = titre;
   $('#btn-retour').hidden = pile.length <= 1;
-  $('#badge-enfant').replaceChildren(etat.enfant ? dessinAvatar(etat.enfant, 'mini-avatar') : '');
+  // Avatar cliquable -> profil de l'élève ; à côté, le bouton 👪 du mode parent (profils "modeParent": true)
+  $('#badge-enfant').replaceChildren(...(etat.enfant ? [
+    etat.enfant.modeParent ? el('button', {
+      class: 'btn-parent' + (modeParent() ? ' actif' : ''), title: 'Mode parent', 'aria-label': 'Mode parent',
+      onclick: basculerModeParent,
+    }, '👪') : null,
+    el('button', { class: 'btn-avatar', title: 'Voir le profil', 'aria-label': 'Voir le profil',
+      onclick: () => { if (pile.at(-1)[0] !== afficherProfilEleve) aller(afficherProfilEleve, etat.enfant); } },
+      dessinAvatar(etat.enfant, 'mini-avatar')),
+  ].filter(Boolean) : []));
+  document.body.classList.toggle('mode-parent', modeParent());
   couperVoix(); // on coupe la voix en changeant d'écran
   fermerLecteurMot(); // et on range le lecteur de mots étrangers
   raccrocherAlex();   // et on termine un éventuel appel avec Alex
@@ -996,7 +1007,7 @@ function afficherLecons() {
   const groupes = parMatiere(lecons);
   for (const a of attentes) if (!groupes.some(([m]) => m === groupeDe(a))) groupes.unshift([groupeDe(a), []]);
 
-  afficher(blocCoachLangues(), ...groupes.map(([matiere, liste]) =>
+  afficher(modeParent() ? tableauDeBordParent(lecons) : blocCoachLangues(), ...groupes.map(([matiere, liste]) =>
     el('section', { class: 'groupe' },
       el('h2', {}, matiere),
       attentes.filter((a) => groupeDe(a) === matiere).map(carteAttente),
@@ -1025,9 +1036,17 @@ function ecrireEleves(liste) { try { localStorage.setItem(CLE_ELEVES, JSON.strin
 
 /** Tous les profils : ceux de lecons.json + ceux créés sur cet appareil (sans doublon d'id) */
 function tousLesEnfants() {
-  const famille = etat.donnees.enfants;
-  return [...famille, ...lireEleves().filter((e) => !famille.some((f) => f.id === e.id))];
+  const locaux = lireEleves();
+  // Enfants de la famille (lecons.json) : on y ajoute ce qu'on a décrit dans l'appli (passions, copains…),
+  // gardé dans l'appareil sous { id, famille: true, … } — sans toucher à leurs réglages
+  const famille = etat.donnees.enfants.map((f) => {
+    const x = locaux.find((e) => e.id === f.id);
+    return x ? { ...f, ...Object.fromEntries(CHAMPS_DESCRIPTION.filter((c) => x[c]).map((c) => [c, x[c]])) } : f;
+  });
+  return [...famille, ...locaux.filter((e) => !e.famille && !famille.some((f) => f.id === e.id))];
 }
+// Les champs « description » d'un profil, qu'on peut remplir pour tous les enfants
+const CHAMPS_DESCRIPTION = ['passions', 'copains', 'forces', 'difficultes', 'envies'];
 
 /** Identifiant d'un nouvel élève : prénom sans accents + 4 caractères au hasard (« Léa » -> « lea-7k2f ») */
 function nouvelId(prenom) {
@@ -1093,6 +1112,9 @@ function champCodeFamille() {
 function afficherProfilEleve(eleve) {
   etat.enfant = eleve;
   entete(eleve ? `Profil de ${eleve.nom}` : 'Nouvel élève');
+  // Enfant de la famille (lecons.json) : prénom, âge, classe, avatar viennent du fichier et ne se
+  // changent pas ici ; on peut seulement compléter sa description (passions, copains…)
+  const famille = !!eleve && !eleve.perso;
   const p = { avatar: AVATARS[0], couleur: COULEURS[Math.floor(Math.random() * COULEURS.length)], ...(eleve || {}) };
 
   const champ = (cle, label, placeholder, lignes = 2) => {
@@ -1125,9 +1147,12 @@ function afficherProfilEleve(eleve) {
   async function enregistrer() {
     p.nom = String(p.nom || '').trim();
     if (!p.nom) { message.textContent = 'Il faut au moins un prénom 🙂'; return; }
-    const profil = reglagesDuProfil({ ...p, id: p.id || nouvelId(p.nom) });
-    // 1. Gardé dans l'appareil tout de suite (l'élève apparaît même sans internet)
-    ecrireEleves([...lireEleves().filter((e) => e.id !== profil.id), profil]);
+    const profil = famille ? p : reglagesDuProfil({ ...p, id: p.id || nouvelId(p.nom) });
+    // 1. Gardé dans l'appareil tout de suite (l'élève apparaît même sans internet).
+    //    Enfant de la famille : on ne garde que sa description (ses réglages restent ceux de lecons.json)
+    const aGarder = famille ? { id: p.id, nom: p.nom, famille: true,
+      ...Object.fromEntries(CHAMPS_DESCRIPTION.map((c) => [c, p[c]])) } : profil;
+    ecrireEleves([...lireEleves().filter((e) => e.id !== profil.id), aGarder]);
     // 2. Envoyé au dépôt privé, pour que Claude personnalise les leçons
     if (etat.donnees.envoi?.url) {
       const c = code.valeur();
@@ -1144,7 +1169,7 @@ function afficherProfilEleve(eleve) {
     }
     son('fin');
     toast(eleve ? '✅ Profil mis à jour' : `🎉 Bienvenue ${profil.nom} !`);
-    etat.enfant = profil;
+    etat.enfant = tousLesEnfants().find((e) => e.id === profil.id) || profil;
     if (eleve) history.back();             // retour à ses leçons
     else remplacerEcran(afficherLecons);   // nouvel élève : on ouvre directement sa page
   }
@@ -1170,11 +1195,16 @@ function afficherProfilEleve(eleve) {
     el('p', { class: 'intro' }, eleve
       ? 'Plus on en dit, plus les leçons seront faites pour lui ou pour elle ✨'
       : 'Décris un peu l’élève : ses leçons seront fabriquées sur mesure (exemples tirés de ses passions, bon niveau, encouragements) ✨'),
-    ...champ('nom', 'Prénom', 'Prénom', 1),
-    el('h3', {}, 'Âge'), champAge,
-    el('h3', {}, 'Classe'), puces('classe', CLASSES),
-    el('h3', {}, 'Avatar'), puces('avatar', AVATARS, (v) => v, 'puces-avatar'),
-    el('h3', {}, 'Couleur'), puces('couleur', COULEURS, () => '', 'puces-couleur'),
+    // Carte d'identité (enfant de la famille) ou champs à remplir (élève ajouté dans l'appli)
+    famille ? el('div', { class: 'identite', style: `--c:${eleve.couleur || '#14b8a6'}` },
+      dessinAvatar(eleve), el('div', {}, el('b', {}, eleve.nom),
+        el('small', {}, [eleve.age ? `${eleve.age} ans` : '', eleve.classe || ''].filter(Boolean).join(' · ')))) : null,
+    ...(famille ? [] : [
+      ...champ('nom', 'Prénom', 'Prénom', 1),
+      el('h3', {}, 'Âge'), champAge,
+      el('h3', {}, 'Classe'), puces('classe', CLASSES),
+      el('h3', {}, 'Avatar'), puces('avatar', AVATARS, (v) => v, 'puces-avatar'),
+      el('h3', {}, 'Couleur'), puces('couleur', COULEURS, () => '', 'puces-couleur')]),
     ...champ('passions', '💛 Ses passions', 'Les dinosaures, le foot, le dessin, Minecraft…'),
     ...champ('copains', '👫 Ses copains', 'Les prénoms de ses copains (pour les histoires des problèmes)'),
     ...champ('forces', '💪 Ses points forts', 'Il calcule vite de tête, elle adore lire…'),
@@ -1183,8 +1213,8 @@ function afficherProfilEleve(eleve) {
     el('div', { class: 'info-maj' }, el('span', { class: 'emoji' }, '🔒'),
       el('p', {}, 'Ces informations restent privées : elles servent seulement à fabriquer ses leçons. Elles ne sont jamais publiées dans l’appli.')),
     code.bloc, message, btn,
-    eleve ? el('p', { class: 'code-eleve' }, 'Code de cet élève (pour le retrouver sur un autre téléphone) : ', el('b', {}, eleve.id)) : null,
-    eleve ? el('button', {
+    eleve && !famille ? el('p', { class: 'code-eleve' }, 'Code de cet élève (pour le retrouver sur un autre téléphone) : ', el('b', {}, eleve.id)) : null,
+    famille ? null : eleve ? el('button', {
       class: 'btn-secondaire btn-retirer', onclick: () => {
         if (!confirm(`Retirer ${eleve.nom} de ce téléphone ? (ses leçons restent en ligne, on pourra le retrouver avec son code)`)) return;
         ecrireEleves(lireEleves().filter((e) => e.id !== eleve.id));
@@ -1610,6 +1640,183 @@ function ouvrirAjustement(lecon) {
   document.body.append(fond);
 }
 
+/* ---- 👪 MODE PARENT ----
+   Pour un profil avec "modeParent": true (aujourd'hui : Gaby, pour tester).
+   Le petit bouton 👪 à côté de l'avatar (en haut à droite) l'active ou le coupe ; l'en-tête
+   devient violet pour qu'on voie tout de suite qu'on est « côté parent ».
+
+   Ce qui change :
+   - LISTE DES LEÇONS : un tableau de bord en haut (révisions des 7 derniers jours, étoiles,
+     « à revoir en priorité ») et, sur chaque leçon, le dernier bilan fait avec le parent ;
+   - PAGE D'UNE LEÇON : un GUIDE pour faire réciter l'enfant en 10 minutes :
+       🎯 l'essentiel à vérifier, 🔁 ce qui a coincé à son dernier quiz,
+       🗣️ des questions à poser (réponse cachée + « Sait / Hésite / À revoir »),
+       ⚠️ les pièges, 💡 si elle bloque, 🎲 un défi à faire ensemble, puis un bilan.
+   Le contenu vient du bloc "parent" de la leçon dans lecons.json :
+     "parent": { "essentiel": […], "questions": [{ "q": "…", "r": "…" }], "pieges": […],
+                 "aide": […], "defi": "…" }
+   Sans bloc "parent", le guide est fabriqué à partir de la fiche (titres) et du quiz (questions + réponses).
+   Les bilans sont gardés dans l'appareil (comme les étoiles). */
+
+const CLE_MODE_PARENT = 'revisions-mode-parent';   // id de l'enfant dont le mode parent est allumé
+const CLE_BILANS = 'revisions-bilans-parent';      // { gaby: { idLecon: { quand, notes: [2,1,0…], total } } }
+
+const modeParent = () => !!etat.enfant?.modeParent && lireStock(CLE_MODE_PARENT, '') === etat.enfant.id;
+
+function basculerModeParent() {
+  const allume = !modeParent();
+  ecrireStock(CLE_MODE_PARENT, allume ? etat.enfant.id : '');
+  toast(allume ? '👪 Mode parent activé' : '🧒 Retour au mode enfant');
+  // On redessine l'écran affiché (liste ou leçon) dans le bon mode
+  const [fonctionEcran, args] = pile.at(-1);
+  if ([afficherLecons, afficherLecon].includes(fonctionEcran)) fonctionEcran(...args);
+  else entete($('#titre').textContent);
+}
+
+/** Une activité du quiz -> { q, r } lisibles par un parent (sans les {{ }} des mots étrangers) */
+function questionReponse(a) {
+  const net = (t) => sansMots(String(t ?? ''));
+  const liste = (x) => (Array.isArray(x) ? x : [x]).map(net);
+  switch (a.type) {
+    case 'qcm': return { q: net(a.question), r: net(a.choix?.[0]) };
+    case 'vraifaux': return { q: `Vrai ou faux : « ${net(a.affirmation)} »`, r: (a.reponse ? 'Vrai' : 'Faux') + (a.explication ? ` — ${net(a.explication)}` : '') };
+    case 'saisie': return { q: net(a.question), r: liste(a.reponse)[0] };
+    case 'trous': return { q: `Complète : ${net(a.texte).replace(/\[[^\]]+\]/g, '…')}`, r: [...net(a.texte).matchAll(/\[([^\]]+)\]/g)].map((m) => m[1]).join(' · ') };
+    case 'paires': return { q: `${net(a.consigne || 'Associe')} : ${(a.paires || []).map((p) => net(p[0])).join(', ')}`, r: (a.paires || []).map((p) => `${net(p[0])} → ${net(p[1])}`).join(' · ') };
+    case 'ordre': return { q: net(a.consigne || 'Remets dans l’ordre'), r: liste(a.elements).join(' → ') };
+    case 'carte': return { q: net(a.recto), r: net(a.verso) };
+    default: return { q: net(a.question || a.consigne || ''), r: '' };
+  }
+}
+
+/** Le guide d'une leçon : son bloc "parent", complété automatiquement par la fiche et le quiz */
+function guideDe(lecon) {
+  const g = lecon.parent || {};
+  const titres = (lecon.fiche || []).filter((l) => typeof l === 'string' && /^#{1,2} /.test(l)).map((l) => sansMots(l.replace(/^#+ /, '')));
+  return {
+    essentiel: g.essentiel?.length ? g.essentiel : titres.map((t) => `Sait expliquer : **${t}**`),
+    questions: g.questions?.length ? g.questions
+      : (lecon.activites || []).map(questionReponse).filter((x) => x.q && x.r).slice(0, 8),
+    pieges: g.pieges || [], aide: g.aide || [], defi: g.defi || '', duree: g.duree || '10 min',
+  };
+}
+
+/** Le dernier bilan parent d'une leçon (ou null) */
+const bilanDe = (idEnfant, idLecon) => lireStock(CLE_BILANS, {})[idEnfant]?.[idLecon] || null;
+function enregistrerBilan(idEnfant, idLecon, notes) {
+  const b = lireStock(CLE_BILANS, {});
+  b[idEnfant] ??= {};
+  b[idEnfant][idLecon] = { quand: Date.now(), notes };
+  ecrireStock(CLE_BILANS, b);
+}
+const dateCourte = (t) => new Date(t).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+/** « 👪 5/7 le 11 nov. » : nombre de questions sues au dernier bilan */
+function resumeBilan(b) {
+  const notes = (b?.notes || []).filter((n) => n !== null && n !== undefined);
+  if (!notes.length) return null;
+  return `👪 ${notes.filter((n) => n === 2).length}/${notes.length} sues le ${dateCourte(b.quand)}`;
+}
+
+/** Tableau de bord en haut de la liste des leçons (mode parent) */
+function tableauDeBordParent(lecons) {
+  const id = etat.enfant.id;
+  const progres = lireProgres()[id] || {};
+  const semaine = Date.now() - 7 * 24 * 60 * MINUTE;
+  const recentes = lecons.filter((l) => progres[l.id]?.dernier > semaine);
+  const etoiles = lecons.reduce((s, l) => s + (progres[l.id]?.etoiles || 0), 0);
+  // Priorités : jamais faite, score < 70 %, ou des « à revoir » au dernier bilan parent
+  const priorite = (l) => {
+    const p = progres[l.id];
+    const aRevoir = (bilanDe(id, l.id)?.notes || []).filter((n) => n === 0).length;
+    if (aRevoir) return { score: 3 + aRevoir, pourquoi: `${pluriel(aRevoir, 'point')} à revoir au dernier bilan` };
+    // Un quiz raté passe avant une leçon jamais faite : on sait déjà qu'il y a quelque chose à reprendre
+    if (p && p.meilleur < 70) return { score: 2 + (70 - p.meilleur) / 100, pourquoi: `meilleur score ${p.meilleur} %` };
+    if (!p) return { score: 1, pourquoi: 'jamais révisée' };
+    return null;
+  };
+  const aRevoir = lecons.map((l) => ({ l, p: priorite(l) })).filter((x) => x.p)
+    .sort((a, b) => b.p.score - a.p.score).slice(0, 3);
+  return el('section', { class: 'tableau-parent' },
+    el('div', { class: 'tp-tete' }, el('b', {}, `👪 Mode parent · ${etat.enfant.nom}`),
+      el('button', { class: 'btn-petit', onclick: basculerModeParent }, '🧒 Mode enfant')),
+    el('div', { class: 'tp-chiffres' },
+      el('div', {}, el('b', {}, recentes.length), el('small', {}, 'leçons révisées\ncette semaine')),
+      el('div', {}, el('b', {}, `⭐ ${etoiles}`), el('small', {}, `sur ${lecons.length * 3} possibles`)),
+      el('div', {}, el('b', {}, Object.keys(lireStock(CLE_BILANS, {})[id] || {}).length), el('small', {}, 'bilans\nfaits ensemble'))),
+    aRevoir.length ? el('div', { class: 'tp-priorites' }, el('h3', {}, '🎯 À revoir en priorité'),
+      aRevoir.map(({ l, p }) => el('button', { class: 'tp-priorite', onclick: () => aller(afficherLecon, l) },
+        el('span', {}, l.emoji || '📘'), el('span', {}, el('b', {}, l.titre), el('small', {}, p.pourquoi)), el('span', {}, '›'))))
+      : el('p', { class: 'tp-bravo' }, '🎉 Rien d’urgent : toutes les leçons sont bien révisées !'),
+    el('p', { class: 'tp-aide' }, 'Touche une leçon : tu auras les questions à lui poser, les réponses, les pièges et un défi à faire ensemble (10 min).'));
+}
+
+/** La page d'une leçon en mode parent : le guide pour faire réciter */
+function guideParent(lecon) {
+  const id = etat.enfant.id;
+  const prenom = etat.enfant.nom;
+  const g = guideDe(lecon);
+  const p = lireProgres()[id]?.[lecon.id];
+  const ancien = bilanDe(id, lecon.id);
+  const notes = g.questions.map(() => null);       // 2 = sait, 1 = hésite, 0 = à revoir
+  const bilan = el('div', { class: 'gp-bilan' });
+  const fmt = (t) => el('span', { html: miseEnForme(sansMots(t)).replace(/^<p>|<\/p>$/g, '') });
+  const liste = (items) => el('ul', {}, items.map((t) => el('li', {}, fmt(t))));
+
+  // Le bilan se met à jour à chaque note, et il est enregistré tout de suite
+  function majBilan() {
+    const faites = notes.filter((n) => n !== null);
+    if (!faites.length) { bilan.replaceChildren(); return; }
+    enregistrerBilan(id, lecon.id, notes);
+    const sues = faites.filter((n) => n === 2).length;
+    const aRevoir = g.questions.filter((_, i) => notes[i] === 0);
+    const conseil = faites.length < notes.length ? `Encore ${notes.length - faites.length} question(s) à poser.`
+      : sues === notes.length ? `Parfait ! ${prenom} maîtrise cette leçon : un quiz pour gagner les ⭐, puis on peut l’archiver.`
+        : aRevoir.length ? `Relisez ensemble la fiche sur les points à revoir, puis lancez le quiz.`
+          : `Presque ! Un dernier passage sur le quiz pour fixer les hésitations.`;
+    bilan.replaceChildren(el('h3', {}, '📋 Bilan'),
+      el('p', {}, el('b', {}, `${sues} / ${faites.length}`), ' sues du premier coup', faites.length < notes.length ? ` (sur ${notes.length})` : ''),
+      aRevoir.length ? el('div', {}, el('small', {}, 'À revoir :'), liste(aRevoir.map((x) => x.q))) : null,
+      el('p', { class: 'gp-conseil' }, '💡 ', conseil));
+  }
+
+  const questions = g.questions.map((x, i) => {
+    const reponse = el('div', { class: 'gp-reponse', hidden: '' }, '✅ ', fmt(x.r));
+    const notes3 = el('div', { class: 'gp-notes' }, [[2, '✅ Sait'], [1, '🤏 Hésite'], [0, '❌ À revoir']].map(([n, t]) =>
+      el('button', { class: 'puce', onclick: (e) => {
+        notes[i] = n;
+        notes3.querySelectorAll('.puce').forEach((b) => b.classList.toggle('choisie', b === e.currentTarget));
+        majBilan();
+      } }, t)));
+    return el('li', { class: 'gp-question' },
+      el('p', {}, fmt(x.q)),
+      el('button', { class: 'btn-petit', onclick: (e) => { reponse.hidden = !reponse.hidden; e.currentTarget.textContent = reponse.hidden ? '👀 Voir la réponse' : '🙈 Cacher'; } }, '👀 Voir la réponse'),
+      reponse, notes3);
+  });
+
+  const ratees = (p?.ratees || []).map((i) => lecon.activites?.[i]).filter(Boolean).map(questionReponse);
+  return el('div', { class: 'guide-parent' },
+    el('div', { class: 'tete-lecon' },
+      el('span', { class: 'gros-emoji' }, lecon.emoji || '📘'),
+      el('div', {}, el('small', {}, `👪 Guide parent · ${lecon.matiere || ''}`), el('h2', {}, lecon.titre),
+        el('span', { class: 'date-ajout' }, `⏱ ${g.duree} · `, p ? `révisée ${pluriel(p.fois, 'fois')}, meilleur score ${p.meilleur} %` : 'pas encore révisée dans l’appli',
+          ancien ? ` · dernier bilan le ${dateCourte(ancien.quand)}` : ''))),
+    el('section', { class: 'gp-bloc gp-essentiel' }, el('h3', {}, '🎯 L’essentiel à vérifier'), liste(g.essentiel)),
+    ratees.length ? el('section', { class: 'gp-bloc gp-coince' }, el('h3', {}, `🔁 Ce qui a coincé à son dernier quiz`),
+      el('ul', {}, ratees.map((x) => el('li', {}, fmt(x.q), el('br'), el('small', {}, '→ ', fmt(x.r)))))) : null,
+    el('section', { class: 'gp-bloc gp-questions' }, el('h3', {}, `🗣️ Les questions à poser à ${prenom}`),
+      el('p', { class: 'gp-astuce' }, 'Pose la question à l’oral, laisse-lui le temps de répondre, puis regarde la réponse et note.'),
+      el('ol', {}, questions)),
+    bilan,
+    g.pieges.length ? el('section', { class: 'gp-bloc gp-pieges' }, el('h3', {}, '⚠️ Les pièges fréquents'), liste(g.pieges)) : null,
+    g.aide.length ? el('section', { class: 'gp-bloc gp-aide' }, el('h3', {}, `💡 Si ${prenom} bloque`), liste(g.aide)) : null,
+    g.defi ? el('section', { class: 'gp-bloc gp-defi' }, el('h3', {}, '🎲 Le défi à faire ensemble'), el('p', {}, fmt(g.defi))) : null,
+    el('details', { class: 'gp-fiche' }, el('summary', {}, `👀 La fiche de ${prenom}`), dessinerFiche(lecon)),
+    el('div', { class: 'gp-actions' },
+      lecon.activites?.length ? el('button', { class: 'btn-principal', onclick: () => { ecrireStock(CLE_MODE_PARENT, ''); aller(lancerQuiz, lecon); } },
+        `🧒 Lui passer le téléphone : quiz (${pluriel(lecon.activites.length, 'question')})`) : null,
+      etat.donnees.envoi?.url ? el('button', { class: 'btn-secondaire', onclick: () => ouvrirAjustement(lecon) }, '🛠️ Demander un ajustement') : null));
+}
+
 /* ---- PARCOURS : une grosse leçon découpée en petits modules ----
    Dans lecons.json, chaque module est une leçon normale avec en plus
      "parcours": "Arrondir et encadrer", "etape": 2
@@ -1666,7 +1873,7 @@ function carteParcours(parcours, modules) {
   return el('div', { class: 'parcours' },
     el('div', { class: 'parcours-tete' },
       el('b', {}, parcours),
-      el('small', {}, faits === modules.length ? '🏆 Parcours terminé !' : `${faits} / ${modules.length} étapes`),
+      faits === modules.length ? el('small', {}, '🏆 Terminé !') : null,
       // 📦 Archiver tout le parcours d'un coup (il va dans « Leçons archivées », d'où on peut le ressortir)
       el('button', {
         class: 'parcours-archiver', title: 'Archiver tout ce parcours', 'aria-label': 'Archiver tout ce parcours',
@@ -1714,6 +1921,7 @@ function carteLecon(l, classe = '') {
     el('span', { class: 'emoji' }, l.emoji || '📘'),
     el('span', { class: 'infos' }, el('b', {}, l.titre),
       ajustementEnCours(etat.enfant.id, l) ? el('small', { class: 'badge-ajustement' }, '🛠️ ajustement en cours…')
+        : modeParent() ? el('small', { class: 'date-ajout' }, resumeBilan(bilanDe(etat.enfant.id, l.id)) || '👪 pas encore de bilan')
         : dateAjout(l) ? el('small', { class: 'date-ajout' }, dateAjout(l)) : null),
     el('span', { class: 'etoiles' }, dessinEtoiles(etoilesDe(etat.enfant.id, l.id))));
 }
@@ -1722,6 +1930,8 @@ function carteLecon(l, classe = '') {
 function afficherLecon(lecon) {
   entete(lecon.titre);
   memoriserEcran(lecon);
+  // 👪 Mode parent : à la place de la fiche, le guide pour faire réciter l'enfant
+  if (modeParent()) { langueLecon = lecon.langue || null; afficher(guideParent(lecon)); return; }
   langueLecon = lecon.langue || null;
   const nb = (lecon.activites || []).length;
   /* Mise en page (voir style.css, « TABLETTE ») :
@@ -1980,7 +2190,8 @@ function afficherResultat(q) {
     const total = q.questions.length;
     const pct = Math.round((q.bons / total) * 100);
     const etoiles = pct >= 90 ? 3 : pct >= 70 ? 2 : pct >= 40 ? 1 : 0;
-    enregistrerScore(etat.enfant.id, q.lecon.id, etoiles, pct);
+    enregistrerScore(etat.enfant.id, q.lecon.id, etoiles, pct,
+      q.erreurs.map((a) => q.lecon.activites.indexOf(a)).filter((i) => i >= 0));
     q.premier = { bons: q.bons, total, etoiles };
     if (q.erreurs.length) return ecranDeuxiemeChance(q);
     return ecranFinal(q.lecon, q.premier, null);

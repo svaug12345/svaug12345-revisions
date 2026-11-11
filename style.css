@@ -1396,3 +1396,61 @@ button.badge-ajustement { display: inline-block; margin-top: 6px; border: 0; bor
 .parcours-rond { position: relative; }
 .pastille-ajustement { position: absolute; right: -6px; top: -6px; font-size: .9rem; background: #fef3c7; border-radius: 50%;
   width: 24px; height: 24px; display: grid; place-items: center; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+
+/* ---------- v1.24.0 : avatar cliquable, 👪 mode parent ---------- */
+/* En-tête : bouton avatar (-> profil) et bouton 👪 (mode parent) */
+#badge-enfant { display: flex; align-items: center; gap: 6px; }
+.btn-avatar { border: 0; background: none; padding: 0; cursor: pointer; display: grid; place-items: center; font-size: 1.6rem; }
+.btn-parent { border: 0; border-radius: 50%; width: 34px; height: 34px; font-size: 1.05rem; cursor: pointer;
+  background: rgba(255, 255, 255, .18); display: grid; place-items: center; padding: 0; }
+.btn-parent.actif { background: #fff; box-shadow: 0 0 0 3px #c4b5fd; }
+/* Mode parent : en-tête violet, pour voir tout de suite qu'on est « côté parent » */
+body.mode-parent header { background: #5b21b6; }
+
+/* Profil d'un enfant de la famille : sa carte d'identité */
+.identite { display: flex; align-items: center; gap: 14px; background: var(--carte); border-radius: var(--rayon);
+  padding: 12px 16px; box-shadow: var(--ombre); border-left: 6px solid var(--c); margin-top: 8px; }
+.identite .avatar { width: 64px; height: 64px; font-size: 2.4rem; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--c) 18%, white); }
+.identite b { display: block; font-size: 1.3rem; color: var(--fonce); }
+.identite small { color: var(--doux); }
+
+/* Tableau de bord du parent (en haut de la liste) */
+.tableau-parent { background: linear-gradient(135deg, #ede9fe, #fff); border-radius: var(--rayon); padding: 14px; margin-bottom: 18px;
+  box-shadow: 0 4px 0 rgba(91, 33, 182, .15); border: 2px solid #ddd6fe; }
+.tp-tete { display: flex; justify-content: space-between; align-items: center; gap: 8px; color: #4c1d95; font-size: 1.05rem; }
+.tp-tete .btn-petit { margin: 0; padding: 6px 10px; background: #ddd6fe; color: #4c1d95; }
+.tp-chiffres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; }
+.tp-chiffres > div { background: #fff; border-radius: 14px; padding: 8px 4px; text-align: center; }
+.tp-chiffres b { display: block; font-size: 1.4rem; color: #5b21b6; }
+.tp-chiffres small { white-space: pre-line; color: var(--doux); font-size: .75rem; line-height: 1.2; display: block; }
+.tp-priorites h3 { margin: 4px 0 8px; font-size: 1rem; color: #4c1d95; }
+.tp-priorite { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; font: inherit; border: 0; cursor: pointer;
+  background: #fff; border-radius: 14px; padding: 10px 12px; margin-bottom: 6px; color: var(--texte); }
+.tp-priorite > span:first-child { font-size: 1.5rem; }
+.tp-priorite > span:nth-child(2) { flex: 1; display: flex; flex-direction: column; }
+.tp-priorite small { color: #b45309; }
+.tp-bravo, .tp-aide { margin: 8px 2px 0; font-size: .88rem; color: var(--doux); }
+
+/* Guide parent d'une leçon */
+.guide-parent .tete-lecon { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.guide-parent .tete-lecon small { color: #5b21b6; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; }
+.guide-parent .tete-lecon h2 { margin: 2px 0; }
+.gp-bloc, .gp-bilan:not(:empty) { background: var(--carte); border-radius: var(--rayon); padding: 12px 16px; margin-bottom: 12px;
+  box-shadow: var(--ombre); border-left: 6px solid var(--t, var(--principal)); }
+.gp-bloc h3, .gp-bilan h3 { margin: 2px 0 8px; font-size: 1.05rem; }
+.gp-bloc ul, .gp-bloc ol { margin: 0; padding-left: 20px; }
+.gp-bloc li { margin-bottom: 6px; }
+.gp-essentiel { --t: #14b8a6; } .gp-coince { --t: #f97316; } .gp-questions { --t: #6366f1; }
+.gp-pieges { --t: #ef4444; } .gp-aide { --t: #eab308; } .gp-defi { --t: #ec4899; background: #fdf2f8; }
+.gp-bilan:not(:empty) { --t: #7c3aed; background: #f5f3ff; }
+.gp-astuce { font-size: .85rem; color: var(--doux); margin: 0 0 10px; }
+.gp-question { margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px dashed var(--clair); }
+.gp-question p { margin: 0 0 6px; font-weight: 800; }
+.gp-question .btn-petit { margin: 0; padding: 6px 10px; }
+.gp-reponse { margin: 8px 0; padding: 8px 10px; background: #ecfdf5; border-radius: 10px; }
+.gp-notes { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.gp-notes .puce { padding: 6px 10px; font-size: .9rem; }
+.gp-conseil { margin-bottom: 0; }
+.gp-fiche { margin: 6px 0 12px; }
+.gp-fiche summary { font-weight: 800; cursor: pointer; color: var(--fonce); padding: 8px 4px; }
+.gp-actions .btn-secondaire { font-size: 1rem; }

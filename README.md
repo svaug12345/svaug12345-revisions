@@ -382,6 +382,25 @@ passions, copains, points forts, difficultés, et ce que le parent aimerait.
 - 📦 **Archiver = toute la série** : depuis la page d'une étape, le bouton archive le parcours entier ; les archives
   montrent une ligne par série, qu'on ressort en entier. Les leçons simples ont aussi leur 📦 dans la liste.
 
+## 👪 Mode parent (depuis la v1.24.0, en test pour Gaby)
+Profil avec `"modeParent": true`. Le petit bouton **👪** à côté de l'avatar (en haut à droite) l'allume ou l'éteint ;
+l'en-tête devient violet.
+- **Liste des leçons** : tableau de bord (leçons révisées cette semaine, étoiles, bilans faits ensemble) et
+  **« 🎯 À revoir en priorité »** (points « à revoir » au dernier bilan, leçons jamais faites, scores < 70 %).
+  Chaque leçon affiche son dernier bilan (« 👪 5/7 sues le 11 nov. »).
+- **Page d'une leçon** = **guide pour faire réciter en 10 min** : 🎯 l'essentiel, 🔁 ce qui a coincé au dernier quiz
+  (les questions ratées sont maintenant gardées avec le score), 🗣️ questions à poser (réponse cachée, puis
+  ✅ Sait / 🤏 Hésite / ❌ À revoir), 📋 bilan + conseil, ⚠️ pièges, 💡 si elle bloque, 🎲 défi à faire ensemble,
+  la fiche de l'enfant repliée, et « 🧒 Lui passer le téléphone » (lance le quiz en mode enfant).
+- Contenu : bloc `"parent"` de la leçon : `{"duree": "10 min", "essentiel": […], "questions": [{"q": "…", "r": "…"}],
+  "pieges": […], "aide": […], "defi": "…"}`. Sans ce bloc, le guide est fabriqué à partir des titres de la fiche
+  et des questions du quiz (avec leurs réponses).
+
+## 🧒 Profil d'un enfant
+Toucher l'**avatar** en haut à droite ouvre son profil. Pour les enfants de la famille (`lecons.json`), on peut
+compléter passions, copains, points forts, difficultés et envies : gardé dans l'appareil et envoyé au dépôt privé
+(`eleves/<id>.json`) pour personnaliser ses prochaines leçons (prénom, âge et réglages restent ceux de `lecons.json`).
+
 ## 🛠️ Demander un ajustement (depuis la v1.22.0)
 Sur la fiche d'une leçon, **« 🛠️ Demander un ajustement »** : plus facile, plus difficile, plus de questions,
 plus court, plus d'exemples, avec ses passions, corriger une erreur, et/ou un texte libre.
