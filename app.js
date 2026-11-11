@@ -187,6 +187,18 @@ function changerArchive(idEnfant, lecon, archiver) {
   try { localStorage.setItem(CLE_ARCHIVES, JSON.stringify(a)); } catch { /* stockage bloqué */ }
 }
 
+/* Une « série » = tous les modules d'un même parcours (même matière, même nom de parcours),
+   ou la leçon seule si elle n'est pas dans un parcours. Depuis la v1.23.0, on archive et on
+   ressort toujours une série entière : archiver une seule étape laissait un parcours à trous. */
+function serieDe(idEnfant, lecon) {
+  if (!lecon.parcours) return [lecon];
+  return leconsDe(idEnfant).filter((l) => l.parcours === lecon.parcours && l.matiere === lecon.matiere)
+    .sort((a, b) => (a.etape || 0) - (b.etape || 0));
+}
+function archiverSerie(idEnfant, lecon, archiver) {
+  serieDe(idEnfant, lecon).forEach((l) => changerArchive(idEnfant, l, archiver));
+}
+
 const etoilesDe = (idEnfant, idLecon) => lireProgres()[idEnfant]?.[idLecon]?.etoiles || 0;
 const dessinEtoiles = (n) => '★'.repeat(n) + '☆'.repeat(3 - n);
 
@@ -902,6 +914,7 @@ function appliquerConfort() {
 // --- Accueil : « Qui révise ? » ---
 function afficherAccueil() {
   etat.enfant = null;
+  memoriserEcran();   // accueil : plus d'écran à restaurer
   entete('Qui révise ?');
   const d = etat.donnees;
   afficher(
@@ -933,30 +946,41 @@ function afficherAccueil() {
 // --- Liste des leçons de l'enfant, rangées par matière ---
 function afficherLecons() {
   const enfant = etat.enfant;
+  memoriserEcran();
   // « de » devient « d' » devant une voyelle : « Leçons d'Elouan », « Leçons d'Ava »
   entete(`Leçons ${/^[aeiouyéèêàâîôû]/i.test(enfant.nom) ? 'd’' : 'de '}${enfant.nom}`);
   const toutes = leconsDe(enfant.id);
   const lecons = toutes.filter((l) => !estArchivee(enfant.id, l));
   const archivees = toutes.filter((l) => estArchivee(enfant.id, l));
 
-  // Bloc "📦 Leçons archivées" (replié par défaut), rangé lui aussi par matière,
-  // avec un bouton pour ressortir chaque leçon
+  // Bloc "📦 Leçons archivées" (replié par défaut), rangé lui aussi par matière.
+  // Une ligne par SÉRIE : un parcours archivé apparaît une seule fois et ressort en entier.
+  const seriesArchivees = (liste) => {
+    const deja = new Set();
+    return liste.filter((l) => !l.parcours || (!deja.has(l.parcours) && deja.add(l.parcours)));
+  };
+  const nbSeries = parMatiere(archivees).reduce((n, [, liste]) => n + seriesArchivees(liste).length, 0);
   const blocArchives = archivees.length ? el('details', { class: 'archives' },
-    el('summary', {}, `📦 Leçons archivées (${archivees.length})`),
+    el('summary', {}, `📦 Leçons archivées (${nbSeries})`),
     parMatiere(archivees).map(([matiere, liste]) => el('section', { class: 'groupe' },
       el('h2', {}, matiere),
-      liste.map((l) => el('div', { class: 'ligne-archive' },
-        carteLecon(l, 'archivee'),
+      seriesArchivees(liste).map((l) => el('div', { class: 'ligne-archive' },
+        l.parcours
+          ? el('button', { class: 'carte-lecon archivee', onclick: () => aller(afficherLecon, l) },
+            el('span', { class: 'emoji' }, '🧩'),
+            el('span', { class: 'infos' }, el('b', {}, l.parcours),
+              el('small', { class: 'date-ajout' }, pluriel(serieDe(enfant.id, l).length, 'étape'))))
+          : carteLecon(l, 'archivee'),
         el('button', {
           class: 'btn-petit', title: 'Remettre dans mes leçons',
-          onclick: () => { changerArchive(enfant.id, l, false); afficherLecons(); },
+          onclick: () => { archiverSerie(enfant.id, l, false); afficherLecons(); toast('📤 Remis dans tes leçons'); },
         }, '📤 Ressortir')))))) : null;
 
   // Élève ajouté depuis l'appli : petit bouton pour modifier son profil
   const btnProfil = enfant.perso ? el('button', { class: 'btn-petit btn-profil', onclick: () => aller(afficherProfilEleve, enfant) },
     '✏️ Modifier le profil de ', enfant.nom) : null;
 
-  if (!lecons.length) {
+  if (!lecons.length && !attentesDe(enfant.id).length) {
     afficher(el('div', { class: 'vide' },
       el('div', { class: 'gros-emoji' }, '📭'),
       el('p', {}, archivees.length ? 'Toutes tes leçons sont archivées 📦'
@@ -966,9 +990,16 @@ function afficherLecons() {
     return;
   }
 
-  afficher(blocCoachLangues(), ...parMatiere(lecons).map(([matiere, liste]) =>
+  // ⏳ Leçons en préparation : rangées dans leur matière (ou dans un groupe à elles, en haut)
+  const attentes = attentesDe(enfant.id);
+  const groupeDe = (a) => (a.matiere === 'Autre' ? '⏳ En préparation' : a.matiere);
+  const groupes = parMatiere(lecons);
+  for (const a of attentes) if (!groupes.some(([m]) => m === groupeDe(a))) groupes.unshift([groupeDe(a), []]);
+
+  afficher(blocCoachLangues(), ...groupes.map(([matiere, liste]) =>
     el('section', { class: 'groupe' },
       el('h2', {}, matiere),
+      attentes.filter((a) => groupeDe(a) === matiere).map(carteAttente),
       cartesDe(liste),
     )), boutonEnvoi(), btnProfil, blocArchives);
 }
@@ -1209,18 +1240,132 @@ async function reduirePhoto(fichier, cote = 1800, qualite = 0.82) {
   return url.length > 2_500_000 && cote > 1200 ? reduirePhoto(fichier, cote - 400, 0.75) : url;
 }
 
-/** Encadré « ⚡ quand arrive la leçon ? ».
-    Depuis la v1.21.0, la leçon est fabriquée tout de suite par Claude (robot « Leçon immédiate »
-    du dépôt privé) : elle arrive en quelques minutes. Le passage du soir reste un filet de sécurité.
-    Réglable dans lecons.json : "envoi": { "delai": "quelques minutes", "heure": "20 h", "contact": "Seb" }. */
+/** Encadré « 🕵️ quand arrive la leçon ? ».
+    La leçon est fabriquée tout de suite par Claude (robot « Leçon immédiate » du dépôt privé).
+    Réglable dans lecons.json : "envoi": { "delai": "10 minutes" }. */
 function infoMiseAJour() {
-  const { delai = 'quelques minutes', heure = '20 h', contact = 'Seb' } = etat.donnees.envoi || {};
-  const insecable = (t) => t.replace(/ /g, '\u00a0');   // espace insécable : « 20 h » jamais coupé en fin de ligne
+  const { delai = '10 minutes' } = etat.donnees.envoi || {};
+  const insecable = (t) => t.replace(/ /g, '\u00a0');   // espace insécable : « 10 minutes » jamais coupé en deux
   return el('div', { class: 'info-maj' },
-    el('span', { class: 'emoji' }, '⚡'),
-    el('p', {}, 'La leçon animée arrive ', el('b', {}, `dans ${insecable(delai)}`),
-      ' : ferme et rouvre l’appli pour la voir.',
-      el('br'), `Toujours rien ce soir après ${insecable(heure)} ? Préviens ${contact} 📱`));
+    el('span', { class: 'emoji' }, '🕵️'),
+    el('p', {}, 'Nos meilleurs analystes préparent la leçon ! ',
+      el('b', {}, `Actualise d’ici ${insecable(delai)}`), ' pour la voir. En attendant, elle apparaît en gris dans ta liste ⏳'));
+}
+
+/* ---- ⏳ LEÇONS EN PRÉPARATION, AJUSTEMENTS EN COURS, ACTUALISATION ----
+   Après un envoi, la vraie leçon met quelques minutes à arriver. En attendant :
+   - une carte GRISÉE « ⏳ en préparation » est gardée dans l'appareil et affichée dans la liste,
+     dans sa matière. Elle disparaît toute seule dès que la vraie leçon est là : le robot écrit
+     dans chaque leçon créée le nom de la demande ("demande": "2026-11-11-2329-ab12"), qu'on compare
+     au nom renvoyé par la boîte aux lettres (secours : une nouvelle leçon pour cet enfant
+     plus de 15 min après, ou 24 h écoulées) ;
+   - une leçon dont on a demandé l'ajustement porte un badge 🛠️ jusqu'à ce que son contenu change ;
+   - le bouton « 🔄 Actualiser » relit lecons.json SANS recharger la page (on reste sur l'écran). */
+
+const CLE_ATTENTES = 'revisions-en-preparation';    // [{ enfant, dossier, matiere, titre, quand, connues }]
+const CLE_AJUSTEMENTS = 'revisions-ajustements';    // { "enfant|idLecon": { quand, empreinte } }
+const MINUTE = 60 * 1000;
+
+const lireStock = (cle, defaut) => { try { return JSON.parse(localStorage.getItem(cle)) ?? defaut; } catch { return defaut; } };
+const ecrireStock = (cle, v) => { try { localStorage.setItem(cle, JSON.stringify(v)); } catch { /* rien */ } };
+
+function ajouterAttente(enfant, { dossier, matiere, note, photos }) {
+  const titre = note && !photos ? note.slice(0, 60) + (note.length > 60 ? '…' : '')
+    : `Leçon en photo (${pluriel(photos, 'page')})`;
+  ecrireStock(CLE_ATTENTES, [...lireStock(CLE_ATTENTES, []), {
+    enfant: enfant.id, dossier: String(dossier || '').split('/').pop(), matiere, titre, quand: Date.now(),
+    connues: leconsDe(enfant.id).map((l) => l.id),     // les leçons qui existaient AVANT l'envoi
+  }]);
+}
+
+/** Les attentes encore valables pour cet enfant (et ménage de celles qui sont arrivées) */
+function attentesDe(idEnfant) {
+  const lecons = leconsDe(idEnfant);
+  const arrivee = (a) =>
+    (a.dossier && lecons.some((l) => l.demande === a.dossier))                       // la vraie leçon est là
+    || (Date.now() - a.quand > 15 * MINUTE && lecons.some((l) => !a.connues.includes(l.id))) // secours
+    || Date.now() - a.quand > 24 * 60 * MINUTE;                                       // trop vieille
+  const toutes = lireStock(CLE_ATTENTES, []);
+  const restantes = toutes.filter((a) => a.enfant !== idEnfant || !arrivee(a));
+  if (restantes.length !== toutes.length) ecrireStock(CLE_ATTENTES, restantes);
+  return restantes.filter((a) => a.enfant === idEnfant);
+}
+
+/** Carte grisée d'une leçon en préparation ; la toucher = actualiser */
+function carteAttente(a) {
+  const minutes = Math.round((Date.now() - a.quand) / MINUTE);
+  const { contact = 'Seb' } = etat.donnees.envoi || {};
+  return el('button', { class: 'carte-lecon en-preparation', onclick: () => actualiser() },
+    el('span', { class: 'emoji' }, '⏳'),
+    el('span', { class: 'infos' }, el('b', {}, a.titre),
+      el('small', { class: 'date-ajout' }, minutes < 30
+        ? `En préparation par nos meilleurs analystes… (envoyée il y a ${minutes < 1 ? 'moins d’une minute' : pluriel(minutes, 'minute')})`
+        : `Toujours en préparation… Si rien n’arrive, préviens ${contact} 📱`)),
+    el('span', { class: 'actualiser' }, '🔄'));
+}
+
+// Empreinte d'une leçon (son contenu) : sert à voir qu'un ajustement a été fait
+const empreinteLecon = (l) => empreinte(JSON.stringify({ ...l, demande: undefined }));
+function noterAjustement(idEnfant, lecon) {
+  const a = lireStock(CLE_AJUSTEMENTS, {});
+  a[`${idEnfant}|${lecon.id}`] = { quand: Date.now(), empreinte: empreinteLecon(lecon) };
+  ecrireStock(CLE_AJUSTEMENTS, a);
+}
+/** Vrai si un ajustement est demandé et pas encore arrivé (contenu inchangé, moins de 24 h) */
+function ajustementEnCours(idEnfant, lecon) {
+  const a = lireStock(CLE_AJUSTEMENTS, {});
+  const cle = `${idEnfant}|${lecon.id}`;
+  const x = a[cle];
+  if (!x) return false;
+  if (x.empreinte !== empreinteLecon(lecon) || Date.now() - x.quand > 24 * 60 * MINUTE) {
+    delete a[cle]; ecrireStock(CLE_AJUSTEMENTS, a);
+    return false;
+  }
+  return true;
+}
+
+/**
+ * 🔄 Relit lecons.json et redessine l'écran affiché, sans recharger la page
+ * (on reste donc sur la même page). Si les leçons demandent un moteur plus récent,
+ * on recharge vraiment : la page reviendra au même endroit grâce à l'écran mémorisé.
+ */
+async function actualiser({ discret = false } = {}) {
+  if (!discret) toast('🔄 Actualisation…');
+  try {
+    const rep = await fetch('lecons.json', { cache: 'no-store' });
+    if (!rep.ok) throw new Error();
+    const donnees = await rep.json();
+    if (donnees.versionApp && plusAncienne(VERSION, donnees.versionApp)) { location.reload(); return; }
+    etat.donnees = donnees;
+    // Les écrans de la pile gardent d'anciennes copies des leçons : on les remplace par les neuves
+    const neuve = (x) => (x && typeof x === 'object' && donnees.lecons.find((l) => l.id === x.id)) || x;
+    pile.forEach((e) => { e[1] = e[1].map(neuve); });
+    if (etat.enfant) etat.enfant = tousLesEnfants().find((e) => e.id === etat.enfant.id) || etat.enfant;
+    const [fonctionEcran, args] = pile.at(-1);
+    // On ne redessine que les écrans « de lecture » (pas un quiz en cours ni un formulaire)
+    if ([afficherAccueil, afficherLecons, afficherLecon].includes(fonctionEcran)) fonctionEcran(...args);
+    if (!discret) toast('✅ À jour');
+  } catch {
+    if (!discret) toast('📶 Impossible d’actualiser : vérifie internet');
+  }
+}
+
+/* Écran mémorisé : après une actualisation de la page (ou en rouvrant l'appli peu après),
+   on revient sur la même page au lieu de l'accueil. Valable 2 heures. */
+const CLE_ECRAN = 'revisions-ecran';
+function memoriserEcran(lecon = null) {
+  ecrireStock(CLE_ECRAN, etat.enfant ? { enfant: etat.enfant.id, lecon: lecon?.id || null, quand: Date.now() } : null);
+}
+function restaurerEcran() {
+  const m = lireStock(CLE_ECRAN, null);
+  if (!m || Date.now() - m.quand > 2 * 60 * MINUTE) return false;
+  const enfant = tousLesEnfants().find((e) => e.id === m.enfant);
+  if (!enfant) return false;
+  etat.enfant = enfant;
+  aller(afficherLecons);
+  const lecon = m.lecon && leconsDe(enfant.id).find((l) => l.id === m.lecon);
+  if (lecon) aller(afficherLecon, lecon);
+  return true;
 }
 
 // --- L'écran « Nouvelle leçon » ---
@@ -1306,6 +1451,9 @@ function afficherEnvoi() {
       if (!rep.ok || !r.ok) throw new Error(r.message || `Envoi refusé (erreur ${rep.status})`);
       try { localStorage.setItem(CLE_CODE_FAMILLE, code); } catch { /* navigation privée : tant pis */ }
       son('fin'); confettis();
+      // ⏳ Leçon « en préparation » affichée en gris dans la liste jusqu'à l'arrivée de la vraie
+      ajouterAttente(enfant, { dossier: r.dossier, matiere: choix.matiere || 'Autre',
+        note: note.value.trim(), photos: choix.photos.length });
       remplacerEcran(afficherEnvoiReussi, choix.photos.length);
     } catch (err) {
       message.textContent = err.message.includes('Failed to fetch') ? '📶 Envoi impossible : vérifie internet et réessaie.' : err.message;
@@ -1440,7 +1588,9 @@ function ouvrirAjustement(lecon) {
         choix: [...choisis], texte: texte.value.trim(),
         eleve: etat.enfant.perso ? profilAEnvoyer(etat.enfant) : undefined }, c);
       fermer(); son('petit');
-      toast('🛠️ Demande envoyée : la leçon sera retouchée dans quelques minutes');
+      noterAjustement(etat.enfant.id, lecon);       // badge « 🛠️ en cours » jusqu'à ce que la leçon change
+      afficherLecon(lecon);
+      toast('🛠️ Demande envoyée : actualise d’ici 10 minutes');
     } catch (err) {
       if (err.code) code.demander();
       message.textContent = err.message;
@@ -1466,11 +1616,15 @@ function ouvrirAjustement(lecon) {
    La liste les affiche comme un chemin d'étapes (⚽ 1 → 2 → 3 → 🏆), et la fin
    du quiz propose directement l'étape suivante. */
 
-// Les cartes d'une matière : une carte par leçon simple, un « chemin » par parcours
+// Les cartes d'une matière : une carte par leçon simple (avec son 📦), un « chemin » par parcours
 function cartesDe(liste) {
   const deja = new Set();
   return liste.map((l) => {
-    if (!l.parcours) return carteLecon(l);
+    if (!l.parcours) return el('div', { class: 'ligne-lecon' }, carteLecon(l),
+      el('button', {
+        class: 'parcours-archiver', title: 'Archiver cette leçon', 'aria-label': 'Archiver cette leçon',
+        onclick: () => { archiverSerie(etat.enfant.id, l, true); afficherLecons(); toast('📦 Leçon archivée'); },
+      }, '📦'));
     if (deja.has(l.parcours)) return null;
     deja.add(l.parcours);
     return carteParcours(l.parcours, liste.filter((x) => x.parcours === l.parcours));
@@ -1500,7 +1654,9 @@ function carteParcours(parcours, modules) {
       class: 'parcours-etape' + (etoiles ? ' faite' : '') + (m === prochain ? ' prochaine' : ''),
       onclick: () => aller(afficherLecon, m),
     },
-      el('span', { class: 'parcours-rond' }, etoiles ? '✔' : (m.emoji || String(i + 1))),
+      el('span', { class: 'parcours-rond' }, etoiles ? '✔' : (m.emoji || String(i + 1)),
+        // petite clé 🛠️ sur l'étape tant que l'ajustement demandé n'est pas arrivé
+        ajustementEnCours(etat.enfant.id, m) ? el('span', { class: 'pastille-ajustement', title: 'Ajustement en cours' }, '🛠️') : null),
       el('span', { class: 'parcours-nom' }, m.titre),
       el('span', { class: 'parcours-etoiles' }, dessinEtoiles(etoiles)));
   };
@@ -1516,7 +1672,7 @@ function carteParcours(parcours, modules) {
         class: 'parcours-archiver', title: 'Archiver tout ce parcours', 'aria-label': 'Archiver tout ce parcours',
         onclick: () => {
           if (!confirm(`Archiver tout le parcours « ${parcours} » ? (on pourra le ressortir)`)) return;
-          modules.forEach((m) => changerArchive(etat.enfant.id, m, true));
+          archiverSerie(etat.enfant.id, modules[0], true);
           afficherLecons();
           toast('📦 Parcours archivé');
         },
@@ -1557,13 +1713,15 @@ function carteLecon(l, classe = '') {
   return el('button', { class: 'carte-lecon ' + classe, onclick: () => aller(afficherLecon, l) },
     el('span', { class: 'emoji' }, l.emoji || '📘'),
     el('span', { class: 'infos' }, el('b', {}, l.titre),
-      dateAjout(l) ? el('small', { class: 'date-ajout' }, dateAjout(l)) : null),
+      ajustementEnCours(etat.enfant.id, l) ? el('small', { class: 'badge-ajustement' }, '🛠️ ajustement en cours…')
+        : dateAjout(l) ? el('small', { class: 'date-ajout' }, dateAjout(l)) : null),
     el('span', { class: 'etoiles' }, dessinEtoiles(etoilesDe(etat.enfant.id, l.id))));
 }
 
 // --- Une leçon : la fiche à relire + le bouton pour lancer le quiz ---
 function afficherLecon(lecon) {
   entete(lecon.titre);
+  memoriserEcran(lecon);
   langueLecon = lecon.langue || null;
   const nb = (lecon.activites || []).length;
   /* Mise en page (voir style.css, « TABLETTE ») :
@@ -1579,7 +1737,10 @@ function afficherLecon(lecon) {
       el('div', {}, el('small', {}, lecon.parcours
         ? `${lecon.matiere || ''} · ${lecon.parcours} · étape ${lecon.etape || 1}/${modulesDu(lecon.parcours).length}`
         : lecon.matiere || ''), el('h2', {}, lecon.titre),
-        dateAjout(lecon) ? el('span', { class: 'date-ajout' }, dateAjout(lecon)) : null),
+        dateAjout(lecon) ? el('span', { class: 'date-ajout' }, dateAjout(lecon)) : null,
+        // 🛠️ ajustement demandé mais pas encore arrivé : on peut actualiser sans quitter la page
+        ajustementEnCours(etat.enfant.id, lecon) ? el('button', { class: 'badge-ajustement', onclick: () => actualiser() },
+          '🛠️ Ajustement en cours… 🔄 Actualiser') : null),
       blocAlex(lecon)), // pastille « 🎧 Alex » à droite du titre (seulement si "assistant": true)
     dessinerFiche(lecon),
     el('aside', { class: 'cote-lecon' },
@@ -1587,15 +1748,18 @@ function afficherLecon(lecon) {
       ? el('button', { class: 'btn-principal collant', onclick: () => aller(lancerQuiz, lecon) },
         `🚀 C'est parti ! (${pluriel(nb, 'question')})`)
       : el('p', { class: 'vide' }, 'Pas encore de questions pour cette leçon.'),
+    // 📦 Archiver : toute la SÉRIE (le parcours entier), pas seulement cette étape
     etat.enfant ? el('button', {
       class: 'btn-secondaire btn-archive',
       onclick: () => {
         const archiver = !estArchivee(etat.enfant.id, lecon);
-        changerArchive(etat.enfant.id, lecon, archiver);
-        afficherLecon(lecon); // redessine le bouton
-        toast(archiver ? '📦 Leçon archivée' : '📤 Leçon remise dans ta liste');
+        archiverSerie(etat.enfant.id, lecon, archiver);
+        if (archiver) { toast(lecon.parcours ? '📦 Série archivée' : '📦 Leçon archivée'); history.back(); } // retour à la liste
+        else { afficherLecon(lecon); toast('📤 Remis dans ta liste'); }
       },
-    }, estArchivee(etat.enfant.id, lecon) ? '📤 Ressortir cette leçon des archives' : '📦 Archiver cette leçon (je la connais !)') : null,
+    }, estArchivee(etat.enfant.id, lecon)
+      ? (lecon.parcours ? '📤 Ressortir toute la série des archives' : '📤 Ressortir cette leçon des archives')
+      : (lecon.parcours ? `📦 Archiver toute la série « ${lecon.parcours} »` : '📦 Archiver cette leçon (je la connais !)')) : null,
     // 🛠️ Demander à Claude de retoucher la leçon (plus facile, plus court, une erreur…)
     etat.donnees.envoi?.url && etat.enfant ? el('button', {
       class: 'btn-secondaire btn-ajuster', onclick: () => ouvrirAjustement(lecon),
@@ -2193,7 +2357,12 @@ async function demarrer() {
   // Premier écran = racine de la pile
   pile.push([afficherAccueil, []]);
   history.replaceState({ niveau: 1 }, '');
-  afficherAccueil();
+  if (!restaurerEcran()) afficherAccueil();   // on revient là où on était avant l'actualisation
+
+  // Retour dans l'appli (après l'avoir mise en arrière-plan) avec une leçon en attente : on actualise tout seul
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && lireStock(CLE_ATTENTES, []).length) actualiser({ discret: true });
+  });
 
   // Active le mode hors-ligne
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => {});

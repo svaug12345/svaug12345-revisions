@@ -1,6 +1,6 @@
 {
   "maj": "11/11/2026",
-  "versionApp": "1.22.1",
+  "versionApp": "1.23.0",
 
   "enfants": [
     {"id": "tom", "nom": "Tom", "avatar": "avatars/tom.svg", "couleur": "#22c55e", "age": 6, "coachLangues": {"en": 1, "de": 1, "es": 1}},
@@ -23,8 +23,7 @@
   "envoi": {
     "_explication": "Bouton « 📸 Envoyer une nouvelle leçon » : les photos partent vers la boîte aux lettres (Cloudflare Worker, dossier worker/), qui les range dans le dépôt PRIVÉ svaug12345/revisions-demandes. Tant que \"url\" est vide, le bouton n'apparaît pas.",
     "url": "https://mes-revisions-envoi.sebastien-vaug.workers.dev",
-    "delai": "quelques minutes",
-    "heure": "20 h",
+    "delai": "10 minutes",
     "contact": "Seb"
   },
 

@@ -1378,3 +1378,21 @@ body.lecture-facile .carte-info b { letter-spacing: 0; overflow-wrap: anywhere; 
 /* Bouton « 🛠️ Demander un ajustement » sur la page d'une leçon (juste après « Archiver ») */
 .btn-ajuster { margin-top: 10px; font-size: .95rem; }
 .page-lecon .btn-ajuster { order: 6; }
+
+/* ---------- v1.23.0 : archives par série, leçons en préparation, ajustements en cours ---------- */
+/* Leçon simple dans la liste : la carte + son petit 📦 à droite */
+.ligne-lecon { display: flex; align-items: center; gap: 4px; }
+.ligne-lecon .carte-lecon { flex: 1; min-width: 0; }
+/* ⏳ Leçon en préparation : grisée, en pointillés, qui « respire » doucement */
+.carte-lecon.en-preparation { opacity: .65; filter: grayscale(.8); border: 2px dashed var(--doux); box-shadow: none;
+  animation: respire 2.4s ease-in-out infinite; }
+.carte-lecon.en-preparation .actualiser { font-size: 1.3rem; }
+@keyframes respire { 50% { opacity: .4; } }
+@media (prefers-reduced-motion: reduce) { .carte-lecon.en-preparation { animation: none; } }
+/* 🛠️ Ajustement demandé, pas encore arrivé */
+.badge-ajustement { color: #b45309; font-weight: 800; }
+button.badge-ajustement { display: inline-block; margin-top: 6px; border: 0; border-radius: 99px; padding: 4px 10px;
+  background: #fef3c7; font: inherit; font-size: .85rem; font-weight: 800; color: #b45309; cursor: pointer; }
+.parcours-rond { position: relative; }
+.pastille-ajustement { position: absolute; right: -6px; top: -6px; font-size: .9rem; background: #fef3c7; border-radius: 50%;
+  width: 24px; height: 24px; display: grid; place-items: center; box-shadow: 0 1px 3px rgba(0,0,0,.2); }

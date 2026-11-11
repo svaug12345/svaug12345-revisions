@@ -371,6 +371,17 @@ passions, copains, points forts, difficultés, et ce que le parent aimerait.
 - « ✏️ Modifier le profil » en bas de sa page ; son **code** y est affiché pour le **retrouver sur un autre
   téléphone** (« 📲 Déjà créé sur un autre téléphone ? » dans le formulaire). Papa reçoit une notif à chaque nouvel élève.
 
+## ⏳ En attendant la leçon (depuis la v1.23.0)
+- Après un envoi, une carte **grisée « ⏳ en préparation »** apparaît dans la liste, dans sa matière. La toucher
+  **actualise** sans quitter la page. Elle disparaît dès que la vraie leçon arrive : le robot écrit dans chaque leçon
+  créée `"demande": "<nom du dossier de la demande>"` (date + 4 caractères, rien de personnel), que l'appli compare
+  avec le nom renvoyé par la boîte aux lettres. Secours : une nouvelle leçon pour cet enfant après 15 min, ou 24 h écoulées.
+- Une leçon dont on a demandé un **ajustement** porte un badge 🛠️ (et un bouton « Actualiser ») jusqu'à ce que son contenu change.
+- **Actualiser la page** ramène au même écran (liste ou leçon) au lieu de l'accueil, pendant 2 h.
+- Message affiché : « Nos meilleurs analystes préparent la leçon, actualise d'ici 10 minutes » (`"envoi" > "delai"`).
+- 📦 **Archiver = toute la série** : depuis la page d'une étape, le bouton archive le parcours entier ; les archives
+  montrent une ligne par série, qu'on ressort en entier. Les leçons simples ont aussi leur 📦 dans la liste.
+
 ## 🛠️ Demander un ajustement (depuis la v1.22.0)
 Sur la fiche d'une leçon, **« 🛠️ Demander un ajustement »** : plus facile, plus difficile, plus de questions,
 plus court, plus d'exemples, avec ses passions, corriger une erreur, et/ou un texte libre.
