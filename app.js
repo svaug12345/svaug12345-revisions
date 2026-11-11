@@ -1002,14 +1002,18 @@ async function reduirePhoto(fichier, cote = 1800, qualite = 0.82) {
   return url.length > 2_500_000 && cote > 1200 ? reduirePhoto(fichier, cote - 400, 0.75) : url;
 }
 
-/** Encadré « 🕗 quand arrive la leçon ? » : l'heure du passage automatique et qui prévenir si c'est urgent.
-    Réglable dans lecons.json : "envoi": { "heure": "20 h", "contact": "Seb" }. */
+/** Encadré « ⚡ quand arrive la leçon ? ».
+    Depuis la v1.21.0, la leçon est fabriquée tout de suite par Claude (robot « Leçon immédiate »
+    du dépôt privé) : elle arrive en quelques minutes. Le passage du soir reste un filet de sécurité.
+    Réglable dans lecons.json : "envoi": { "delai": "quelques minutes", "heure": "20 h", "contact": "Seb" }. */
 function infoMiseAJour() {
-  const { heure = '20 h', contact = 'Seb' } = etat.donnees.envoi || {};
+  const { delai = 'quelques minutes', heure = '20 h', contact = 'Seb' } = etat.donnees.envoi || {};
+  const insecable = (t) => t.replace(/ /g, '\u00a0');   // espace insécable : « 20 h » jamais coupé en fin de ligne
   return el('div', { class: 'info-maj' },
-    el('span', { class: 'emoji' }, '🕗'),
-    el('p', {}, 'Les nouvelles leçons sont ajoutées ', el('b', {}, `automatiquement chaque soir vers ${heure.replace(/ /g, '\u00a0')}`), '.', // espace insécable : « 20 h » jamais coupé
-      el('br'), `Besoin pour plus tôt ? Envoie un petit message à ${contact} 📱`));
+    el('span', { class: 'emoji' }, '⚡'),
+    el('p', {}, 'La leçon animée arrive ', el('b', {}, `dans ${insecable(delai)}`),
+      ' : ferme et rouvre l’appli pour la voir.',
+      el('br'), `Toujours rien ce soir après ${insecable(heure)} ? Préviens ${contact} 📱`));
 }
 
 // --- L'écran « Nouvelle leçon » ---

@@ -329,14 +329,16 @@ Les photos sont réduites dans le téléphone (≈ 400 Ko chacune) puis envoyée
    `svaug12345/revisions-demandes`, en un seul commit :
    `demandes/<enfant>/<date-heure>/demande.json` + `photo-1.jpg`, `photo-2.jpg`…
    (jamais dans ce dépôt-ci, qui est public : les photos y seraient visibles par tous) ;
-3. Claude lit les demandes « à traiter », fabrique les leçons dans `lecons.json` (même style que les autres,
-   réglages de l'enfant respectés), augmente la version et propose une **pull request** ;
-4. Papa la valide d'un clic (appli GitHub) : la leçon est en ligne une minute plus tard.
-   La demande passe alors au statut « traitée » et ses photos sont effacées.
+3. ⚡ **tout de suite** (depuis la v1.21.0) : ce dépôt privé lance son robot « Leçon immédiate »
+   (`.github/workflows/lecon-immediate.yml` de `revisions-demandes`) : Claude Code, payé avec les crédits de
+   l'API Claude, lit les photos et écrit la leçon dans `lecons.json` (même style que les autres, réglages de l'enfant) ;
+4. le robot vérifie (JSON valide, code intact), augmente la version, publie sur `main` : la leçon est en ligne
+   quelques minutes après l'envoi. Les photos sont effacées et Papa reçoit une notif ✅ (ou ⚠️ si ça a raté :
+   la demande est alors reprise au passage de 20 h).
 
 **Réglages :**
-- `lecons.json` → `"envoi": { "url": "https://mes-revisions-envoi.<sous-domaine>.workers.dev", "heure": "20 h", "contact": "Seb" }`
-  (adresse vide = bouton caché ; `heure` et `contact` s'affichent dans l'encadré 🕗 de l'écran d'envoi et de confirmation) ;
+- `lecons.json` → `"envoi": { "url": "https://mes-revisions-envoi.<sous-domaine>.workers.dev", "delai": "quelques minutes", "heure": "20 h", "contact": "Seb" }`
+  (adresse vide = bouton caché ; `delai`, `heure` et `contact` s'affichent dans l'encadré ⚡ de l'écran d'envoi et de confirmation) ;
 - le Worker est mis en ligne par le robot `.github/workflows/worker.yml` (onglet Actions > « Boîte aux lettres ») ;
   il a besoin de 4 secrets : `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `DEMANDES_TOKEN`, `CODE_FAMILLE` ;
 - compte rendu du robot : `statut.json` sur la branche `statut-worker` ;
@@ -357,7 +359,8 @@ Les bulles n'apparaissent que si `"envoi.url"` est réglé (même code famille q
 
 ## 🌙 Passage du soir (20 h)
 Chaque soir, une tâche planifiée de Claude :
-1. transforme les photos reçues en leçons et les **publie directement** (sans pull request) ;
+1. reprend les photos que le robot « Leçon immédiate » n'a pas pu traiter, fabrique les voix (dictées, CP) et
+   jette un œil aux leçons publiées dans la journée ;
 2. rassemble les nouvelles remarques dans un **ticket récapitulatif** du dépôt privé `revisions-demandes`
    (sans rien corriger) — Papa répond dans le ticket (« corrige la 2 ») et c'est appliqué au passage suivant ;
 3. envoie une notification sur le téléphone de Papa.
