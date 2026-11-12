@@ -894,10 +894,10 @@ function entete(titre) {
   $('#btn-retour').hidden = pile.length <= 1;
   // Avatar cliquable -> profil de l'élève ; à côté, le bouton 👪 du mode parent (profils "modeParent": true)
   $('#badge-enfant').replaceChildren(...(etat.enfant ? [
-    etat.enfant.modeParent ? el('button', {
+    el('button', {
       class: 'btn-parent' + (modeParent() ? ' actif' : ''), title: 'Mode parent', 'aria-label': 'Mode parent',
-      onclick: basculerModeParent,
-    }, '👪') : null,
+      onclick: basculerModeParent, html: PICTO_PARENT,
+    }),
     el('button', { class: 'btn-avatar', title: 'Voir le profil', 'aria-label': 'Voir le profil',
       onclick: () => { if (pile.at(-1)[0] !== afficherProfilEleve) aller(afficherProfilEleve, etat.enfant); } },
       dessinAvatar(etat.enfant, 'mini-avatar')),
@@ -1205,11 +1205,11 @@ function afficherProfilEleve(eleve) {
       el('h3', {}, 'Classe'), puces('classe', CLASSES),
       el('h3', {}, 'Avatar'), puces('avatar', AVATARS, (v) => v, 'puces-avatar'),
       el('h3', {}, 'Couleur'), puces('couleur', COULEURS, () => '', 'puces-couleur')]),
-    ...champ('passions', '💛 Ses passions', 'Les dinosaures, le foot, le dessin, Minecraft…'),
-    ...champ('copains', '👫 Ses copains', 'Les prénoms de ses copains (pour les histoires des problèmes)'),
-    ...champ('forces', '💪 Ses points forts', 'Il calcule vite de tête, elle adore lire…'),
-    ...champ('difficultes', '🧗 Ce qui est plus difficile', 'Il confond b et d, elle se décourage vite… (pas besoin de diagnostic : décris simplement)'),
-    ...champ('envies', '🎯 Ce que tu aimerais', 'Qu’il prenne confiance, réviser les tables avant le contrôle…', 3),
+    ...champ('passions', '💛 Ses passions', 'Ex. : les dinosaures, le foot, le dessin…'),
+    ...champ('copains', '👫 Ses copains', 'Ex. : Léo, Inès (pour les histoires des problèmes)'),
+    ...champ('forces', '💪 Ses points forts', 'Ex. : calcule vite de tête, adore lire…'),
+    ...champ('difficultes', '🧗 Ce qui est plus difficile', 'Ex. : confond b et d, se décourage vite… (pas besoin de diagnostic)'),
+    ...champ('envies', '🎯 Ce que tu aimerais', 'Ex. : prendre confiance, réviser les tables avant le contrôle…', 3),
     el('div', { class: 'info-maj' }, el('span', { class: 'emoji' }, '🔒'),
       el('p', {}, 'Ces informations restent privées : elles servent seulement à fabriquer ses leçons. Elles ne sont jamais publiées dans l’appli.')),
     code.bloc, message, btn,
@@ -1641,8 +1641,8 @@ function ouvrirAjustement(lecon) {
 }
 
 /* ---- 👪 MODE PARENT ----
-   Pour un profil avec "modeParent": true (aujourd'hui : Gaby, pour tester).
-   Le petit bouton 👪 à côté de l'avatar (en haut à droite) l'active ou le coupe ; l'en-tête
+   Pour tous les enfants (depuis la v1.25.0 ; d'abord testé avec Gaby).
+   Le petit bouton « parent » (deux silhouettes) à côté de l'avatar (en haut à droite) l'active ou le coupe ; l'en-tête
    devient violet pour qu'on voie tout de suite qu'on est « côté parent ».
 
    Ce qui change :
@@ -1658,15 +1658,22 @@ function ouvrirAjustement(lecon) {
    Sans bloc "parent", le guide est fabriqué à partir de la fiche (titres) et du quiz (questions + réponses).
    Les bilans sont gardés dans l'appareil (comme les étoiles). */
 
+/* Picto du mode parent : un adulte et un enfant, dessinés en SVG (l'emoji 👪 s'affichait
+   en carré gris sur certains téléphones). currentColor = prend la couleur du texte du bouton. */
+const PICTO_PARENT = `<svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true" fill="currentColor">
+  <circle cx="11.5" cy="7.5" r="4.2"/><path d="M4 27v-6.5C4 15.9 7.4 13 11.5 13s7.5 2.9 7.5 7.5V27z"/>
+  <circle cx="23.5" cy="14" r="3.2"/><path d="M18.5 27v-4.2c0-3.2 2.2-5.3 5-5.3s5 2.1 5 5.3V27z"/></svg>`;
+
 const CLE_MODE_PARENT = 'revisions-mode-parent';   // id de l'enfant dont le mode parent est allumé
 const CLE_BILANS = 'revisions-bilans-parent';      // { gaby: { idLecon: { quand, notes: [2,1,0…], total } } }
 
-const modeParent = () => !!etat.enfant?.modeParent && lireStock(CLE_MODE_PARENT, '') === etat.enfant.id;
+// Depuis la v1.25.0 : disponible pour TOUS les enfants (plus besoin de "modeParent": true)
+const modeParent = () => !!etat.enfant && lireStock(CLE_MODE_PARENT, '') === etat.enfant.id;
 
 function basculerModeParent() {
   const allume = !modeParent();
   ecrireStock(CLE_MODE_PARENT, allume ? etat.enfant.id : '');
-  toast(allume ? '👪 Mode parent activé' : '🧒 Retour au mode enfant');
+  toast(allume ? 'Mode parent activé' : '🧒 Retour au mode enfant');
   // On redessine l'écran affiché (liste ou leçon) dans le bon mode
   const [fonctionEcran, args] = pile.at(-1);
   if ([afficherLecons, afficherLecon].includes(fonctionEcran)) fonctionEcran(...args);
@@ -1714,7 +1721,7 @@ const dateCourte = (t) => new Date(t).toLocaleDateString('fr-FR', { day: 'numeri
 function resumeBilan(b) {
   const notes = (b?.notes || []).filter((n) => n !== null && n !== undefined);
   if (!notes.length) return null;
-  return `👪 ${notes.filter((n) => n === 2).length}/${notes.length} sues le ${dateCourte(b.quand)}`;
+  return `✅ ${notes.filter((n) => n === 2).length}/${notes.length} sues le ${dateCourte(b.quand)}`;
 }
 
 /** Tableau de bord en haut de la liste des leçons (mode parent) */
@@ -1737,7 +1744,7 @@ function tableauDeBordParent(lecons) {
   const aRevoir = lecons.map((l) => ({ l, p: priorite(l) })).filter((x) => x.p)
     .sort((a, b) => b.p.score - a.p.score).slice(0, 3);
   return el('section', { class: 'tableau-parent' },
-    el('div', { class: 'tp-tete' }, el('b', {}, `👪 Mode parent · ${etat.enfant.nom}`),
+    el('div', { class: 'tp-tete' }, el('b', { class: 'tp-titre' }, el('span', { html: PICTO_PARENT }), ` Mode parent · ${etat.enfant.nom}`),
       el('button', { class: 'btn-petit', onclick: basculerModeParent }, '🧒 Mode enfant')),
     el('div', { class: 'tp-chiffres' },
       el('div', {}, el('b', {}, recentes.length), el('small', {}, 'leçons révisées\ncette semaine')),
@@ -1745,7 +1752,7 @@ function tableauDeBordParent(lecons) {
       el('div', {}, el('b', {}, Object.keys(lireStock(CLE_BILANS, {})[id] || {}).length), el('small', {}, 'bilans\nfaits ensemble'))),
     aRevoir.length ? el('div', { class: 'tp-priorites' }, el('h3', {}, '🎯 À revoir en priorité'),
       aRevoir.map(({ l, p }) => el('button', { class: 'tp-priorite', onclick: () => aller(afficherLecon, l) },
-        el('span', {}, l.emoji || '📘'), el('span', {}, el('b', {}, l.titre), el('small', {}, p.pourquoi)), el('span', {}, '›'))))
+        el('span', {}, l.emoji || '📘'), el('span', {}, el('b', {}, titreSurDeuxLignes(l.titre)), el('small', {}, p.pourquoi)), el('span', {}, '›'))))
       : el('p', { class: 'tp-bravo' }, '🎉 Rien d’urgent : toutes les leçons sont bien révisées !'),
     el('p', { class: 'tp-aide' }, 'Touche une leçon : tu auras les questions à lui poser, les réponses, les pièges et un défi à faire ensemble (10 min).'));
 }
@@ -1781,10 +1788,15 @@ function guideParent(lecon) {
 
   const questions = g.questions.map((x, i) => {
     const reponse = el('div', { class: 'gp-reponse', hidden: '' }, '✅ ', fmt(x.r));
-    const notes3 = el('div', { class: 'gp-notes' }, [[2, '✅ Sait'], [1, '🤏 Hésite'], [0, '❌ À revoir']].map(([n, t]) =>
-      el('button', { class: 'puce', onclick: (e) => {
+    // 3 boutons ; celui choisi se remplit de sa couleur (vert / orange / rouge), les autres pâlissent
+    const notes3 = el('div', { class: 'gp-notes' }, [[2, '✅ Sait', 'sait'], [1, '🤏 Hésite', 'hesite'], [0, '❌ À revoir', 'revoir']].map(([n, t, c]) =>
+      el('button', { class: `gp-note ${c}`, 'aria-pressed': 'false', onclick: (e) => {
         notes[i] = n;
-        notes3.querySelectorAll('.puce').forEach((b) => b.classList.toggle('choisie', b === e.currentTarget));
+        notes3.classList.add('note-faite');
+        notes3.querySelectorAll('.gp-note').forEach((b) => {
+          b.classList.toggle('choisie', b === e.currentTarget);
+          b.setAttribute('aria-pressed', String(b === e.currentTarget));
+        });
         majBilan();
       } }, t)));
     return el('li', { class: 'gp-question' },
@@ -1797,7 +1809,7 @@ function guideParent(lecon) {
   return el('div', { class: 'guide-parent' },
     el('div', { class: 'tete-lecon' },
       el('span', { class: 'gros-emoji' }, lecon.emoji || '📘'),
-      el('div', {}, el('small', {}, `👪 Guide parent · ${lecon.matiere || ''}`), el('h2', {}, lecon.titre),
+      el('div', {}, el('small', {}, `Guide parent · ${lecon.matiere || ''}`), el('h2', {}, titreSurDeuxLignes(lecon.titre)),
         el('span', { class: 'date-ajout' }, `⏱ ${g.duree} · `, p ? `révisée ${pluriel(p.fois, 'fois')}, meilleur score ${p.meilleur} %` : 'pas encore révisée dans l’appli',
           ancien ? ` · dernier bilan le ${dateCourte(ancien.quand)}` : ''))),
     el('section', { class: 'gp-bloc gp-essentiel' }, el('h3', {}, '🎯 L’essentiel à vérifier'), liste(g.essentiel)),
@@ -1815,6 +1827,191 @@ function guideParent(lecon) {
       lecon.activites?.length ? el('button', { class: 'btn-principal', onclick: () => { ecrireStock(CLE_MODE_PARENT, ''); aller(lancerQuiz, lecon); } },
         `🧒 Lui passer le téléphone : quiz (${pluriel(lecon.activites.length, 'question')})`) : null,
       etat.donnees.envoi?.url ? el('button', { class: 'btn-secondaire', onclick: () => ouvrirAjustement(lecon) }, '🛠️ Demander un ajustement') : null));
+}
+
+/* ---- 🎮 JEU CACHÉ : « LA TOUR » ----
+   Easter egg : toucher 3 fois de suite le titre « Leçons de … » ouvre un petit jeu.
+   Règle : un bloc glisse de gauche à droite ; on touche l'écran pour le lâcher sur la tour.
+   La partie qui dépasse est coupée : le bloc suivant est plus étroit. Un lâcher pile au bon
+   endroit (« Parfait ! ») ne coupe rien. La partie s'arrête quand on rate complètement la tour.
+   - Le score = la hauteur de la tour ; le meilleur score est gardé (par enfant).
+   - 2 minutes de jeu, puis il faut FINIR UNE LEÇON (un quiz) pour recharger 2 minutes.
+   Tout est dessiné dans un <canvas> ; le temps ne s'écoule que pendant qu'on joue. */
+
+const CLE_JEU = 'revisions-jeu';          // { gaby: { meilleur: 23, resteMs: 120000 } }
+const TEMPS_JEU = 2 * 60 * 1000;
+
+const etatJeuDe = (id) => ({ meilleur: 0, resteMs: TEMPS_JEU, ...(lireStock(CLE_JEU, {})[id] || {}) });
+function ecrireJeu(id, maj) {
+  const tout = lireStock(CLE_JEU, {});
+  tout[id] = { ...etatJeuDe(id), ...maj };
+  ecrireStock(CLE_JEU, tout);
+}
+/** Appelé à la fin d'un quiz : 2 minutes de jeu à nouveau disponibles */
+function rechargerJeu(id) { ecrireJeu(id, { resteMs: TEMPS_JEU }); }
+
+// 3 touches rapides sur le titre de la liste des leçons -> le jeu
+let touchesTitre = [];
+function toucheTitre() {
+  if (!etat.enfant || pile.at(-1)?.[0] !== afficherLecons) return;
+  const t = Date.now();
+  touchesTitre = [...touchesTitre.filter((x) => t - x < 900), t];
+  if (touchesTitre.length >= 3) { touchesTitre = []; ouvrirJeu(); }
+}
+
+function ouvrirJeu() {
+  const id = etat.enfant.id;
+  const couleur = etat.enfant.couleur || '#14b8a6';
+  document.querySelector('.jeu-fond')?.remove();
+  const canvas = el('canvas', { class: 'jeu-canvas' });
+  const chrono = el('span', { class: 'jeu-chrono' });
+  const score = el('span', { class: 'jeu-score' });
+  const message = el('div', { class: 'jeu-message' });
+  let fini = false;
+  const fermer = () => { fini = true; fond.remove(); };
+  const fond = el('div', { class: 'jeu-fond' },
+    el('div', { class: 'jeu-barre' }, chrono, score,
+      el('button', { class: 'feuille-fermer', 'aria-label': 'Fermer le jeu', onclick: fermer }, '✖')),
+    canvas, message);
+  document.body.append(fond);
+
+  // Plus de temps : écran « verrouillé » avec le meilleur score
+  if (etatJeuDe(id).resteMs <= 0) {
+    canvas.remove(); chrono.textContent = '⏳ 0:00'; score.textContent = `🏆 ${etatJeuDe(id).meilleur}`;
+    message.replaceChildren(el('div', { class: 'gros-emoji' }, '🔒'), el('h2', {}, 'Le temps de jeu est fini !'),
+      el('p', {}, 'Termine une leçon (un quiz) pour gagner 2 nouvelles minutes de jeu 💪'),
+      el('p', {}, `Ton record : `, el('b', {}, etatJeuDe(id).meilleur)),
+      el('button', { class: 'btn-principal', onclick: fermer }, '📚 Aller réviser'));
+    message.classList.add('visible');
+    return;
+  }
+
+  // --- Taille du canvas (net sur les écrans haute densité) ---
+  const ctx = canvas.getContext('2d');
+  let L, H;
+  const dimensionner = () => {
+    const r = canvas.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+    L = r.width; H = r.height;
+    canvas.width = L * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  };
+  dimensionner();
+
+  // --- État d'une partie ---
+  const HB = 26;                         // hauteur d'un bloc
+  let tour, mobile, vitesse, camera, morceaux, combo, enCours, dernier, reste = etatJeuDe(id).resteMs;
+  const teinte = (n) => `hsl(${(n * 9 + 170) % 360} 75% 58%)`;
+  function nouvellePartie() {
+    tour = [{ x: L / 2 - 80, l: 160 }];  // le socle
+    vitesse = 2.2; camera = 0; morceaux = []; combo = 0; enCours = true;
+    nouveauBloc();
+    message.classList.remove('visible');
+  }
+  function nouveauBloc() {
+    const haut = tour.at(-1);
+    const depuisGauche = tour.length % 2 === 0;
+    // le bloc arrive déjà un peu dans l'écran (pas d'attente au début)
+    mobile = { x: depuisGauche ? -haut.l * 0.6 : L - haut.l * 0.4, l: haut.l, sens: depuisGauche ? 1 : -1 };
+  }
+  // Toucher = lâcher le bloc
+  function lacher() {
+    if (!enCours) return;
+    const haut = tour.at(-1);
+    let gauche = Math.max(mobile.x, haut.x), droite = Math.min(mobile.x + mobile.l, haut.x + haut.l);
+    if (droite <= gauche) return perdu();                       // complètement à côté
+    if (Math.abs(mobile.x - haut.x) < 5) {                      // « Parfait ! » : rien n'est coupé
+      gauche = haut.x; droite = haut.x + haut.l; combo++;
+      if (combo >= 3) { gauche -= 6; droite += 6; }             // série de parfaits : le bloc regrandit un peu
+      son('petit'); afficherBulle(combo >= 3 ? `Parfait ×${combo} !` : 'Parfait !');
+    } else {
+      combo = 0;
+      // La partie qui dépasse tombe (petite animation)
+      const y = tour.length;
+      if (mobile.x < gauche) morceaux.push({ x: mobile.x, l: gauche - mobile.x, y, vy: 0, n: y });
+      if (mobile.x + mobile.l > droite) morceaux.push({ x: droite, l: mobile.x + mobile.l - droite, y, vy: 0, n: y });
+    }
+    tour.push({ x: gauche, l: droite - gauche });
+    vitesse = Math.min(2.2 + tour.length * 0.12, 7.5);          // de plus en plus vite
+    nouveauBloc();
+  }
+  let bulle = null;
+  const afficherBulle = (t) => { bulle = { t, vie: 50 }; };
+  function perdu() {
+    enCours = false; son('faux');
+    const hauteur = tour.length - 1;
+    const record = hauteur > etatJeuDe(id).meilleur;
+    if (record) ecrireJeu(id, { meilleur: hauteur });
+    finDePartie(record ? '🎉 Nouveau record !' : 'Raté !', hauteur);
+  }
+  function finDePartie(titre, hauteur) {
+    const plusDeTemps = reste <= 0;
+    message.replaceChildren(el('div', { class: 'gros-emoji' }, plusDeTemps ? '⏰' : hauteur > 10 ? '🏗️' : '💥'),
+      el('h2', {}, plusDeTemps ? 'Temps écoulé !' : titre),
+      el('p', {}, 'Tour de ', el('b', {}, pluriel(hauteur, 'bloc')), ` · record : ${etatJeuDe(id).meilleur}`),
+      plusDeTemps ? el('p', {}, 'Termine une leçon pour gagner 2 nouvelles minutes de jeu 💪') : null,
+      plusDeTemps ? el('button', { class: 'btn-principal', onclick: fermer }, '📚 Aller réviser')
+        : el('button', { class: 'btn-principal', onclick: (e) => { e.stopPropagation(); nouvellePartie(); } }, '🔁 Rejouer'));
+    message.classList.add('visible');
+  }
+  canvas.addEventListener('pointerdown', (e) => { e.preventDefault(); lacher(); });
+
+  // --- La boucle d'animation ---
+  function image(t) {
+    if (fini) return;
+    const dt = dernier ? Math.min(t - dernier, 100) : 16;
+    dernier = t;
+    if (enCours) {
+      // Chrono : le temps ne s'écoule que pendant une partie
+      const avant = Math.ceil(reste / 1000);
+      reste -= dt;
+      // On sauvegarde le temps restant une fois par seconde (pas à chaque image)
+      if (Math.ceil(reste / 1000) !== avant) ecrireJeu(id, { resteMs: Math.max(0, reste) });
+      if (reste <= 0) {
+        enCours = false;
+        const hauteur = tour.length - 1;
+        if (hauteur > etatJeuDe(id).meilleur) ecrireJeu(id, { meilleur: hauteur });
+        finDePartie('', hauteur);
+      }
+      mobile.x += mobile.sens * vitesse * (dt / 16);
+      if (mobile.x > L - mobile.l / 3 && mobile.sens > 0) mobile.sens = -1;   // rebondit sur les bords
+      if (mobile.x < -mobile.l * 2 / 3 && mobile.sens < 0) mobile.sens = 1;
+    }
+    const s = Math.max(0, Math.ceil(reste / 1000));
+    chrono.textContent = `⏳ ${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+    score.textContent = `🧱 ${tour.length - 1} · 🏆 ${etatJeuDe(id).meilleur}`;
+
+    // La caméra monte doucement avec la tour
+    const cible = Math.max(0, (tour.length + 1) * HB - H * 0.55);
+    camera += (cible - camera) * 0.08;
+    const yEcran = (n) => H - 40 - (n + 1) * HB + camera;       // n = numéro d'étage (0 = socle)
+
+    ctx.clearRect(0, 0, L, H);
+    const ciel = ctx.createLinearGradient(0, 0, 0, H);
+    ciel.addColorStop(0, `hsl(${(tour.length * 6 + 200) % 360} 70% 88%)`); ciel.addColorStop(1, '#f0fdfa');
+    ctx.fillStyle = ciel; ctx.fillRect(0, 0, L, H);
+    const bloc = (x, y, l, c) => {
+      ctx.fillStyle = c; ctx.beginPath(); ctx.roundRect(x, y, l, HB - 3, 6); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,.25)'; ctx.fillRect(x + 4, y + 3, Math.max(0, l - 8), 5);
+    };
+    tour.forEach((b, n) => { const y = yEcran(n); if (y > -HB && y < H) bloc(b.x, y, b.l, n === 0 ? couleur : teinte(n)); });
+    morceaux.forEach((m) => { m.vy += 0.5; m.y -= m.vy / HB; bloc(m.x, yEcran(m.y), m.l, teinte(m.n)); });
+    morceaux = morceaux.filter((m) => yEcran(m.y) < H + 50);
+    if (enCours) bloc(mobile.x, yEcran(tour.length), mobile.l, teinte(tour.length));
+    if (bulle && bulle.vie-- > 0) {
+      ctx.fillStyle = '#7c3aed'; ctx.font = '800 22px Nunito, system-ui, sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(bulle.t, L / 2, yEcran(tour.length) - 30 - (50 - bulle.vie) / 2);
+    }
+    requestAnimationFrame(image);
+  }
+
+  // Écran d'accueil du jeu
+  message.replaceChildren(el('div', { class: 'gros-emoji' }, '🏗️'), el('h2', {}, 'La Tour'),
+    el('p', {}, 'Touche l’écran pour lâcher le bloc pile sur la tour. Ce qui dépasse est coupé !'),
+    el('p', {}, `⏳ ${Math.ceil(reste / 1000)} s de jeu · 🏆 record : ${etatJeuDe(id).meilleur}`),
+    el('button', { class: 'btn-principal', onclick: (e) => { e.stopPropagation(); nouvellePartie(); } }, '▶️ Jouer'));
+  message.classList.add('visible');
+  tour = [{ x: L / 2 - 80, l: 160 }]; mobile = { x: 0, l: 160, sens: 1 }; camera = 0; morceaux = []; enCours = false;
+  requestAnimationFrame(image);
 }
 
 /* ---- PARCOURS : une grosse leçon découpée en petits modules ----
@@ -1916,12 +2113,26 @@ function parMatiere(lecons) {
 }
 
 // Carte d'une leçon dans une liste : emoji, titre, étoiles (sans le nombre de questions)
+/**
+ * Titre coupé en deux lignes quand c'est possible, pour qu'il se lise mieux sur téléphone :
+ *   « BE et HAVE (The Addams Family) »  ->  BE et HAVE / (The Addams Family)
+ *   « Calcul mental : 0,5 · 4 · 5 »     ->  Calcul mental / 0,5 · 4 · 5
+ * Renvoie une liste de morceaux à mettre dans un élément (le 2e est un petit sous-titre).
+ */
+function titreSurDeuxLignes(titre) {
+  const t = String(titre || '');
+  let m = t.match(/^(.{3,}?)\s+(\(.+\))$/);           // une parenthèse à la fin
+  if (!m) m = t.match(/^(.{3,}?)\s*:\s+(.+)$/);         // « avant : après »
+  if (!m) return [t];
+  return [m[1], el('span', { class: 'sous-titre' }, m[2])];
+}
+
 function carteLecon(l, classe = '') {
   return el('button', { class: 'carte-lecon ' + classe, onclick: () => aller(afficherLecon, l) },
     el('span', { class: 'emoji' }, l.emoji || '📘'),
-    el('span', { class: 'infos' }, el('b', {}, l.titre),
+    el('span', { class: 'infos' }, el('b', {}, titreSurDeuxLignes(l.titre)),
       ajustementEnCours(etat.enfant.id, l) ? el('small', { class: 'badge-ajustement' }, '🛠️ ajustement en cours…')
-        : modeParent() ? el('small', { class: 'date-ajout' }, resumeBilan(bilanDe(etat.enfant.id, l.id)) || '👪 pas encore de bilan')
+        : modeParent() ? el('small', { class: 'date-ajout' }, resumeBilan(bilanDe(etat.enfant.id, l.id)) || 'pas encore de bilan')
         : dateAjout(l) ? el('small', { class: 'date-ajout' }, dateAjout(l)) : null),
     el('span', { class: 'etoiles' }, dessinEtoiles(etoilesDe(etat.enfant.id, l.id))));
 }
@@ -1946,7 +2157,7 @@ function afficherLecon(lecon) {
       el('span', { class: 'gros-emoji' }, lecon.emoji || '📘'),
       el('div', {}, el('small', {}, lecon.parcours
         ? `${lecon.matiere || ''} · ${lecon.parcours} · étape ${lecon.etape || 1}/${modulesDu(lecon.parcours).length}`
-        : lecon.matiere || ''), el('h2', {}, lecon.titre),
+        : lecon.matiere || ''), el('h2', {}, titreSurDeuxLignes(lecon.titre)),
         dateAjout(lecon) ? el('span', { class: 'date-ajout' }, dateAjout(lecon)) : null,
         // 🛠️ ajustement demandé mais pas encore arrivé : on peut actualiser sans quitter la page
         ajustementEnCours(etat.enfant.id, lecon) ? el('button', { class: 'badge-ajustement', onclick: () => actualiser() },
@@ -2190,6 +2401,7 @@ function afficherResultat(q) {
     const total = q.questions.length;
     const pct = Math.round((q.bons / total) * 100);
     const etoiles = pct >= 90 ? 3 : pct >= 70 ? 2 : pct >= 40 ? 1 : 0;
+    rechargerJeu(etat.enfant.id);   // 🎮 une leçon finie = 2 minutes de jeu caché rechargées
     enregistrerScore(etat.enfant.id, q.lecon.id, etoiles, pct,
       q.erreurs.map((a) => q.lecon.activites.indexOf(a)).filter((i) => i >= 0));
     q.premier = { bons: q.bons, total, etoiles };
@@ -2568,7 +2780,8 @@ async function demarrer() {
   // Premier écran = racine de la pile
   pile.push([afficherAccueil, []]);
   history.replaceState({ niveau: 1 }, '');
-  if (!restaurerEcran()) afficherAccueil();   // on revient là où on était avant l'actualisation
+  if (!restaurerEcran()) afficherAccueil();
+  $('#titre').addEventListener('click', toucheTitre);   // 🎮 3 touches sur « Leçons de … » = jeu caché   // on revient là où on était avant l'actualisation
 
   // Retour dans l'appli (après l'avoir mise en arrière-plan) avec une leçon en attente : on actualise tout seul
   document.addEventListener('visibilitychange', () => {

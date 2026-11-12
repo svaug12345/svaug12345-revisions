@@ -382,8 +382,8 @@ passions, copains, points forts, difficultés, et ce que le parent aimerait.
 - 📦 **Archiver = toute la série** : depuis la page d'une étape, le bouton archive le parcours entier ; les archives
   montrent une ligne par série, qu'on ressort en entier. Les leçons simples ont aussi leur 📦 dans la liste.
 
-## 👪 Mode parent (depuis la v1.24.0, en test pour Gaby)
-Profil avec `"modeParent": true`. Le petit bouton **👪** à côté de l'avatar (en haut à droite) l'allume ou l'éteint ;
+## 👪 Mode parent (depuis la v1.24.0 ; pour tous les enfants depuis la v1.25.0)
+Le petit bouton **parent** (deux silhouettes) à côté de l'avatar (en haut à droite) l'allume ou l'éteint ;
 l'en-tête devient violet.
 - **Liste des leçons** : tableau de bord (leçons révisées cette semaine, étoiles, bilans faits ensemble) et
   **« 🎯 À revoir en priorité »** (points « à revoir » au dernier bilan, leçons jamais faites, scores < 70 %).
@@ -395,6 +395,11 @@ l'en-tête devient violet.
 - Contenu : bloc `"parent"` de la leçon : `{"duree": "10 min", "essentiel": […], "questions": [{"q": "…", "r": "…"}],
   "pieges": […], "aide": […], "defi": "…"}`. Sans ce bloc, le guide est fabriqué à partir des titres de la fiche
   et des questions du quiz (avec leurs réponses).
+
+## 🎮 Jeu caché « La Tour » (depuis la v1.25.0)
+Toucher **3 fois** le titre « Leçons de … » ouvre un jeu : lâcher des blocs pile sur la tour (ce qui dépasse est coupé).
+2 minutes de jeu, puis il faut **finir un quiz** pour recharger 2 minutes. Le meilleur score est gardé par enfant
+(clé `revisions-jeu` du stockage de l'appareil).
 
 ## 🧒 Profil d'un enfant
 Toucher l'**avatar** en haut à droite ouvre son profil. Pour les enfants de la famille (`lecons.json`), on peut

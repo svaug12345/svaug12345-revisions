@@ -1454,3 +1454,37 @@ body.mode-parent header { background: #5b21b6; }
 .gp-fiche { margin: 6px 0 12px; }
 .gp-fiche summary { font-weight: 800; cursor: pointer; color: var(--fonce); padding: 8px 4px; }
 .gp-actions .btn-secondaire { font-size: 1rem; }
+
+/* ---------- v1.25.0 : mode parent pour tous, titres sur 2 lignes, jeu caché ---------- */
+/* Picto parent (SVG) : blanc dans l'en-tête, violet quand le mode est allumé */
+.btn-parent { color: #fff; }
+.btn-parent.actif { color: #5b21b6; }
+.btn-parent svg { display: block; }
+.tp-titre { display: flex; align-items: center; gap: 6px; }
+.tp-titre svg { width: 20px; height: 20px; }
+
+/* Sait / Hésite / À revoir : le bouton choisi se remplit, les autres pâlissent */
+.gp-note { font: inherit; font-size: .92rem; font-weight: 800; border-radius: 99px; padding: 7px 12px; cursor: pointer;
+  border: 2px solid var(--n); background: #fff; color: var(--n); transition: all .15s; }
+.gp-note.sait { --n: #16a34a; } .gp-note.hesite { --n: #d97706; } .gp-note.revoir { --n: #dc2626; }
+.gp-note.choisie { background: var(--n); color: #fff; transform: scale(1.06); box-shadow: 0 3px 0 rgba(0,0,0,.15); }
+.gp-notes.note-faite .gp-note:not(.choisie) { opacity: .45; }
+
+/* Exemples dans les champs : gris clair en italique, pour qu'on ne croie pas que c'est déjà rempli */
+.note-envoi::placeholder, .code-envoi::placeholder { color: #a0aec0; font-style: italic; opacity: 1; }
+
+/* Titre sur deux lignes : la 2e partie en petit sous-titre */
+.sous-titre { display: block; font-size: .82em; font-weight: 700; opacity: .75; margin-top: 1px; }
+
+/* 🎮 Jeu caché « La Tour » (plein écran) */
+.jeu-fond { position: fixed; inset: 0; z-index: 60; background: #0f172a; display: flex; flex-direction: column; }
+.jeu-barre { display: flex; align-items: center; gap: 12px; padding: calc(env(safe-area-inset-top) + 10px) 14px 10px;
+  color: #fff; font-weight: 800; font-size: 1.05rem; }
+.jeu-barre .jeu-score { flex: 1; text-align: center; }
+.jeu-barre .feuille-fermer { color: #fff; }
+.jeu-canvas { flex: 1; width: 100%; touch-action: none; display: block; }
+.jeu-message { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(86vw, 360px);
+  background: #fff; border-radius: 24px; padding: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,.3); display: none; }
+.jeu-message.visible { display: block; }
+.jeu-message h2 { margin: 6px 0; }
+.jeu-message .gros-emoji { font-size: 3rem; }
