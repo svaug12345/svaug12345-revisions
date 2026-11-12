@@ -398,7 +398,8 @@ l'en-tête devient violet.
 
 ## 🎮 Jeu caché « La Tour » (depuis la v1.25.0)
 Toucher **3 fois** le titre « Leçons de … » ouvre un jeu : lâcher des blocs pile sur la tour (ce qui dépasse est coupé).
-2 minutes de jeu, puis il faut **finir un quiz** pour recharger 2 minutes. Le meilleur score est gardé par enfant
+**1 minute** de jeu (v1.26.0), puis il faut **finir une série complète** (toutes les étapes d'un parcours réussies,
+ou une leçon simple) pour recharger 1 minute. L'écran de fin garde ses boutons inactifs 1,5 s (anti-clics en rafale). Le meilleur score est gardé par enfant
 (clé `revisions-jeu` du stockage de l'appareil).
 
 ## 🧒 Profil d'un enfant

@@ -1488,3 +1488,7 @@ body.mode-parent header { background: #5b21b6; }
 .jeu-message.visible { display: block; }
 .jeu-message h2 { margin: 6px 0; }
 .jeu-message .gros-emoji { font-size: 3rem; }
+
+/* v1.26.0 : jeu caché — progression vers la prochaine recharge, boutons inactifs juste après la fin */
+.jeu-progres { display: block; margin-top: 6px; color: #7c3aed; font-weight: 800; }
+.jeu-message button:disabled { opacity: .5; }

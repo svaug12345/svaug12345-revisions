@@ -1,6 +1,6 @@
 {
   "maj": "11/11/2026",
-  "versionApp": "1.25.1",
+  "versionApp": "1.26.0",
 
   "enfants": [
     {"id": "tom", "nom": "Tom", "avatar": "avatars/tom.svg", "couleur": "#22c55e", "age": 6, "coachLangues": {"en": 1, "de": 1, "es": 1}},

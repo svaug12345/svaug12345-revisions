@@ -1835,20 +1835,64 @@ function guideParent(lecon) {
    La partie qui dépasse est coupée : le bloc suivant est plus étroit. Un lâcher pile au bon
    endroit (« Parfait ! ») ne coupe rien. La partie s'arrête quand on rate complètement la tour.
    - Le score = la hauteur de la tour ; le meilleur score est gardé (par enfant).
-   - 2 minutes de jeu, puis il faut FINIR UNE LEÇON (un quiz) pour recharger 2 minutes.
+   - 1 minute de jeu, puis il faut finir une SÉRIE COMPLÈTE (toutes les étapes d'un parcours, ou une
+     leçon simple) pour recharger 1 minute (v1.26.0 ; avant : 2 min par quiz).
    Tout est dessiné dans un <canvas> ; le temps ne s'écoule que pendant qu'on joue. */
 
 const CLE_JEU = 'revisions-jeu';          // { gaby: { meilleur: 23, resteMs: 120000 } }
-const TEMPS_JEU = 2 * 60 * 1000;
+const TEMPS_JEU = 60 * 1000;
 
-const etatJeuDe = (id) => ({ meilleur: 0, resteMs: TEMPS_JEU, ...(lireStock(CLE_JEU, {})[id] || {}) });
+// faites = leçons réussies (≥ 1 ⭐) depuis la dernière recharge ; resteMs plafonné à 1 min
+// (un ancien stock de 2 min, d'avant la v1.26.0, est ramené à 1 min)
+function etatJeuDe(id) {
+  const e = { meilleur: 0, resteMs: TEMPS_JEU, faites: [], ...(lireStock(CLE_JEU, {})[id] || {}) };
+  e.resteMs = Math.min(e.resteMs, TEMPS_JEU);
+  return e;
+}
 function ecrireJeu(id, maj) {
   const tout = lireStock(CLE_JEU, {});
   tout[id] = { ...etatJeuDe(id), ...maj };
   ecrireStock(CLE_JEU, tout);
 }
-/** Appelé à la fin d'un quiz : 2 minutes de jeu à nouveau disponibles */
-function rechargerJeu(id) { ecrireJeu(id, { resteMs: TEMPS_JEU }); }
+/**
+ * Appelé à la fin de chaque quiz. La leçon réussie (≥ 1 étoile) est notée ; dès que TOUTES les
+ * étapes de sa série ont été réussies depuis la dernière recharge, 1 minute de jeu revient.
+ * (Une leçon simple est une série d'une seule étape.) Renvoie vrai s'il y a eu recharge.
+ */
+function progresJeu(id, lecon, etoiles) {
+  if (!etoiles) return false;
+  const e = etatJeuDe(id);
+  const faites = [...new Set([...e.faites, lecon.id])];
+  const serie = serieDe(id, lecon);
+  if (serie.every((l) => faites.includes(l.id))) {
+    // Série complète : 1 minute rechargée, et on repart de zéro pour la suivante
+    ecrireJeu(id, { resteMs: TEMPS_JEU, faites: [] });
+    return e.resteMs < TEMPS_JEU;
+  }
+  ecrireJeu(id, { faites });
+  return false;
+}
+
+/** La série la plus avancée depuis la dernière recharge (pour l'écran « temps écoulé ») */
+function serieLaPlusAvancee(id) {
+  const faites = etatJeuDe(id).faites;
+  const deja = new Set();
+  let mieux = null;
+  for (const l of leconsDe(id).filter((x) => !estArchivee(id, x))) {
+    const serie = serieDe(id, l);
+    if (deja.has(serie[0].id)) continue;
+    deja.add(serie[0].id);
+    const n = serie.filter((x) => faites.includes(x.id)).length;
+    if (!mieux || n / serie.length > mieux.n / mieux.total) mieux = { nom: l.parcours || l.titre, n, total: serie.length };
+  }
+  return mieux;
+}
+/** Le message « comment regagner du temps » (+ où on en est) */
+function messageRecharge(id) {
+  const m = serieLaPlusAvancee(id);
+  return el('p', {}, 'Termine une ', el('b', {}, 'série complète'), ' (toutes les étapes d’un parcours, ou une leçon) pour gagner 1 minute de jeu 💪',
+    m && m.n ? el('small', { class: 'jeu-progres' }, `Presque : « ${m.nom} » ${m.n}/${m.total}`) : null);
+}
 
 // 3 touches rapides sur le titre de la liste des leçons -> le jeu
 let touchesTitre = [];
@@ -1879,7 +1923,7 @@ function ouvrirJeu() {
   if (etatJeuDe(id).resteMs <= 0) {
     canvas.remove(); chrono.textContent = '⏳ 0:00'; score.textContent = `🏆 ${etatJeuDe(id).meilleur}`;
     message.replaceChildren(el('div', { class: 'gros-emoji' }, '🔒'), el('h2', {}, 'Le temps de jeu est fini !'),
-      el('p', {}, 'Termine une leçon (un quiz) pour gagner 2 nouvelles minutes de jeu 💪'),
+      messageRecharge(id),
       el('p', {}, `Ton record : `, el('b', {}, etatJeuDe(id).meilleur)),
       el('button', { class: 'btn-principal', onclick: fermer }, '📚 Aller réviser'));
     message.classList.add('visible');
@@ -1948,12 +1992,26 @@ function ouvrirJeu() {
     message.replaceChildren(el('div', { class: 'gros-emoji' }, plusDeTemps ? '⏰' : hauteur > 10 ? '🏗️' : '💥'),
       el('h2', {}, plusDeTemps ? 'Temps écoulé !' : titre),
       el('p', {}, 'Tour de ', el('b', {}, pluriel(hauteur, 'bloc')), ` · record : ${etatJeuDe(id).meilleur}`),
-      plusDeTemps ? el('p', {}, 'Termine une leçon pour gagner 2 nouvelles minutes de jeu 💪') : null,
+      plusDeTemps ? messageRecharge(id) : '',   // '' et pas null : replaceChildren écrirait « null »
       plusDeTemps ? el('button', { class: 'btn-principal', onclick: fermer }, '📚 Aller réviser')
         : el('button', { class: 'btn-principal', onclick: (e) => { e.stopPropagation(); nouvellePartie(); } }, '🔁 Rejouer'));
     message.classList.add('visible');
+    proteger(message);
   }
-  canvas.addEventListener('pointerdown', (e) => { e.preventDefault(); lacher(); });
+  /* Anti-« clic à fond » : à la fin d'une partie, l'enfant tape encore très vite sur l'écran.
+     Pendant 1,5 s les boutons de l'écran de fin sont inactifs (grisés), pour qu'il ait le temps
+     de VOIR son score au lieu de relancer une partie (ou de fermer) sans le vouloir. */
+  function proteger(boite) {
+    const boutons = [...boite.querySelectorAll('button')];
+    boutons.forEach((b) => { b.disabled = true; b.dataset.texte = b.textContent; });
+    let n = 3;
+    const tic = () => {
+      if (n > 0) { boutons.forEach((b) => { b.textContent = `${b.dataset.texte} (${n})`; }); n--; setTimeout(tic, 500); }
+      else boutons.forEach((b) => { b.disabled = false; b.textContent = b.dataset.texte; });
+    };
+    tic();
+  }
+  canvas.addEventListener('pointerdown', (e) => { e.preventDefault(); if (enCours) lacher(); });
 
   // --- La boucle d'animation ---
   function image(t) {
@@ -2008,6 +2066,7 @@ function ouvrirJeu() {
   message.replaceChildren(el('div', { class: 'gros-emoji' }, '🏗️'), el('h2', {}, 'La Tour'),
     el('p', {}, 'Touche l’écran pour lâcher le bloc pile sur la tour. Ce qui dépasse est coupé !'),
     el('p', {}, `⏳ ${Math.ceil(reste / 1000)} s de jeu · 🏆 record : ${etatJeuDe(id).meilleur}`),
+    reste < TEMPS_JEU ? messageRecharge(id) : '',   // '' et pas null : replaceChildren écrirait « null »
     el('button', { class: 'btn-principal', onclick: (e) => { e.stopPropagation(); nouvellePartie(); } }, '▶️ Jouer'));
   message.classList.add('visible');
   tour = [{ x: L / 2 - 80, l: 160 }]; mobile = { x: 0, l: 160, sens: 1 }; camera = 0; morceaux = []; enCours = false;
@@ -2401,7 +2460,8 @@ function afficherResultat(q) {
     const total = q.questions.length;
     const pct = Math.round((q.bons / total) * 100);
     const etoiles = pct >= 90 ? 3 : pct >= 70 ? 2 : pct >= 40 ? 1 : 0;
-    rechargerJeu(etat.enfant.id);   // 🎮 une leçon finie = 2 minutes de jeu caché rechargées
+    // 🎮 jeu caché : une série complète = 1 minute rechargée
+    if (progresJeu(etat.enfant.id, q.lecon, etoiles)) setTimeout(() => toast('🎮 Série complète : 1 minute de jeu gagnée !'), 1200);
     enregistrerScore(etat.enfant.id, q.lecon.id, etoiles, pct,
       q.erreurs.map((a) => q.lecon.activites.indexOf(a)).filter((i) => i >= 0));
     q.premier = { bons: q.bons, total, etoiles };
