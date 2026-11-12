@@ -385,6 +385,8 @@ passions, copains, points forts, difficultés, et ce que le parent aimerait.
 ## 👪 Mode parent (depuis la v1.24.0 ; pour tous les enfants depuis la v1.25.0)
 Le petit bouton **parent** (deux silhouettes) à côté de l'avatar (en haut à droite) l'allume ou l'éteint ;
 l'en-tête devient violet.
+**Le mode enfant est le mode par défaut** (v1.27.0) : le mode parent s'éteint en revenant à l'accueil,
+en changeant d'enfant et à la réouverture de l'appli.
 - **Liste des leçons** : tableau de bord (leçons révisées cette semaine, étoiles, bilans faits ensemble) et
   **« 🎯 À revoir en priorité »** (points « à revoir » au dernier bilan, leçons jamais faites, scores < 70 %).
   Chaque leçon affiche son dernier bilan (« 👪 5/7 sues le 11 nov. »).

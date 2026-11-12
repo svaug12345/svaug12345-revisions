@@ -925,6 +925,7 @@ function appliquerConfort() {
 // --- Accueil : « Qui révise ? » ---
 function afficherAccueil() {
   etat.enfant = null;
+  modeParentPour = '';   // retour à l'accueil = retour au mode enfant
   memoriserEcran();   // accueil : plus d'écran à restaurer
   entete('Qui révise ?');
   const d = etat.donnees;
@@ -1664,15 +1665,19 @@ const PICTO_PARENT = `<svg viewBox="0 0 32 32" width="22" height="22" aria-hidde
   <circle cx="11.5" cy="7.5" r="4.2"/><path d="M4 27v-6.5C4 15.9 7.4 13 11.5 13s7.5 2.9 7.5 7.5V27z"/>
   <circle cx="23.5" cy="14" r="3.2"/><path d="M18.5 27v-4.2c0-3.2 2.2-5.3 5-5.3s5 2.1 5 5.3V27z"/></svg>`;
 
-const CLE_MODE_PARENT = 'revisions-mode-parent';   // id de l'enfant dont le mode parent est allumé
+/* Le mode ENFANT est le mode par défaut (v1.27.0) : le mode parent n'est plus gardé dans le
+   téléphone. Il est retenu seulement dans cette variable : il s'éteint en revenant à l'accueil,
+   en changeant d'enfant ou en rouvrant l'appli. (Avant, il restait allumé d'une fois sur l'autre.) */
+let modeParentPour = '';   // id de l'enfant dont le mode parent est allumé ('' = mode enfant)
+try { localStorage.removeItem('revisions-mode-parent'); } catch { /* rien */ }   // ménage de l'ancienne version
 const CLE_BILANS = 'revisions-bilans-parent';      // { gaby: { idLecon: { quand, notes: [2,1,0…], total } } }
 
 // Depuis la v1.25.0 : disponible pour TOUS les enfants (plus besoin de "modeParent": true)
-const modeParent = () => !!etat.enfant && lireStock(CLE_MODE_PARENT, '') === etat.enfant.id;
+const modeParent = () => !!etat.enfant && modeParentPour === etat.enfant.id;
 
 function basculerModeParent() {
   const allume = !modeParent();
-  ecrireStock(CLE_MODE_PARENT, allume ? etat.enfant.id : '');
+  modeParentPour = allume ? etat.enfant.id : '';
   toast(allume ? 'Mode parent activé' : '🧒 Retour au mode enfant');
   // On redessine l'écran affiché (liste ou leçon) dans le bon mode
   const [fonctionEcran, args] = pile.at(-1);
@@ -1824,7 +1829,7 @@ function guideParent(lecon) {
     g.defi ? el('section', { class: 'gp-bloc gp-defi' }, el('h3', {}, '🎲 Le défi à faire ensemble'), el('p', {}, fmt(g.defi))) : null,
     el('details', { class: 'gp-fiche' }, el('summary', {}, `👀 La fiche de ${prenom}`), dessinerFiche(lecon)),
     el('div', { class: 'gp-actions' },
-      lecon.activites?.length ? el('button', { class: 'btn-principal', onclick: () => { ecrireStock(CLE_MODE_PARENT, ''); aller(lancerQuiz, lecon); } },
+      lecon.activites?.length ? el('button', { class: 'btn-principal', onclick: () => { modeParentPour = ''; aller(lancerQuiz, lecon); } },
         `🧒 Lui passer le téléphone : quiz (${pluriel(lecon.activites.length, 'question')})`) : null,
       etat.donnees.envoi?.url ? el('button', { class: 'btn-secondaire', onclick: () => ouvrirAjustement(lecon) }, '🛠️ Demander un ajustement') : null));
 }
